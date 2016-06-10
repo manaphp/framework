@@ -1,5 +1,5 @@
 <?php
-namespace ManaPHP\Caching {
+namespace ManaPHP\Store {
 
     class Exception extends \ManaPHP\Exception
     {

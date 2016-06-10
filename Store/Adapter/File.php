@@ -1,7 +1,7 @@
 <?php
-namespace ManaPHP\Caching\Store\Adapter {
+namespace ManaPHP\Store\Adapter {
 
-    use ManaPHP\Caching\Store\AdapterInterface;
+    use ManaPHP\Store\AdapterInterface;
 
     class File implements AdapterInterface
     {
@@ -18,7 +18,7 @@ namespace ManaPHP\Caching\Store\Adapter {
         /**
          * @var string
          */
-        protected $_extension = '.cache';
+        protected $_extension = '.store';
 
         /**
          * @var array

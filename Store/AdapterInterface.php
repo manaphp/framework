@@ -1,5 +1,5 @@
 <?php
-namespace ManaPHP\Caching\Store {
+namespace ManaPHP\Store {
 
     interface AdapterInterface
     {

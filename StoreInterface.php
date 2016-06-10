@@ -1,5 +1,5 @@
 <?php
-namespace ManaPHP\Caching {
+namespace ManaPHP {
 
     interface StoreInterface
     {
@@ -58,15 +58,13 @@ namespace ManaPHP\Caching {
          */
         public function delete($id);
 
-        /** Retrieves the internal adapter instance
-         *
-         * @return \ManaPHP\Caching\Store\AdapterInterface
-         */
-        public function getAdapter();
-
         /**
-         * @return \ManaPHP\Caching\Serializer\AdapterInterface
+         * Deletes values with the specified ids from store
+         *
+         * @param array $ids
+         *
+         * @void
          */
-        public function getSerializer();
+        public function mDelete($ids);
     }
 }

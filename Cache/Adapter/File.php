@@ -1,7 +1,7 @@
 <?php
-namespace ManaPHP\Caching\Cache\Adapter {
+namespace ManaPHP\Cache\Adapter {
 
-    use ManaPHP\Caching\Cache\AdapterInterface;
+    use ManaPHP\Cache\AdapterInterface;
 
     class File implements AdapterInterface
     {
@@ -31,7 +31,7 @@ namespace ManaPHP\Caching\Cache\Adapter {
          * @param string $cacheDir
          * @param string $shardMode
          *
-         * @throws \ManaPHP\Caching\Cache\Exception
+         * @throws \ManaPHP\Cache\Exception
          */
         public function __construct($cacheDir, $shardMode = null)
         {

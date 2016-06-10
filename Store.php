@@ -1,13 +1,13 @@
 <?php
-namespace ManaPHP\Caching {
+namespace ManaPHP {
 
-    use ManaPHP\Caching\Serializer\Adapter\JsonPhp;
+    use ManaPHP\Serializer\Adapter\JsonPhp;
     use ManaPHP\Di;
 
     class Store implements StoreInterface
     {
         /**
-         * @var \ManaPHP\Caching\Store\AdapterInterface
+         * @var \ManaPHP\Store\AdapterInterface
          */
         protected $_adapter;
 
@@ -17,20 +17,19 @@ namespace ManaPHP\Caching {
         protected $_prefix;
 
         /**
-         * @var \ManaPHP\Caching\Serializer\AdapterInterface $_serializer
+         * @var \ManaPHP\Serializer\AdapterInterface $_serializer
          */
         protected $_serializer;
 
         /**
          * Store constructor.
          *
-         * @param string                                         $prefix
-         * @param string|\ManaPHP\Caching\Store\AdapterInterface $adapter
-         * @param \ManaPHP\Caching\Serializer\AdapterInterface   $serializer
+         * @param string                                 $prefix
+         * @param string|\ManaPHP\Store\AdapterInterface $adapter
          *
          * @throws \ManaPHP\Di\Exception
          */
-        public function __construct($prefix = '', $adapter = null, $serializer = null)
+        public function __construct($prefix = '', $adapter = null)
         {
             $this->_prefix = $prefix;
 
@@ -39,7 +38,7 @@ namespace ManaPHP\Caching {
             }
 
             $this->_adapter = is_string($adapter) ? Di::getDefault()->getShared($adapter) : $adapter;
-            $this->_serializer = $serializer ?: new JsonPhp();
+            $this->_serializer = new JsonPhp();
         }
 
         /**
@@ -48,7 +47,7 @@ namespace ManaPHP\Caching {
          * @param string $id
          *
          * @return mixed
-         * @throws \ManaPHP\Caching\Store\Exception
+         * @throws \ManaPHP\Store\Exception
          */
         public function get($id)
         {
@@ -66,7 +65,7 @@ namespace ManaPHP\Caching {
          * @param array $ids
          *
          * @return array
-         * @throws \ManaPHP\Caching\Store\Exception
+         * @throws \ManaPHP\Store\Exception
          */
         public function mGet($ids)
         {
@@ -96,7 +95,7 @@ namespace ManaPHP\Caching {
          * @param mixed  $value
          *
          * @return void
-         * @throws \ManaPHP\Caching\Cache\Exception
+         * @throws \ManaPHP\Cache\Exception
          */
         public function set($id, $value)
         {
@@ -133,6 +132,20 @@ namespace ManaPHP\Caching {
         }
 
         /**
+         * Deletes values with the specified ids from store
+         *
+         * @param array $ids
+         *
+         * @void
+         */
+        public function mDelete($ids)
+        {
+            foreach ($ids as $id) {
+                $this->_adapter->delete($this->_prefix . $id);
+            }
+        }
+
+        /**
          * Check if id exists
          *
          * @param string $id
@@ -142,22 +155,6 @@ namespace ManaPHP\Caching {
         public function exists($id)
         {
             return $this->_adapter->exists($this->_prefix . $id);
-        }
-
-        /**
-         * @return \ManaPHP\Caching\Store\AdapterInterface
-         */
-        public function getAdapter()
-        {
-            return $this->_adapter;
-        }
-
-        /**
-         * @return \ManaPHP\Caching\Serializer\AdapterInterface
-         */
-        public function getSerializer()
-        {
-            return $this->_serializer;
         }
 
         /**

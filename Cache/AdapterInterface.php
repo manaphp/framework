@@ -1,7 +1,7 @@
 <?php
-namespace ManaPHP\Caching {
+namespace ManaPHP\Cache {
 
-    interface CacheInterface
+    interface AdapterInterface
     {
         /**
          * Checks whether a specified key exists in the cache.
@@ -17,7 +17,7 @@ namespace ManaPHP\Caching {
          *
          * @param string $key
          *
-         * @return mixed|false
+         * @return string|false
          */
         public function get($key);
 
@@ -25,12 +25,12 @@ namespace ManaPHP\Caching {
          * Stores a value identified by a key into cache.
          *
          * @param string $key
-         * @param mixed  $value
+         * @param string $value
          * @param int    $ttl
          *
          * @return void
          */
-        public function set($key, $value, $ttl = null);
+        public function set($key, $value, $ttl);
 
         /**
          * Deletes a value with the specified key from cache
@@ -41,15 +41,5 @@ namespace ManaPHP\Caching {
          */
         public function delete($key);
 
-        /** Retrieves the internal adapter instance
-         *
-         * @return \ManaPHP\Caching\Cache\AdapterInterface
-         */
-        public function getAdapter();
-
-        /**
-         * @return \ManaPHP\Caching\Serializer\AdapterInterface
-         */
-        public function getSerializer();
     }
 }

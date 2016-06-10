@@ -1,7 +1,7 @@
 <?php
-namespace ManaPHP\Caching\Serializer\Adapter {
+namespace ManaPHP\Serializer\Adapter {
 
-    use ManaPHP\Caching\Serializer\AdapterInterface;
+    use ManaPHP\Serializer\AdapterInterface;
 
     class JsonPhp implements AdapterInterface
     {

@@ -1,8 +1,7 @@
 <?php
-namespace ManaPHP\Caching\Store\Adapter {
+namespace ManaPHP\Store\Adapter {
 
-    use ManaPHP\Caching\Store;
-    use ManaPHP\Caching\Store\AdapterInterface;
+    use ManaPHP\Store\AdapterInterface;
 
     class Memory implements AdapterInterface
     {
@@ -13,11 +12,7 @@ namespace ManaPHP\Caching\Store\Adapter {
 
         public function get($id)
         {
-            if (isset($this->_data[$id])) {
-                return $this->_data[$id];
-            } else {
-                return false;
-            }
+            return isset($this->_data[$id]) ? $this->_data[$id] : false;
         }
 
         public function mGet($ids)

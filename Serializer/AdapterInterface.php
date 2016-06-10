@@ -1,5 +1,5 @@
 <?php
-namespace ManaPHP\Caching\Serializer {
+namespace ManaPHP\Serializer {
 
     interface AdapterInterface
     {

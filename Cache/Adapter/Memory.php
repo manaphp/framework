@@ -1,7 +1,7 @@
 <?php
-namespace ManaPHP\Caching\Cache\Adapter {
+namespace ManaPHP\Cache\Adapter {
 
-    use ManaPHP\Caching\Cache\AdapterInterface;
+    use ManaPHP\Cache\AdapterInterface;
 
     class Memory implements AdapterInterface
     {
