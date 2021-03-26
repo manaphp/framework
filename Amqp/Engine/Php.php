@@ -239,28 +239,28 @@ class Php extends Component implements EngineInterface
 
     /**
      * @param string|Exchange $exchange
-     * @param string|Queue    $routingKey
+     * @param string|Queue    $routing_key
      * @param string|array    $body
      * @param array           $properties
      * @param bool            $mandatory
      *
      * @return void
      */
-    public function basicPublish($exchange, $routingKey, $body, $properties, $mandatory)
+    public function basicPublish($exchange, $routing_key, $body, $properties, $mandatory)
     {
         $channel = $this->getChannel();
         if (is_object($exchange)) {
             $this->exchangeDeclareInternal($channel, $exchange);
         }
 
-        if (is_object($routingKey)) {
-            $this->queueDeclareInternal($channel, $routingKey);
-            $routingKey = $routingKey->name;
+        if (is_object($routing_key)) {
+            $this->queueDeclareInternal($channel, $routing_key);
+            $routing_key = $routing_key->name;
         }
 
         $message = new AMQPMessage($body, $properties);
         $exchangeName = is_string($exchange) ? $exchange : $exchange->name;
-        $channel->basic_publish($message, $exchangeName, $routingKey, $mandatory);
+        $channel->basic_publish($message, $exchangeName, $routing_key, $mandatory);
     }
 
     /**

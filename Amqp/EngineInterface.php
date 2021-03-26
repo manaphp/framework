@@ -53,14 +53,14 @@ interface EngineInterface
 
     /**
      * @param string|Exchange $exchange
-     * @param string|Queue    $routingKey
+     * @param string|Queue    $routing_key
      * @param string|array    $body
      * @param array           $properties
      * @param bool            $mandatory
      *
      * @return void
      */
-    public function basicPublish($exchange, $routingKey, $body, $properties, $mandatory);
+    public function basicPublish($exchange, $routing_key, $body, $properties, $mandatory);
 
     /**
      * @param string|Queue $queue
