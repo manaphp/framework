@@ -120,17 +120,17 @@ class Client extends Component implements ClientInterface
     }
 
     /**
-     * @param Bind $bind
+     * @param Binding $binding
      *
      * @return void
      */
-    public function queueBind($bind)
+    public function queueBind($binding)
     {
         /** @var \ManaPHP\Amqp\EngineInterface $engine */
         $engine = $this->poolManager->pop($this, $this->timeout);
 
         try {
-            $engine->queueBind($bind);
+            $engine->queueBind($binding);
         } finally {
             $this->poolManager->push($this, $engine);
         }

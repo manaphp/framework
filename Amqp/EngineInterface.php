@@ -38,11 +38,11 @@ interface EngineInterface
     public function queueDelete($queue, $if_unused, $if_empty, $nowait);
 
     /**
-     * @param Bind $bind
+     * @param Binding $binding
      *
      * @return void
      */
-    public function queueBind($bind);
+    public function queueBind($binding);
 
     /**
      * @param string|Exchange $exchange

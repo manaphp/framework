@@ -2,7 +2,7 @@
 
 namespace ManaPHP\Amqp\Engine;
 
-use ManaPHP\Amqp\Bind;
+use ManaPHP\Amqp\Binding;
 use ManaPHP\Amqp\ChannelException;
 use ManaPHP\Component;
 use ManaPHP\Exception\MisuseException;
@@ -179,14 +179,14 @@ class Php extends Component implements EngineInterface
     }
 
     /**
-     * @param Bind $bind
+     * @param Binding $binding
      *
      * @return void
      */
-    public function queueBind($bind)
+    public function queueBind($binding)
     {
-        $queue = $bind->queue;
-        $exchange = $bind->exchange;
+        $queue = $binding->queue;
+        $exchange = $binding->exchange;
 
         $channel = $this->getChannel();
         if (is_object($queue)) {
@@ -197,11 +197,15 @@ class Php extends Component implements EngineInterface
             $this->exchangeDeclareInternal($channel, $exchange);
         }
 
-        $channel->queue_bind(
-            is_string($queue) ? $queue : $queue->name,
-            is_string($exchange) ? $exchange : $exchange->name,
-            $bind->binding_key, false, $bind->arguments
-        );
+        try {
+            $channel->queue_bind(
+                is_string($queue) ? $queue : $queue->name,
+                is_string($exchange) ? $exchange : $exchange->name,
+                $binding->binding_key, false, $binding->arguments
+            );
+        } catch (AMQPProtocolChannelException $exception) {
+            throw new ChannelException($exception);
+        }
     }
 
     /**
