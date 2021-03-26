@@ -56,6 +56,12 @@ class Php extends Component implements EngineInterface
      */
     protected function getChannel()
     {
+        if ($this->channel !== null && !$this->channel->is_open()) {
+            $this->channel = null;
+            $this->exchanges = [];
+            $this->queues = [];
+        }
+
         if ($this->channel === null) {
             $parts = parse_url($this->uri);
             $scheme = $parts['scheme'];
@@ -219,7 +225,6 @@ class Php extends Component implements EngineInterface
         $exchange = $binding->exchange;
 
         $channel = $this->getChannel();
-
         try {
             $channel->queue_unbind(
                 is_string($queue) ? $queue : $queue->name,
