@@ -45,6 +45,13 @@ interface EngineInterface
     public function queueBind($binding);
 
     /**
+     * @param Binding $binding
+     *
+     * @return void
+     */
+    public function queueUnbind($binding);
+
+    /**
      * @param string|Exchange $exchange
      * @param string|Queue    $routingKey
      * @param string|array    $body

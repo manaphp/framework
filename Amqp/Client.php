@@ -137,6 +137,23 @@ class Client extends Component implements ClientInterface
     }
 
     /**
+     * @param Binding $binding
+     *
+     * @return void
+     */
+    public function queueUnbind($binding)
+    {
+        /** @var \ManaPHP\Amqp\EngineInterface $engine */
+        $engine = $this->poolManager->pop($this, $this->timeout);
+
+        try {
+            $engine->queueUnbind($binding);
+        } finally {
+            $this->poolManager->push($this, $engine);
+        }
+    }
+
+    /**
      * @param string|Exchange $exchange
      * @param string|Queue    $routing_key
      * @param string|array    $body

@@ -209,6 +209,25 @@ class Php extends Component implements EngineInterface
     }
 
     /**
+     * @param Binding $binding
+     *
+     * @return void
+     */
+    public function queueUnbind($binding)
+    {
+        $queue = $binding->queue;
+        $exchange = $binding->exchange;
+
+        $channel = $this->getChannel();
+
+        $channel->queue_unbind(
+            is_string($queue) ? $queue : $queue->name,
+            is_string($exchange) ? $exchange : $exchange->name,
+            $binding->binding_key, $binding->arguments
+        );
+    }
+
+    /**
      * @param string|Exchange $exchange
      * @param string|Queue    $routingKey
      * @param string|array    $body

@@ -45,6 +45,13 @@ interface ClientInterface
     public function queueBind($binding);
 
     /**
+     * @param Binding $binding
+     *
+     * @return void
+     */
+    public function queueUnbind($binding);
+
+    /**
      * @param string|Exchange $exchange
      * @param string|Queue    $routing_key
      * @param string|array    $body
