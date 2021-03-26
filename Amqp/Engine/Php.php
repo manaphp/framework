@@ -139,12 +139,16 @@ class Php extends Component implements EngineInterface
         }
 
         $features = $queue->features;
-        $channel->queue_declare(
-            $name,
-            $features['passive'], $features['durable'],
-            $features['exclusive'], $features['auto_delete'],
-            $features['nowait'], $features['arguments']
-        );
+        try {
+            $channel->queue_declare(
+                $name,
+                $features['passive'], $features['durable'],
+                $features['exclusive'], $features['auto_delete'],
+                $features['nowait'], $features['arguments']
+            );
+        } catch (AMQPProtocolChannelException $exception) {
+            throw new ChannelException($exception);
+        }
         $this->queues[$name] = 1;
     }
 
