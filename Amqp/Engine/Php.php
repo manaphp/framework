@@ -220,11 +220,16 @@ class Php extends Component implements EngineInterface
 
         $channel = $this->getChannel();
 
-        $channel->queue_unbind(
-            is_string($queue) ? $queue : $queue->name,
-            is_string($exchange) ? $exchange : $exchange->name,
-            $binding->binding_key, $binding->arguments
-        );
+        try {
+            $channel->queue_unbind(
+                is_string($queue) ? $queue : $queue->name,
+                is_string($exchange) ? $exchange : $exchange->name,
+                $binding->binding_key, $binding->arguments
+            );
+        } catch (AMQPProtocolChannelException $exception) {
+            throw new ChannelException($exception);
+        }
+
     }
 
     /**
