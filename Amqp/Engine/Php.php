@@ -104,6 +104,21 @@ class Php extends Component implements EngineInterface
     }
 
     /**
+     * @param string $exchange
+     * @param bool   $if_unused
+     * @param bool   $nowait
+     *
+     * @return void
+     */
+    public function exchangeDelete($exchange, $if_unused = false, $nowait = false)
+    {
+        unset($this->exchanges[$exchange]);
+
+        $channel = $this->getChannel();
+        $channel->exchange_delete($exchange, $if_unused, $nowait);
+    }
+
+    /**
      * @param AMQPChannel $channel
      * @param Queue       $queue
      *
@@ -146,6 +161,8 @@ class Php extends Component implements EngineInterface
      */
     public function queueDelete($queue, $if_unused = false, $if_empty = false, $nowait = false)
     {
+        unset($this->queues[$queue]);
+
         $channel = $this->getChannel();
         $channel->queue_delete($queue, $if_unused, $if_empty, $nowait);
     }
@@ -174,19 +191,6 @@ class Php extends Component implements EngineInterface
             is_string($exchange) ? $exchange : $exchange->name,
             $bind->binding_key, false, $bind->arguments
         );
-    }
-
-    /**
-     * @param string $exchange
-     * @param bool   $if_unused
-     * @param bool   $nowait
-     *
-     * @return void
-     */
-    public function exchangeDelete($exchange, $if_unused = false, $nowait = false)
-    {
-        $channel = $this->getChannel();
-        $channel->exchange_delete($exchange, $if_unused, $nowait);
     }
 
     /**
