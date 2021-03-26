@@ -3,6 +3,7 @@
 namespace ManaPHP\Amqp\Engine;
 
 use ManaPHP\Amqp\Bind;
+use ManaPHP\Amqp\ChannelException;
 use ManaPHP\Component;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Amqp\EngineInterface;
@@ -10,6 +11,7 @@ use ManaPHP\Amqp\Exchange;
 use ManaPHP\Amqp\MessageInterface;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Channel\AMQPChannel;
+use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 use PhpAmqpLib\Message\AMQPMessage;
 use ManaPHP\Amqp\Queue;
 use ManaPHP\Amqp\Engine\Php\Message as PhpMessage;
@@ -85,11 +87,16 @@ class Php extends Component implements EngineInterface
         }
 
         $features = $exchange->features;
-        $channel->exchange_declare(
-            $name, $exchange->type,
-            $features['passive'], $features['durable'], $features['auto_delete'],
-            $features['internal'], $features['nowait'], $features['arguments']
-        );
+        try {
+            $channel->exchange_declare(
+                $name, $exchange->type,
+                $features['passive'], $features['durable'], $features['auto_delete'],
+                $features['internal'], $features['nowait'], $features['arguments']
+            );
+        } catch (AMQPProtocolChannelException $exception) {
+            throw new ChannelException($exception);
+        }
+
         $this->exchanges[$name] = 1;
     }
 
