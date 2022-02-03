@@ -1,0 +1,14 @@
+<?php
+declare(strict_types=1);
+
+namespace ManaPHP\Logging\Logger\Adapter;
+
+use ManaPHP\Logging\AbstractLogger;
+
+class Noop extends AbstractLogger
+{
+    public function append(array $logs): void
+    {
+        null;
+    }
+}

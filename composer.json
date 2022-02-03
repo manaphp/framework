@@ -1,0 +1,30 @@
+{
+  "license": "MIT",
+  "name": "manaphp/framework",
+  "description": "The ManaPHP Framework",
+  "keywords": [
+    "manaphp",
+    "framework",
+    "di",
+    "yii2",
+    "laravel"
+  ],
+  "homepage": "https://github.com/manaphp/framework",
+  "require": {
+    "php": ">=8.0.2",
+    "psr/container": "~2.0.2",
+    "psr/log": "^2.0"
+  },
+  "authors": [
+    {
+      "name": "ManaPHP Mark",
+      "email": "manaphp@qq.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "ManaPHP\\": ""
+    }
+  },
+  "minimum-stability": "dev"
+}
