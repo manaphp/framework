@@ -14,7 +14,7 @@ class SendMessage
     ) {
     }
 
-    public function __call($method, $args): mixed
+    public function __call($method, $args): bool
     {
         return $this->workers->sendMessage([$this->caller, $method], $args, $this->task_worker_id);
     }
