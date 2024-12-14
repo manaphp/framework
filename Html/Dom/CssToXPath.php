@@ -33,7 +33,7 @@ class CssToXPath
             }, $path
             );
 
-            $path = preg_replace(['#:contains\((["\'])([^\'"]+)\\1\)#'], ["[contains(.,'\\2')]"], $path);
+            $path = (string)preg_replace(['#:contains\((["\'])([^\'"]+)\\1\)#'], ["[contains(.,'\\2')]"], $path);
             $path = strtr(
                 $path, [
                     ':header'      => '*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]',
