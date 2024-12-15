@@ -228,7 +228,7 @@ class EntityMetadata implements EntityMetadataInterface
 
         return $columnMap;
     }
-    
+
     public function getFillable(string $entityClass): array
     {
         if (($fillable = $this->fillable[$entityClass] ?? null) === null) {
