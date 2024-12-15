@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ManaPHP\Swoole;
 
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Di\InvokerInterface;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Http\Server\Event\ServerPipeMessage;
@@ -22,6 +23,7 @@ use function is_string;
 class Workers implements WorkersInterface
 {
     #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected InvokerInterface $invoker;
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
 
     protected Server $server;
@@ -79,16 +81,20 @@ class Workers implements WorkersInterface
         return $class;
     }
 
-    public function task(array|callable $task, array $arguments, int $task_worker_id, float $timeout = null): string|int|false
+    public function task(array|callable $task, array $arguments, int $task_worker_id, float $timeout = null): mixed
     {
         $id = $this->getIdInContainer(is_string($task[0]) ? $task[0] : get_class($task[0]));
 
-        if ($timeout === null) {
-            $data = new TaskCallMessage($id, $task[1], $arguments);
-            return $this->server->task($data, $task_worker_id);
+        if (isset($this->server)) {
+            if ($timeout === null) {
+                $data = new TaskCallMessage($id, $task[1], $arguments);
+                return $this->server->task($data, $task_worker_id);
+            } else {
+                $data = new TaskWaitCallMessage($id, $task[1], $arguments);
+                return $this->server->taskwait($data, $timeout, $task_worker_id);
+            }
         } else {
-            $data = new TaskWaitCallMessage($id, $task[1], $arguments);
-            return $this->server->taskwait($data, $timeout, $task_worker_id);
+            return $this->invoker->call([$this->container->get($id), $task[1]], $arguments);
         }
     }
 
