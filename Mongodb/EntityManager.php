@@ -125,6 +125,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
      *
      * @return Entity
      * @noinspection PhpUndefinedFieldInspection
+     * @noinspection PhpDynamicFieldDeclarationInspection
      */
     public function create(Entity $entity): Entity
     {
