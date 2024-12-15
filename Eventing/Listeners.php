@@ -12,7 +12,7 @@ use function is_int;
 class Listeners implements ListenersInterface
 {
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
-    protected array $listeners
+    #[Autowired] protected array $listeners
         = [
             '@app/Listeners/*.php'         => 'App\Listeners\*',
             '@app/Areas/*/Listeners/*.php' => 'App\Areas\*\Listeners\*',
