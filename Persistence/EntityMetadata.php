@@ -326,11 +326,13 @@ class EntityMetadata implements EntityMetadataInterface
                     )) !== []
                 ) {
                     foreach ($attributes as $attribute) {
-                        if ($attribute->getArguments() === []) {
-                            $constraint = $this->container->get($attribute->getName());
+                        $attributeName = $attribute->getName();
+                        $attributeArguments = $attribute->getArguments();
+
+                        if ($attributeArguments === []) {
+                            $constraint = $this->container->get($attributeName);
                         } else {
-                            $constraint = $attribute->newInstance();
-                            $this->container->injectProperties($constraint);
+                            $constraint = $this->container->make($attributeName, $attributeArguments);
                         }
                         $propertyConstraints[] = $constraint;
                     }

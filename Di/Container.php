@@ -141,7 +141,7 @@ class Container implements ContainerInterface
         }
     }
 
-    protected function injectPropertiesInternal(object $object, ReflectionClass $rClass, array $parameters): void
+    protected function injectProperties(object $object, ReflectionClass $rClass, array $parameters): void
     {
         foreach ($rClass->getProperties() as $property) {
             if ($property->isStatic()) {
@@ -178,13 +178,6 @@ class Container implements ContainerInterface
         }
     }
 
-    public function injectProperties(object $object, array $parameters = []): object
-    {
-        $this->injectPropertiesInternal($object, new ReflectionClass($object), $parameters);
-
-        return $object;
-    }
-
     protected function makeInternal(string $name, array $parameters = [], string $id = null): object
     {
         $rClass = new ReflectionClass($name);
@@ -195,7 +188,7 @@ class Container implements ContainerInterface
                 $this->instances[$id] = $instance;
             }
 
-            $this->injectPropertiesInternal($instance, $rClass, $parameters);
+            $this->injectProperties($instance, $rClass, $parameters);
 
             $this->call([$instance, '__construct'], $parameters);
         } else {
@@ -205,7 +198,7 @@ class Container implements ContainerInterface
                 $this->instances[$id] = $instance;
             }
 
-            $this->injectPropertiesInternal($instance, $rClass, $parameters);
+            $this->injectProperties($instance, $rClass, $parameters);
         }
 
         return $instance;
