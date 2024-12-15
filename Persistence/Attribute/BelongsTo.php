@@ -5,9 +5,7 @@ namespace ManaPHP\Persistence\Attribute;
 
 use Attribute;
 use ManaPHP\Helper\Arr;
-use ManaPHP\Helper\Container;
 use ManaPHP\Persistence\Entity;
-use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Query\QueryInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
@@ -17,7 +15,7 @@ class BelongsTo extends AbstractRelation
 
     public function __construct(?string $selfField = null)
     {
-        $this->selfField = $selfField ?? Container::get(EntityMetadataInterface::class)->getReferencedKey($this->thatEntity);
+        $this->selfField = $selfField ?? $this->entityMetadata->getReferencedKey($this->thatEntity);
     }
 
     public function earlyLoad(array $r, QueryInterface $thatQuery, string $name): array

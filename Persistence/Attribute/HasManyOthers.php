@@ -5,9 +5,7 @@ namespace ManaPHP\Persistence\Attribute;
 
 use Attribute;
 use ManaPHP\Helper\Arr;
-use ManaPHP\Helper\Container;
 use ManaPHP\Persistence\Entity;
-use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Query\QueryInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
@@ -21,7 +19,7 @@ class HasManyOthers extends AbstractRelation
     {
         $this->thatEntity = $thatEntity;
         $this->selfField = $selfField;
-        $this->selfValue = $selfValue ?? Container::get(EntityMetadataInterface::class)->getReferencedKey($thatEntity);
+        $this->selfValue = $selfValue ?? $this->entityMetadata->getReferencedKey($thatEntity);
         $this->orderBy = $orderBy;
     }
 

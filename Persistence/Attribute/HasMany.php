@@ -5,9 +5,7 @@ namespace ManaPHP\Persistence\Attribute;
 
 use Attribute;
 use ManaPHP\Exception\MisuseException;
-use ManaPHP\Helper\Container;
 use ManaPHP\Persistence\Entity;
-use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Query\QueryInterface;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
@@ -19,7 +17,7 @@ class HasMany extends AbstractRelation
     public function __construct(string $thatEntity, ?string $thatField = null, array $orderBy = [])
     {
         $this->thatEntity = $thatEntity;
-        $this->thatField = $thatField ?? Container::get(EntityMetadataInterface::class)->getReferencedKey($this->selfEntity);
+        $this->thatField = $thatField ?? $this->entityMetadata->getReferencedKey($this->selfEntity);
         $this->orderBy = $orderBy;
     }
 

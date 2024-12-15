@@ -9,7 +9,7 @@ use ManaPHP\Query\QueryInterface;
 
 abstract class AbstractRelation implements RelationInterface
 {
-    #[Autowired] protected EntityMetadataInterface $entityMetadata;
+    #[Autowired] protected ?EntityMetadataInterface $entityMetadata = null;
 
     #[Autowired] protected string $selfEntity = '';
     #[Autowired] protected string $thatEntity = '';

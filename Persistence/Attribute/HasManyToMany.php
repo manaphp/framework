@@ -5,9 +5,7 @@ namespace ManaPHP\Persistence\Attribute;
 
 use Attribute;
 use ManaPHP\Helper\Arr;
-use ManaPHP\Helper\Container;
 use ManaPHP\Persistence\Entity;
-use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Query\QueryInterface;
 use function basename;
 use function class_exists;
@@ -30,12 +28,10 @@ class HasManyToMany extends AbstractRelation
         ?string $pivotSelfField = null, ?string $pivotThatField = null,
         array $orderBy = []
     ) {
-        $entityMetadata = Container::get(EntityMetadataInterface::class);
-
         $this->pivotEntity = $pivotEntity;
         $this->thatEntity = $thatEntity ?? $this->inferThatEntity($pivotEntity, $this->selfEntity);
-        $this->pivotSelfField = $pivotSelfField ?? $entityMetadata->getReferencedKey($this->selfEntity);
-        $this->pivotThatField = $pivotThatField ?? $entityMetadata->getReferencedKey($this->thatEntity);
+        $this->pivotSelfField = $pivotSelfField ?? $this->entityMetadata->getReferencedKey($this->selfEntity);
+        $this->pivotThatField = $pivotThatField ?? $this->entityMetadata->getReferencedKey($this->thatEntity);
         $this->orderBy = $orderBy;
     }
 
