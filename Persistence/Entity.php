@@ -5,9 +5,6 @@ namespace ManaPHP\Persistence;
 
 use ArrayAccess;
 use JsonSerializable;
-use ManaPHP\Exception\NotSupportedException;
-use ManaPHP\Exception\UnknownPropertyException;
-use ManaPHP\Helper\Container;
 use ManaPHP\Persistence\Event\EntityEventInterface;
 use Stringable;
 use function get_object_vars;
@@ -82,53 +79,6 @@ class Entity implements ArrayAccess, JsonSerializable, Stringable
 
     public function onEvent(EntityEventInterface $entityEvent)
     {
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return Entity|Entity[]|mixed
-     * @throws UnknownPropertyException
-     */
-    public function __get(mixed $name): mixed
-    {
-        $method = 'get' . ucfirst($name);
-        if (method_exists($this, $method)) {
-            return $this->$name = $this->$method()->fetch();
-        } elseif (Container::has($name)) {
-            return $this->{$name} = Container::get($name);
-        } elseif (($relations = Container::get(RelationsInterface::class))->has(static::class, $name)) {
-            return $this->$name = $relations->lazyLoad($this, $name)->fetch();
-        } else {
-            throw new UnknownPropertyException(['`{1}` does not contain `{2}` field.`', static::class, $name]);
-        }
-    }
-
-    public function __set(mixed $name, mixed $value): void
-    {
-        $this->$name = $value;
-    }
-
-    public function __isset(mixed $name): bool
-    {
-        return isset($this->$name);
-    }
-
-    public function __call(string $name, array $arguments): mixed
-    {
-        if (str_starts_with($name, 'get')) {
-            $relations = Container::get(RelationsInterface::class);
-
-            $relation = lcfirst(substr($name, 3));
-            if ($relations->has(static::class, $relation)) {
-                return $relations->lazyLoad($this, $relation);
-            } else {
-                throw new NotSupportedException(
-                    ['`{1}` entity does not define `{2}` relation', static::class, $relation]
-                );
-            }
-        }
-        throw new NotSupportedException(['`{1}` does not contain `{2}` method', static::class, $name]);
     }
 
     public function offsetExists(mixed $offset): bool
