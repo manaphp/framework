@@ -22,6 +22,8 @@ class AutoFiller implements AutoFillerInterface
     #[Autowired] protected array $updator_id = ['updator_id'];
     #[Autowired] protected array $updator_name = ['updator_name'];
 
+    #[Autowired] protected string $date_format = 'Y-m-d H:i:s';
+
     protected function findField(Entity $entity, array $fields): ?string
     {
         foreach ($fields as $field) {
@@ -38,7 +40,7 @@ class AutoFiller implements AutoFillerInterface
         $rProperty = new ReflectionProperty($entity, $field);
         if (($rType = $rProperty->getType()) && $rType instanceof ReflectionNamedType) {
             $type = $rType->getName();
-            $entity->$field = $type === 'int' ? $timestamp : date('Y-m-d H:i:s');
+            $entity->$field = $type === 'int' ? $timestamp : date($this->date_format);
         }
     }
 
