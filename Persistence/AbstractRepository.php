@@ -13,7 +13,7 @@ use function preg_match;
 
 /**
  * @template T of Entity
- * @template-implements  RepositoryInterface<T>
+ * @implements RepositoryInterface<T>
  */
 abstract class AbstractRepository implements RepositoryInterface
 {
