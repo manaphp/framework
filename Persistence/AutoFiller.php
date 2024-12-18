@@ -13,12 +13,10 @@ class AutoFiller implements AutoFillerInterface
     #[Autowired] protected IdentityInterface $identity;
 
     #[Autowired] protected array $created_time = ['created_time', 'created_at'];
-    #[Autowired] protected array $created_by = ['created_by'];
     #[Autowired] protected array $creator_id = ['creator_id'];
     #[Autowired] protected array $creator_name = ['creator_name'];
 
     #[Autowired] protected array $updated_time = ['updated_time', 'updated_at'];
-    #[Autowired] protected array $updated_by = ['updated_by'];
     #[Autowired] protected array $updator_id = ['updator_id'];
     #[Autowired] protected array $updator_name = ['updator_name'];
 
@@ -44,15 +42,6 @@ class AutoFiller implements AutoFillerInterface
         }
     }
 
-    protected function setBy(Entity $entity, string $field, int $id, string $name): void
-    {
-        $rProperty = new ReflectionProperty($entity, $field);
-        if (($rType = $rProperty->getType()) && $rType instanceof ReflectionNamedType) {
-            $type = $rType->getName();
-            $entity->$field = $type === 'int' ? $id : $name;
-        }
-    }
-
     public function fillCreated(Entity $entity): void
     {
         $timestamp = time();
@@ -64,21 +53,14 @@ class AutoFiller implements AutoFillerInterface
             $this->setTime($entity, $created_time, $timestamp);
         }
 
-        $created_by = $this->findField($entity, $this->created_by);
-        if ($created_by !== null) {
-            if (!isset($entity->$created_by)) {
-                $this->setBy($entity, $created_by, $user_id, $user_name);
-            }
-        } else {
-            $creator_id = $this->findField($entity, $this->creator_id);
-            if ($creator_id !== null && !isset($entity->$creator_id)) {
-                $entity->$creator_id = $user_id;
-            }
+        $creator_id = $this->findField($entity, $this->creator_id);
+        if ($creator_id !== null && !isset($entity->$creator_id)) {
+            $entity->$creator_id = $user_id;
+        }
 
-            $creator_name = $this->findField($entity, $this->creator_name);
-            if ($creator_name !== null && !isset($entity->$creator_name)) {
-                $entity->$creator_name = $user_name;
-            }
+        $creator_name = $this->findField($entity, $this->creator_name);
+        if ($creator_name !== null && !isset($entity->$creator_name)) {
+            $entity->$creator_name = $user_name;
         }
 
         $updated_time = $this->findField($entity, $this->updated_time);
@@ -91,21 +73,14 @@ class AutoFiller implements AutoFillerInterface
             $this->setTime($entity, $updated_time, $timestamp);
         }
 
-        $updated_by = $this->findField($entity, $this->updated_by);
-        if ($updated_by !== null) {
-            if (!isset($entity->$updated_by)) {
-                $this->setBy($entity, $updated_by, $user_id, $user_name);
-            }
-        } else {
-            $updator_id = $this->findField($entity, $this->updator_id);
-            if ($updator_id !== null && !isset($entity->$updator_id)) {
-                $entity->$updator_id = $user_id;
-            }
+        $updator_id = $this->findField($entity, $this->updator_id);
+        if ($updator_id !== null && !isset($entity->$updator_id)) {
+            $entity->$updator_id = $user_id;
+        }
 
-            $updator_name = $this->findField($entity, $this->updator_name);
-            if ($updator_name !== null && !isset($entity->$updator_name)) {
-                $entity->$updator_name = $user_name;
-            }
+        $updator_name = $this->findField($entity, $this->updator_name);
+        if ($updator_name !== null && !isset($entity->$updator_name)) {
+            $entity->$updator_name = $user_name;
         }
     }
 
@@ -120,19 +95,14 @@ class AutoFiller implements AutoFillerInterface
             $this->setTime($entity, $updated_time, $timestamp);
         }
 
-        $updated_by = $this->findField($entity, $this->updated_by);
-        if ($updated_by !== null) {
-            $this->setBy($entity, $updated_by, $user_id, $user_name);
-        } else {
-            $updator_id = $this->findField($entity, $this->updator_id);
-            if ($updator_id !== null) {
-                $entity->$updator_id = $user_id;
-            }
+        $updator_id = $this->findField($entity, $this->updator_id);
+        if ($updator_id !== null) {
+            $entity->$updator_id = $user_id;
+        }
 
-            $updator_name = $this->findField($entity, $this->updator_name);
-            if ($updator_name !== null) {
-                $entity->$updator_name = $user_name;
-            }
+        $updator_name = $this->findField($entity, $this->updator_name);
+        if ($updator_name !== null) {
+            $entity->$updator_name = $user_name;
         }
     }
 }
