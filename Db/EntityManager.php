@@ -12,6 +12,8 @@ use ManaPHP\Persistence\Event\EntityCreated;
 use ManaPHP\Persistence\Event\EntityCreating;
 use ManaPHP\Persistence\Event\EntityDeleted;
 use ManaPHP\Persistence\Event\EntityDeleting;
+use ManaPHP\Persistence\Event\EntityRestored;
+use ManaPHP\Persistence\Event\EntityRestoring;
 use ManaPHP\Persistence\Event\EntityUpdated;
 use ManaPHP\Persistence\Event\EntityUpdating;
 use function array_key_exists;
@@ -87,6 +89,49 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         }
 
         $this->dispatchEvent(new EntityCreated($entity));
+
+        return $entity;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return Entity
+     */
+    public function restore(Entity $entity): Entity
+    {
+        $entityClass = $entity::class;
+
+        $fields = $this->entityMetadata->getFields($entityClass);
+
+        $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);
+
+        list($connection, $table) = $this->sharding->getUniqueShard($entityClass, $entity);
+
+        $this->dispatchEvent(new EntityRestoring($entity));
+
+        $fieldValues = [];
+        foreach ($fields as $field) {
+            if (isset($entity->$field)) {
+                $fieldValues[$field] = $entity->$field;
+            }
+        }
+
+        foreach ($this->entityMetadata->getColumnMap($entityClass) as $propery => $column) {
+            if (array_key_exists($propery, $fieldValues)) {
+                $fieldValues[$column] = $fieldValues[$propery];
+                unset($fieldValues[$propery]);
+            }
+        }
+
+        $db = $this->dbConnector->get($connection);
+        if (!isset($entity->$primaryKey)) {
+            $entity->$primaryKey = (int)$db->insert($table, $fieldValues, true);
+        } else {
+            $db->insert($table, $fieldValues);
+        }
+
+        $this->dispatchEvent(new EntityRestored($entity));
 
         return $entity;
     }

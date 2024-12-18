@@ -11,6 +11,8 @@ interface EntityManagerInterface
 
     public function create(Entity $entity): Entity;
 
+    public function restore(Entity $entity): Entity;
+
     public function update(Entity $entity, Entity $original): Entity;
 
     public function delete(Entity $entity): Entity;

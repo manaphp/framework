@@ -83,6 +83,13 @@ interface RepositoryInterface
      *
      * @return T
      */
+    public function restore(Entity $entity): Entity;
+
+    /**
+     * @param T|array $entity
+     *
+     * @return T
+     */
     public function update(Entity|array $entity): Entity;
 
     /**

@@ -10,6 +10,7 @@ use function array_unshift;
 use function is_array;
 use function is_string;
 use function preg_match;
+use function property_exists;
 
 /**
  * @template T of Entity
@@ -188,6 +189,26 @@ abstract class AbstractRepository implements RepositoryInterface
         }
 
         return $this->getEntityManager()->create($entity);
+    }
+
+    /**
+     * @param T|array $entity
+     *
+     * @return T
+     */
+    public function restore(Entity|array $entity): Entity
+    {
+        if (is_array($entity)) {
+            $data = $entity;
+            $entity = new $this->entityClass;
+            foreach ($data as $field => $value) {
+                if (property_exists($entity, $field)) {
+                    $entity->$field = $value;
+                }
+            }
+        }
+
+        return $this->getEntityManager()->restore($entity);
     }
 
     /**
