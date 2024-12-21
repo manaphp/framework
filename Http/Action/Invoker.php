@@ -23,11 +23,11 @@ class Invoker implements InvokerInterface
     protected function invokeMvc($object, string $action): mixed
     {
         if ($this->request->method() === 'GET' && !$this->request->isAjax()) {
-            $view = $this->container->get(ViewInterface::class);
-
             $rMethod = new ReflectionMethod($object, $action);
             $attributes = $rMethod->getAttributes(ViewGetMapping::class, ReflectionAttribute::IS_INSTANCEOF);
             if ($attributes !== []) {
+                $view = $this->container->get(ViewInterface::class);
+
                 /** @var ViewGetMapping $viewGetMapping */
                 $viewGetMapping = $attributes[0]->newInstance();
                 if (($method = $viewGetMapping->getVars()) !== null) {
