@@ -4,7 +4,7 @@ declare(strict_types=1);
 use ManaPHP\Helper\Container;
 use ManaPHP\Http\InputInterface;
 use ManaPHP\Http\RouterInterface;
-use ManaPHP\Viewing\View\AssetInterface;
+use ManaPHP\Viewing\AssetInterface;
 
 if (!function_exists('attr_nv')) {
     function attr_nv(string $name, string $default = ''): string

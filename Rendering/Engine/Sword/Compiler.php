@@ -487,7 +487,7 @@ class Compiler
 
     protected function compile_flash(): string
     {
-        return "<?php container('ManaPHP\Viewing\View\FlashInterface')->output() ?>";
+        return "<?php container('ManaPHP\Viewing\FlashInterface')->output() ?>";
     }
 
     protected function compile_json(string $expression): string
