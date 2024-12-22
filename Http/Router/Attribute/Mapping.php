@@ -5,11 +5,8 @@ namespace ManaPHP\Http\Router\Attribute;
 
 abstract class Mapping implements MappingInterface
 {
-    protected string|array|null $path;
-
-    public function __construct(string|array|null $path = null)
+    public function __construct(protected string|array|null $path = null)
     {
-        $this->path = $path;
     }
 
     public function getPath(): string|array|null
