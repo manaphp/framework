@@ -18,7 +18,12 @@ class EntityManager extends AbstractEntityManager
         return $this->maker->make($this->queryClass);
     }
 
-    public function create(Entity|array $entity): Entity
+    public function create(Entity $entity): Entity
+    {
+        throw new NotSupportedException(__METHOD__);
+    }
+
+    public function restore(Entity $entity): Entity
     {
         throw new NotSupportedException(__METHOD__);
     }
@@ -29,7 +34,7 @@ class EntityManager extends AbstractEntityManager
         throw new NotSupportedException(__METHOD__);
     }
 
-    public function update(array|Entity $entity, Entity $original): Entity
+    public function update(Entity $entity, Entity $original): Entity
     {
         throw new NotSupportedException(__METHOD__);
     }
