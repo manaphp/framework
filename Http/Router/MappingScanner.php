@@ -45,7 +45,7 @@ class MappingScanner implements MappingScannerInterface
     {
         $controller = $rClass->getName();
 
-        $prefix = $requestMapping->path ?? '';
+        $prefix = $requestMapping->getPath() ?? '';
 
         foreach ($rClass->getMethods(ReflectionMethod::IS_PUBLIC) as $rMethod) {
             $method = $rMethod->getName();
@@ -58,8 +58,8 @@ class MappingScanner implements MappingScannerInterface
             foreach ($attributes as $attribute) {
                 /** @var MappingInterface $mapping */
                 $mapping = $attribute->newInstance();
-
-                foreach (is_array($mapping->path) ? $mapping->path : [$mapping->path] as $item) {
+                $path = $mapping->getPath();
+                foreach (is_array($path) ? $path : [$path] as $item) {
                     if ($item === null) {
                         $pattern = $prefix . '/' . Str::hyphen(basename($method, 'Action'));
                     } elseif ($item === '') {
