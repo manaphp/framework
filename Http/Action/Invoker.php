@@ -6,7 +6,6 @@ namespace ManaPHP\Http\Action;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\MakerInterface;
 use ManaPHP\Http\RequestInterface;
-use ManaPHP\Mvc\Controller;
 use ManaPHP\Mvc\View\Attribute\ViewMappingInterface;
 use ManaPHP\Mvc\ViewInterface;
 use Psr\Container\ContainerInterface;
@@ -20,7 +19,14 @@ class Invoker implements InvokerInterface
     #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
     #[Autowired] protected RequestInterface $request;
 
-    protected function invokeMvc($object, string $action): mixed
+    protected function invokeMethod(object $object, string $method): mixed
+    {
+        $arguments = $this->argumentsResolver->resolve($object, $method);
+
+        return $object->$method(...$arguments);
+    }
+
+    public function invoke(object $object, string $action): mixed
     {
         if ($this->request->method() === 'GET' && !$this->request->isAjax()) {
             $rMethod = new ReflectionMethod($object, $action);
@@ -31,32 +37,12 @@ class Invoker implements InvokerInterface
                 /** @var ViewMappingInterface $viewMapping */
                 $viewMapping = $attributes[0]->newInstance();
                 if (($method = $viewMapping->getVars()) !== null) {
-                    $view->setVars($object->$method());
+                    $view->setVars($this->invokeMethod($object, $method));
                 }
                 return $view;
             }
         }
 
-        $method = $action;
-        $arguments = $this->argumentsResolver->resolve($object, $method);
-
-        return $object->$method(...$arguments);
-    }
-
-    protected function invokeRest(object $object, string $action)
-    {
-        $method = $action;
-        $arguments = $this->argumentsResolver->resolve($object, $method);
-
-        return $object->$method(...$arguments);
-    }
-
-    public function invoke(object $object, string $action): mixed
-    {
-        if ($object instanceof Controller) {
-            return $this->invokeMvc($object, $action);
-        } else {
-            return $this->invokeRest($object, $action);
-        }
+        return $this->invokeMethod($object, $action);
     }
 }
