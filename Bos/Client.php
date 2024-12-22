@@ -9,13 +9,10 @@ use ManaPHP\Exception\MissingFieldException;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Helper\Arr;
 use ManaPHP\Http\ClientInterface as HttpClientInterface;
-use ManaPHP\Rest\ClientInterface as RestClientInterface;
-
 class Client implements ClientInterface
 {
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected HttpClientInterface $httpClient;
-    #[Autowired] protected RestClientInterface $restClient;
 
     #[Autowired] protected string $endpoint;
 
@@ -31,7 +28,7 @@ class Client implements ClientInterface
             $params['base_url'] = str_replace('{bucket}', $bucket, $this->endpoint);
         }
 
-        $body = $this->restClient->post($endpoint . '/api/buckets', $params)->body;
+        $body = $this->httpClient->post($endpoint . '/api/buckets', $params)->body;
 
         if ($body['code'] !== 0) {
             throw new Exception($body['message'], $body['code']);
@@ -44,7 +41,7 @@ class Client implements ClientInterface
     {
         $token = jwt_encode([], 300, 'bos.bucket.list');
         $endpoint = preg_replace('#{bucket}[\-.]*#', '', $this->endpoint);
-        $body = $this->restClient->get([$endpoint . '/api/buckets', 'token' => $token])->body;
+        $body = $this->httpClient->get([$endpoint . '/api/buckets', 'token' => $token])->body;
 
         if ($body['code'] !== 0) {
             throw new Exception($body['message'], $body['code']);
@@ -65,7 +62,7 @@ class Client implements ClientInterface
         $filters['bucket'] = $bucket;
         $filters['token'] = jwt_encode(['bucket' => $bucket], 300, 'bos.object.list');
 
-        $body = $this->restClient->get($filters)->body;
+        $body = $this->httpClient->get($filters)->body;
 
         if ($body['code'] !== 0) {
             throw new Exception($body['message'], $body['code']);
