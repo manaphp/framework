@@ -53,7 +53,8 @@ abstract class AbstractHandler implements HandlerInterface
 
             if (($matcher = $this->router->match()) === null) {
                 throw new NotFoundRouteException(
-                    ['router does not have matched route for `{1}`', $this->router->getRewriteUri()]
+                    ['router does not have matched route for `{1} {2}`', $this->request->method(),
+                     $this->router->getRewriteUri()]
                 );
             }
 
