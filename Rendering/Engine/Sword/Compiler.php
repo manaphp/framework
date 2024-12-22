@@ -415,7 +415,7 @@ class Compiler
 
     protected function compile_block(string $expression): string
     {
-        return "<?php container('ManaPHP\Mvc\ViewInterface')->block$expression ?>";
+        return "<?php container('ManaPHP\Viewing\ViewInterface')->block$expression ?>";
     }
 
     protected function compile_break(string $expression): string
@@ -430,21 +430,21 @@ class Compiler
 
     protected function compile_maxAge(string $expression): string
     {
-        return "<?php container('ManaPHP\Mvc\ViewInterface')->setMaxAge$expression; ?>";
+        return "<?php container('ManaPHP\Viewing\ViewInterface')->setMaxAge$expression; ?>";
     }
 
     protected function compile_layout(string $expression): string
     {
         if (str_contains($expression, '(false)')) {
-            return "<?php container('ManaPHP\Mvc\ViewInterface')->disableLayout(); ?>";
+            return "<?php container('ManaPHP\Viewing\ViewInterface')->disableLayout(); ?>";
         } else {
-            return "<?php container('ManaPHP\Mvc\ViewInterface')->setLayout$expression; ?>";
+            return "<?php container('ManaPHP\Viewing\ViewInterface')->setLayout$expression; ?>";
         }
     }
 
     protected function compile_content(): string
     {
-        return "<?= container('ManaPHP\Mvc\ViewInterface')->getContent(); ?>";
+        return "<?= container('ManaPHP\Viewing\ViewInterface')->getContent(); ?>";
     }
 
     protected function compile_php(string $expression): string
@@ -463,7 +463,7 @@ class Compiler
 
     protected function compile_widget(string $expression): string
     {
-        return "<?php container('ManaPHP\Mvc\ViewInterface')->widget$expression; ?>";
+        return "<?php container('ManaPHP\Viewing\ViewInterface')->widget$expression; ?>";
     }
 
     protected function compile_url(string $expression): string
@@ -487,7 +487,7 @@ class Compiler
 
     protected function compile_flash(): string
     {
-        return "<?php container('ManaPHP\Mvc\View\FlashInterface')->output() ?>";
+        return "<?php container('ManaPHP\Viewing\View\FlashInterface')->output() ?>";
     }
 
     protected function compile_json(string $expression): string

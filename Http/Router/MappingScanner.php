@@ -9,7 +9,7 @@ use ManaPHP\Helper\Str;
 use ManaPHP\Http\Router\Attribute\MappingInterface;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Http\RouterInterface;
-use ManaPHP\Mvc\View\Attribute\ViewMappingInterface;
+use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;

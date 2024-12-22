@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ManaPHP\Mvc\View;
+namespace ManaPHP\Viewing\View;
 
 use ManaPHP\AliasInterface;
 use ManaPHP\Di\Attribute\Autowired;

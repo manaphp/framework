@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace ManaPHP\Mvc\View\Event;
+namespace ManaPHP\Viewing\View\Event;
 
 use ManaPHP\Eventing\Attribute\Verbosity;
-use ManaPHP\Mvc\ViewInterface;
+use ManaPHP\Viewing\ViewInterface;
 
 #[Verbosity(Verbosity::HIGH)]
-class ViewRendering
+class ViewRendered
 {
     public function __construct(
         public ViewInterface $view,

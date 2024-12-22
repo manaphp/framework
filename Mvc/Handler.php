@@ -7,6 +7,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\AbstractHandler;
 use ManaPHP\Http\Response;
+use ManaPHP\Viewing\View;
 use Throwable;
 use function is_array;
 use function is_int;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ManaPHP\Mvc;
+namespace ManaPHP\Viewing;
 
 use ManaPHP\Context\ContextTrait;
 use ManaPHP\Di\Attribute\Autowired;
@@ -9,9 +9,9 @@ use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Http\DispatcherInterface;
 use ManaPHP\Http\RouterInterface;
-use ManaPHP\Mvc\View\Event\ViewRendered;
-use ManaPHP\Mvc\View\Event\ViewRendering;
 use ManaPHP\Rendering\RendererInterface;
+use ManaPHP\Viewing\View\Event\ViewRendered;
+use ManaPHP\Viewing\View\Event\ViewRendering;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionClass;
