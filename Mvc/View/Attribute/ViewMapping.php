@@ -8,14 +8,9 @@ use Attribute;
 #[Attribute(Attribute::TARGET_METHOD)]
 class ViewMapping implements ViewMappingInterface
 {
-    public function __construct(public string|array|null $path = null, public ?string $vars = null)
+    public function __construct(public string|array|null $path = null)
     {
 
-    }
-
-    public function getVars(): ?string
-    {
-        return $this->vars;
     }
 
     public function getPath(): string|array|null

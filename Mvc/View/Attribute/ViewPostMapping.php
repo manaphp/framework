@@ -9,13 +9,5 @@ use ManaPHP\Http\Router\Attribute\PostMapping;
 #[Attribute(Attribute::TARGET_METHOD)]
 class ViewPostMapping extends PostMapping implements ViewMappingInterface
 {
-    public function __construct(public string|array|null $path = null, public ?string $vars = null)
-    {
-        parent::__construct($path);
-    }
 
-    public function getVars(): ?string
-    {
-        return $this->vars;
-    }
 }

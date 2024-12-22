@@ -38,12 +38,8 @@ class Invoker implements InvokerInterface
 
                 /** @var ViewMappingInterface $viewMapping */
                 $viewMapping = $attributes[0]->newInstance();
-                if ($viewMapping instanceof ViewMapping) {
-                    if (is_array($vars = $this->invokeMethod($object, $action))) {
-                        $view->setVars($vars);
-                    }
-                } elseif (($method = $viewMapping->getVars()) !== null) {
-                    $view->setVars($this->invokeMethod($object, $method));
+                if ($viewMapping instanceof ViewMapping && is_array($vars = $this->invokeMethod($object, $action))) {
+                    $view->setVars($vars);
                 }
 
                 return $view;

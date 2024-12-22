@@ -9,5 +9,5 @@ use ManaPHP\Http\Router\Attribute\MappingInterface;
 #[Attribute(Attribute::TARGET_METHOD)]
 interface ViewMappingInterface extends MappingInterface
 {
-    public function getVars(): ?string;
+
 }
