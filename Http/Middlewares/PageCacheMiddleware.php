@@ -14,7 +14,6 @@ use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Server\Event\RequestReady;
 use ManaPHP\Http\Server\Event\RequestResponding;
-use ManaPHP\Mvc\Controller as MvcController;
 use ManaPHP\Redis\RedisCacheInterface;
 use ReflectionMethod;
 use function in_array;
@@ -118,7 +117,7 @@ class PageCacheMiddleware
             $context->key = $this->prefix . $dispatcher->getHandler() . ':' . $key;
         }
 
-        if ($controller instanceof MvcController && $this->request->isAjax()) {
+        if ($this->request->isAjax()) {
             $context->key .= ':ajax';
         }
 
