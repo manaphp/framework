@@ -9,6 +9,7 @@ use ManaPHP\Helper\Str;
 use ManaPHP\Http\Router\Attribute\MappingInterface;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Http\RouterInterface;
+use ManaPHP\Mvc\View\Attribute\ViewMappingInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -67,6 +68,10 @@ class MappingScanner implements MappingScannerInterface
                         $pattern = $item;
                     } else {
                         $pattern = $prefix . '/' . $item;
+                    }
+
+                    if ($mapping instanceof ViewMappingInterface) {
+                        $this->router->add('GET', $pattern, $controller . '::' . $method);
                     }
                     $this->router->add($mapping->getMethod(), $pattern, $controller . '::' . $method);
                 }

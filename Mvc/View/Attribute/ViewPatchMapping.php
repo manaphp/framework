@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace ManaPHP\Mvc\View\Attribute;
 
 use Attribute;
-use ManaPHP\Http\Router\Attribute\GetMapping;
+use ManaPHP\Http\Router\Attribute\PatchMapping;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class ViewGetMapping extends GetMapping implements ViewMappingInterface
+class ViewPatchMapping extends PatchMapping implements ViewMappingInterface
 {
     public function __construct(public string|array|null $path = null, public ?string $vars = null)
     {
