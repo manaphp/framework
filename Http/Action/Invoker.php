@@ -6,11 +6,13 @@ namespace ManaPHP\Http\Action;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\MakerInterface;
 use ManaPHP\Http\RequestInterface;
+use ManaPHP\Mvc\View\Attribute\ViewMapping;
 use ManaPHP\Mvc\View\Attribute\ViewMappingInterface;
 use ManaPHP\Mvc\ViewInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionAttribute;
 use ReflectionMethod;
+use function is_array;
 
 class Invoker implements InvokerInterface
 {
@@ -36,9 +38,14 @@ class Invoker implements InvokerInterface
 
                 /** @var ViewMappingInterface $viewMapping */
                 $viewMapping = $attributes[0]->newInstance();
-                if (($method = $viewMapping->getVars()) !== null) {
+                if ($viewMapping instanceof ViewMapping) {
+                    if (is_array($vars = $this->invokeMethod($object, $action))) {
+                        $view->setVars($vars);
+                    }
+                } elseif (($method = $viewMapping->getVars()) !== null) {
                     $view->setVars($this->invokeMethod($object, $method));
                 }
+
                 return $view;
             }
         }
