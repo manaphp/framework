@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace ManaPHP\Mvc;
+namespace ManaPHP\Http;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Exception;
-use ManaPHP\Exception as ManaPHPException;
-use ManaPHP\Http\RequestInterface;
-use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Rendering\RendererInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
@@ -31,7 +28,7 @@ class ErrorHandler implements ErrorHandlerInterface
         }
 
         if ($this->request->isAjax()) {
-            if ($throwable instanceof ManaPHPException) {
+            if ($throwable instanceof Exception) {
                 $status = $throwable->getStatusCode();
                 $json = $throwable->getJson();
             } else {
@@ -55,7 +52,7 @@ class ErrorHandler implements ErrorHandlerInterface
             if ($this->renderer->exists('@views/Errors/Debug')) {
                 $template = '@views/Errors/Debug';
             } else {
-                $template = '@manaphp/Mvc/ErrorHandler/Views/Debug';
+                $template = '@manaphp/Http/ErrorHandler/Views/Debug';
             }
             return $this->renderer->renderFile($template, ['exception' => $exception]);
         }

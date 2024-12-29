@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ManaPHP\Ws;
+namespace ManaPHP\Http;
 
 use Throwable;
 

@@ -20,7 +20,7 @@ use function is_array;
 use function is_int;
 use function is_string;
 
-abstract class AbstractHandler implements HandlerInterface
+class Handler implements HandlerInterface
 {
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
@@ -30,6 +30,7 @@ abstract class AbstractHandler implements HandlerInterface
     #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected AccessLogInterface $accessLog;
     #[Autowired] protected ServerInterface $httpServer;
+    #[Autowired] protected ErrorHandlerInterface $errorHandler;
 
     #[Autowired] protected array $middlewares = [];
 
@@ -55,13 +56,11 @@ abstract class AbstractHandler implements HandlerInterface
         } elseif (is_int($actionReturnValue)) {
             $this->response->json(['code' => $actionReturnValue, 'msg' => '']);
         } elseif ($actionReturnValue instanceof Throwable) {
-            $this->handleError($actionReturnValue);
+            $this->errorHandler->handle($actionReturnValue);
         } else {
             $this->response->json(['code' => 0, 'msg' => '', 'data' => $actionReturnValue]);
         }
     }
-
-    abstract protected function handleError(Throwable $throwable): void;
 
     /** @noinspection PhpRedundantCatchClauseInspection */
     public function handle(): void
@@ -86,7 +85,7 @@ abstract class AbstractHandler implements HandlerInterface
             SuppressWarnings::noop();
         } catch (Throwable $exception) {
             $this->eventDispatcher->dispatch(new RequestException($exception));
-            $this->handleError($exception);
+            $this->errorHandler->handle($exception);
         }
 
         $this->httpServer->send();
