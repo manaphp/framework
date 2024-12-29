@@ -21,7 +21,7 @@ class ErrorHandler implements ErrorHandlerInterface
 
     public function handle(Throwable $throwable): void
     {
-        $code = $throwable instanceof Exception ? $throwable->getCode() : 500;
+        $code = $throwable instanceof Exception ? $throwable->getStatusCode() : 500;
         if ($code >= 500 && $code <= 599) {
             $this->logger->error('', ['exception' => $throwable]);
         }
