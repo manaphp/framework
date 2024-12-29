@@ -114,7 +114,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         } elseif ($type === 'float') {
             return is_float($value) ? $value : (float)$value;
         } elseif ($type === 'objectid') {
-            return is_scalar($value) ? new ObjectID($value) : $value;
+            return is_scalar($value) ? new ObjectId($value) : $value;
         } elseif ($type === 'bool') {
             return is_bool($value) ? $value : (bool)$value;
         } elseif ($type === 'array') {
@@ -143,10 +143,10 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
 
         if ($entity->_id) {
             if (is_string($entity->_id) && strlen($entity->_id) === 24) {
-                $entity->_id = new ObjectID($entity->_id);
+                $entity->_id = new ObjectId($entity->_id);
             }
         } else {
-            $entity->_id = new ObjectID();
+            $entity->_id = new ObjectId();
         }
 
         $allowNull = $this->isAllowNullValue();
@@ -200,10 +200,10 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
 
         if ($entity->_id) {
             if (is_string($entity->_id) && strlen($entity->_id) === 24) {
-                $entity->_id = new ObjectID($entity->_id);
+                $entity->_id = new ObjectId($entity->_id);
             }
         } else {
-            $entity->_id = new ObjectID();
+            $entity->_id = new ObjectId();
         }
 
         $allowNull = $this->isAllowNullValue();
