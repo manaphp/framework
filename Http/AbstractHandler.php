@@ -16,6 +16,9 @@ use ManaPHP\Http\Server\Event\RequestBegin;
 use ManaPHP\Http\Server\Event\RequestEnd;
 use ManaPHP\Http\Server\Event\RequestException;
 use Throwable;
+use function is_array;
+use function is_int;
+use function is_string;
 
 abstract class AbstractHandler implements HandlerInterface
 {
@@ -39,7 +42,24 @@ abstract class AbstractHandler implements HandlerInterface
         }
     }
 
-    abstract protected function handleInternal(mixed $actionReturnValue): void;
+    protected function handleInternal(mixed $actionReturnValue): void
+    {
+        if ($actionReturnValue === null) {
+            $this->response->json(['code' => 0, 'msg' => '']);
+        } elseif (is_array($actionReturnValue)) {
+            $this->response->json(['code' => 0, 'msg' => '', 'data' => $actionReturnValue]);
+        } elseif ($actionReturnValue instanceof Response) {
+            SuppressWarnings::noop();
+        } elseif (is_string($actionReturnValue)) {
+            $this->response->json(['code' => -1, 'msg' => $actionReturnValue]);
+        } elseif (is_int($actionReturnValue)) {
+            $this->response->json(['code' => $actionReturnValue, 'msg' => '']);
+        } elseif ($actionReturnValue instanceof Throwable) {
+            $this->handleError($actionReturnValue);
+        } else {
+            $this->response->json(['code' => 0, 'msg' => '', 'data' => $actionReturnValue]);
+        }
+    }
 
     abstract protected function handleError(Throwable $throwable): void;
 
