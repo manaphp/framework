@@ -5,7 +5,7 @@ namespace ManaPHP\Http;
 
 use ManaPHP\Context\ContextTrait;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Http\Action\InvokerInterface;
+use ManaPHP\Http\Action\ArgumentsResolverInterface;
 use ManaPHP\Http\Dispatcher\NotFoundActionException;
 use ManaPHP\Http\Dispatcher\NotFoundControllerException;
 use ManaPHP\Http\Server\Event\RequestAuthorized;
@@ -15,9 +15,15 @@ use ManaPHP\Http\Server\Event\RequestInvoking;
 use ManaPHP\Http\Server\Event\RequestReady;
 use ManaPHP\Http\Server\Event\RequestValidated;
 use ManaPHP\Http\Server\Event\RequestValidating;
+use ManaPHP\Viewing\View\Attribute\ViewMapping;
+use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
+use ManaPHP\Viewing\ViewInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use ReflectionAttribute;
+use ReflectionMethod;
 use function explode;
+use function is_array;
 use function is_string;
 
 class Dispatcher implements DispatcherInterface
@@ -27,7 +33,7 @@ class Dispatcher implements DispatcherInterface
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ContainerInterface $container;
-    #[Autowired] protected InvokerInterface $invoker;
+    #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
 
     public function getController(): ?string
     {
@@ -61,6 +67,34 @@ class Dispatcher implements DispatcherInterface
         return $context->handler;
     }
 
+    public function invokeMethod(object $object, string $method): mixed
+    {
+        if ($this->request->method() === 'GET' && !$this->request->isAjax()) {
+            $rMethod = new ReflectionMethod($object, $method);
+            $attributes = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+            if ($attributes !== []) {
+                $view = $this->container->get(ViewInterface::class);
+
+                /** @var ViewMappingInterface $viewMapping */
+                $viewMapping = $attributes[0]->newInstance();
+                if ($viewMapping instanceof ViewMapping) {
+                    $arguments = $this->argumentsResolver->resolve($object, $method);
+
+                    $vars = $object->$method(...$arguments);
+                    if (is_array($vars)) {
+                        $view->setVars($vars);
+                    }
+                }
+
+                return $view;
+            }
+        }
+
+        $arguments = $this->argumentsResolver->resolve($object, $method);
+
+        return $object->$method(...$arguments);
+    }
+
     public function invokeAction(object $controller, string $action): mixed
     {
         if (!method_exists($controller, $action)) {
@@ -82,7 +116,7 @@ class Dispatcher implements DispatcherInterface
             $context = $this->getContext();
 
             $context->isInvoking = true;
-            $return = $this->invoker->invoke($controller, $action);
+            $return = $this->invokeMethod($controller, $action);
         } finally {
             $context->isInvoking = false;
         }
