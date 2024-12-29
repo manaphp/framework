@@ -10,6 +10,7 @@ use ManaPHP\Exception;
 use ManaPHP\Rendering\RendererInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function str_contains;
 
 class ErrorHandler implements ErrorHandlerInterface
 {
@@ -17,6 +18,8 @@ class ErrorHandler implements ErrorHandlerInterface
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected RendererInterface $renderer;
+
+    #[Autowired] protected ?string $format = null;
 
     #[Config] protected bool $app_debug;
 
@@ -27,7 +30,10 @@ class ErrorHandler implements ErrorHandlerInterface
             $this->logger->error('', ['exception' => $throwable]);
         }
 
-        if ($this->request->isAjax()) {
+        if ($this->format === 'json'
+            || str_contains($this->request->server('CONTENT_TYPE'), 'application/json')
+            || str_contains($this->request->header('accept'), 'application/json')
+        ) {
             if ($throwable instanceof Exception) {
                 $status = $throwable->getStatusCode();
                 $json = $throwable->getJson();
