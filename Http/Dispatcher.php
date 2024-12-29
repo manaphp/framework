@@ -25,6 +25,7 @@ use ReflectionMethod;
 use function explode;
 use function is_array;
 use function is_string;
+use function method_exists;
 
 class Dispatcher implements DispatcherInterface
 {
@@ -67,7 +68,7 @@ class Dispatcher implements DispatcherInterface
         return $context->handler;
     }
 
-    public function invokeMethod(object $object, string $method): mixed
+    protected function invoke(object $object, string $method): mixed
     {
         if ($this->request->method() === 'GET' && !$this->request->isAjax()) {
             $rMethod = new ReflectionMethod($object, $method);
@@ -95,37 +96,6 @@ class Dispatcher implements DispatcherInterface
         return $object->$method(...$arguments);
     }
 
-    public function invokeAction(object $controller, string $action): mixed
-    {
-        if (!method_exists($controller, $action)) {
-            throw new NotFoundActionException(['`{1}::{2}` method does not exist', $controller::class, $action]);
-        }
-
-        $this->eventDispatcher->dispatch(new RequestAuthorizing($this, $controller, $action));
-        $this->eventDispatcher->dispatch(new RequestAuthorized($this, $controller, $action));
-
-        $this->eventDispatcher->dispatch(new RequestValidating($this, $controller, $action));
-        $this->eventDispatcher->dispatch(new RequestValidated($this, $controller, $action));
-
-        $this->eventDispatcher->dispatch(new RequestReady($this, $controller, $action));
-
-        $this->eventDispatcher->dispatch(new RequestInvoking($this, $controller, $action));
-
-        try {
-            /** @var DispatcherContext $context */
-            $context = $this->getContext();
-
-            $context->isInvoking = true;
-            $return = $this->invokeMethod($controller, $action);
-        } finally {
-            $context->isInvoking = false;
-        }
-
-        $this->eventDispatcher->dispatch(new RequestInvoked($this, $controller, $action, $return));
-
-        return $return;
-    }
-
     public function dispatch(string $handler, array $params): mixed
     {
         /** @var DispatcherContext $context */
@@ -141,16 +111,39 @@ class Dispatcher implements DispatcherInterface
                 $globals->_REQUEST[$k] = $v;
             }
         }
-        list($controller, $action) = explode('::', $handler);
+        list($context->controller, $context->action) = explode('::', $handler);
+        $action = $context->action;
 
-        $context->controller = $controller;
-        $context->action = $action;
-
-        if (!class_exists($controller)) {
-            throw new NotFoundControllerException(['`{1}` class cannot be loaded', $controller]);
+        if (!class_exists($context->controller)) {
+            throw new NotFoundControllerException(['`{1}` class cannot be loaded', $context->controller]);
         }
 
-        return $this->invokeAction($this->container->get($controller), $action);
+        $controller = $this->container->get($context->controller);
+
+        if (!method_exists($controller, $action)) {
+            throw new NotFoundActionException(['`{1}::{2}` method does not exist', $controller::class, $action]);
+        }
+
+        $this->eventDispatcher->dispatch(new RequestAuthorizing($this, $controller, $action));
+        $this->eventDispatcher->dispatch(new RequestAuthorized($this, $controller, $action));
+
+        $this->eventDispatcher->dispatch(new RequestValidating($this, $controller, $action));
+        $this->eventDispatcher->dispatch(new RequestValidated($this, $controller, $action));
+
+        $this->eventDispatcher->dispatch(new RequestReady($this, $controller, $action));
+
+        $this->eventDispatcher->dispatch(new RequestInvoking($this, $controller, $action));
+
+        try {
+            $context->isInvoking = true;
+            $return = $this->invoke($controller, $action);
+        } finally {
+            $context->isInvoking = false;
+        }
+
+        $this->eventDispatcher->dispatch(new RequestInvoked($this, $controller, $action, $return));
+
+        return $return;
     }
 
     public function isInvoking(): bool
