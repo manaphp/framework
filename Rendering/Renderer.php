@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Rendering;
@@ -14,6 +15,7 @@ use ManaPHP\Rendering\Renderer\Event\RendererRendered;
 use ManaPHP\Rendering\Renderer\Event\RendererRendering;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+
 use function dirname;
 
 class Renderer implements RendererInterface

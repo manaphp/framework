@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Imaging;
@@ -135,7 +136,11 @@ abstract class AbstractImage implements ImageInterface
         return $this;
     }
 
-    abstract public function do_watermark(string $file, int $offsetX = 0, int $offsetY = 0, float $opacity = 1.0
+    abstract public function do_watermark(
+        string $file,
+        int $offsetX = 0,
+        int $offsetY = 0,
+        float $opacity = 1.0
     ): static;
 
     public function watermark(string $file, int $offsetX = 0, int $offsetY = 0, float $opacity = 1.0): static

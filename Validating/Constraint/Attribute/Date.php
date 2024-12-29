@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Validating\Constraint\Attribute;
@@ -7,6 +8,7 @@ use Attribute;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
 use ReflectionProperty;
+
 use function is_int;
 use function is_object;
 use function is_string;

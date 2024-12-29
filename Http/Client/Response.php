@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Client;
@@ -7,6 +8,7 @@ use JsonSerializable;
 use ManaPHP\Exception\InvalidJsonException;
 use ManaPHP\Http\Client\Response\Cookie;
 use Stringable;
+
 use function array_slice;
 use function count;
 use function is_array;

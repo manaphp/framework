@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Amqp\Engine;
@@ -65,9 +66,14 @@ class Php implements EngineInterface
         $features = $exchange->features;
         try {
             $channel->exchange_declare(
-                $name, $exchange->type,
-                $features['passive'], $features['durable'], $features['auto_delete'],
-                $features['internal'], $features['nowait'], $features['arguments']
+                $name,
+                $exchange->type,
+                $features['passive'],
+                $features['durable'],
+                $features['auto_delete'],
+                $features['internal'],
+                $features['nowait'],
+                $features['arguments']
             );
         } catch (AMQPProtocolChannelException $exception) {
             throw new ChannelException($exception);
@@ -100,9 +106,12 @@ class Php implements EngineInterface
         try {
             $channel->queue_declare(
                 $name,
-                $features['passive'], $features['durable'],
-                $features['exclusive'], $features['auto_delete'],
-                $features['nowait'], $features['arguments']
+                $features['passive'],
+                $features['durable'],
+                $features['exclusive'],
+                $features['auto_delete'],
+                $features['nowait'],
+                $features['arguments']
             );
         } catch (AMQPProtocolChannelException $exception) {
             throw new ChannelException($exception);
@@ -115,7 +124,11 @@ class Php implements EngineInterface
         $this->queueDeclareInternal($this->getChannel(), $queue);
     }
 
-    public function queueDelete(string $queue, bool $if_unused = false, bool $if_empty = false, bool $nowait = false
+    public function queueDelete(
+        string $queue,
+        bool $if_unused = false,
+        bool $if_empty = false,
+        bool $nowait = false
     ): void {
         unset($this->queues[$queue]);
 
@@ -141,7 +154,9 @@ class Php implements EngineInterface
             $channel->queue_bind(
                 is_string($queue) ? $queue : $queue->name,
                 is_string($exchange) ? $exchange : $exchange->name,
-                $binding->binding_key, false, $binding->arguments
+                $binding->binding_key,
+                false,
+                $binding->arguments
             );
         } catch (AMQPProtocolChannelException $exception) {
             throw new ChannelException($exception);
@@ -158,7 +173,8 @@ class Php implements EngineInterface
             $channel->queue_unbind(
                 is_string($queue) ? $queue : $queue->name,
                 is_string($exchange) ? $exchange : $exchange->name,
-                $binding->binding_key, $binding->arguments
+                $binding->binding_key,
+                $binding->arguments
             );
         } catch (AMQPProtocolChannelException $exception) {
             throw new ChannelException($exception);
@@ -166,8 +182,12 @@ class Php implements EngineInterface
 
     }
 
-    public function basicPublish(string|Exchange $exchange, string|Queue $routing_key, string|array $body,
-        array $properties, bool $mandatory
+    public function basicPublish(
+        string|Exchange $exchange,
+        string|Queue $routing_key,
+        string|array $body,
+        array $properties,
+        bool $mandatory
     ): void {
         $channel = $this->getChannel();
         if (is_object($exchange)) {
@@ -184,7 +204,12 @@ class Php implements EngineInterface
         $channel->basic_publish($message, $exchangeName, $routing_key, $mandatory);
     }
 
-    public function basicConsume(string|Queue $queue, callable $callback, bool $no_ack, bool $exclusive, string $tag
+    public function basicConsume(
+        string|Queue $queue,
+        callable $callback,
+        bool $no_ack,
+        bool $exclusive,
+        string $tag
     ): string {
         $channel = $this->getChannel();
 

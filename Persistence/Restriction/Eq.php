@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence\Restriction;
 
 use ManaPHP\Persistence\RestrictionInterface;
 use ManaPHP\Query\QueryInterface;
+
 use function is_array;
 
 class Eq implements RestrictionInterface

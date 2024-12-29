@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http;
@@ -16,8 +17,14 @@ class Cookies implements CookiesInterface, JsonSerializable
         return $this->request->getContext()->_COOKIE;
     }
 
-    public function set(string $name, string $value, int $expire = 0, string $path = '', string $domain = '',
-        bool $secure = false, bool $httponly = true
+    public function set(
+        string $name,
+        string $value,
+        int $expire = 0,
+        string $path = '',
+        string $domain = '',
+        bool $secure = false,
+        bool $httponly = true
     ): static {
         $this->request->getContext()->_COOKIE[$name] = $value;
         $this->response->setCookie($name, $value, $expire, $path, $domain, $secure, $httponly);
@@ -40,8 +47,11 @@ class Cookies implements CookiesInterface, JsonSerializable
         unset($this->request->getContext()->_COOKIE[$name]);
 
         $this->response->setCookie(
-            $name, 'deleted', 1,
-            $path ?? $this->request->path(), $domain ?? $this->request->header('host')
+            $name,
+            'deleted',
+            1,
+            $path ?? $this->request->path(),
+            $domain ?? $this->request->header('host')
         );
 
         return $this;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Ws;
@@ -29,8 +30,14 @@ class Client implements ClientInterface
 
     /** @noinspection PhpTypedPropertyMightBeUninitializedInspection */
     public function __construct(
-        string $endpoint, ?string $proxy = null, float $timeout = 3.0, ?string $protocol = null,
-        bool $masking = true, ?string $origin = null, string $user_agent = 'manaphp/client', int $pool_size = 4
+        string $endpoint,
+        ?string $proxy = null,
+        float $timeout = 3.0,
+        ?string $protocol = null,
+        bool $masking = true,
+        ?string $origin = null,
+        string $user_agent = 'manaphp/client',
+        int $pool_size = 4
     ) {
         $this->endpoint = $endpoint;
         $this->proxy = $proxy;
@@ -42,7 +49,14 @@ class Client implements ClientInterface
         $this->pool_size = $pool_size;
 
         $parameters = compact(
-            'endpoint', 'proxy', 'timeout', 'protocol', 'masking', 'origin', 'user_agent', 'pool_size'
+            'endpoint',
+            'proxy',
+            'timeout',
+            'protocol',
+            'masking',
+            'origin',
+            'user_agent',
+            'pool_size'
         );
         $parameters['owner'] = $this;
 

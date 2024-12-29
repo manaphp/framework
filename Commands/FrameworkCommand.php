@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
@@ -22,9 +23,9 @@ class FrameworkCommand extends Command
         $tmp = '@runtime/framework/strip.tmp';
         LocalFS::filePut($tmp, $str);
         return php_strip_whitespace($this->alias->resolve($tmp));
-//        $str = preg_replace('#\s*/\*\*.*?\*/#ms', '', $str);//remove comments
-//        $str = preg_replace('#([\r\n]+)\s*\\1#', '\\1', $str);//remove blank lines
-//        $str = preg_replace('#([\r\n]+)\s+{#', '{', $str);//repositionClose;
+        //        $str = preg_replace('#\s*/\*\*.*?\*/#ms', '', $str);//remove comments
+        //        $str = preg_replace('#([\r\n]+)\s*\\1#', '\\1', $str);//remove blank lines
+        //        $str = preg_replace('#([\r\n]+)\s+{#', '{', $str);//repositionClose;
     }
 
     /**

@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Helper;
 
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Exception\NotSupportedException;
+
 use function chr;
 use function lcfirst;
 use function ord;
@@ -91,7 +93,11 @@ class Str
         $bytes = unpack('N1a/n1b/n1c/n1d/n1e/N1f', random_bytes(16));
         return sprintf(
             '%08x-%04x-%04x-%04x-%04x%08x',
-            $bytes['a'], $bytes['b'], ($bytes['c'] & 0x0FFF) | 0x4000, ($bytes['d'] & 0x3FFF) | 0x8000, $bytes['e'],
+            $bytes['a'],
+            $bytes['b'],
+            ($bytes['c'] & 0x0FFF) | 0x4000,
+            ($bytes['d'] & 0x3FFF) | 0x8000,
+            $bytes['e'],
             $bytes['f']
         );
     }

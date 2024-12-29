@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Messaging;
@@ -6,6 +7,7 @@ namespace ManaPHP\Messaging;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Redis\RedisBrokerInterface;
+
 use function in_array;
 
 class Queue extends AbstractQueue

@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
 
 use ManaPHP\Cli\Command;
 use ManaPHP\Version;
+
 use function defined;
 
 class VersionCommand extends Command

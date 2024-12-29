@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Db\Connection\Adapter;
@@ -269,7 +270,10 @@ class Mysql extends AbstractConnection
         return $this->execute($sql);
     }
 
-    public function upsert(string $table, array $insertFieldValues, array $updateFieldValues = [],
+    public function upsert(
+        string $table,
+        array $insertFieldValues,
+        array $updateFieldValues = [],
         ?string $primaryKey = null
     ): int {
         if (!$primaryKey) {

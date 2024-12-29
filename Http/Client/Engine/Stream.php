@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Client\Engine;
@@ -11,6 +12,7 @@ use ManaPHP\Http\Client\EngineInterface;
 use ManaPHP\Http\Client\Request;
 use ManaPHP\Http\Client\Response;
 use ManaPHP\Http\Client\TimeoutException;
+
 use function is_int;
 use function strlen;
 
@@ -211,7 +213,12 @@ class Stream implements EngineInterface
         return '';
     }
 
-    protected function receiveContentLengthBody(mixed $stream, string $url, string $body, int $length, float $end_time
+    protected function receiveContentLengthBody(
+        mixed $stream,
+        string $url,
+        string $body,
+        int $length,
+        float $end_time
     ): string {
         $write = null;
         $except = null;

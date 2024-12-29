@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
@@ -51,7 +52,11 @@ class BosCommand extends Command
      *
      * @return void
      */
-    public function listAction(string $bucket, string $key = '', string $prefix = '', string $mime_type = '',
+    public function listAction(
+        string $bucket,
+        string $key = '',
+        string $prefix = '',
+        string $mime_type = '',
         string $extension = ''
     ): void {
         $filters = [];

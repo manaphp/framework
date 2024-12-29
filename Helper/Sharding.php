@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Helper;
 
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Helper\Sharding\ShardingTooManyException;
+
 use function count;
 use function is_scalar;
 use function strlen;

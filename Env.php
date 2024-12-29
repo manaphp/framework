@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP;
@@ -8,6 +9,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\FileNotFoundException;
 use ManaPHP\Exception\InvalidArgumentException;
 use ManaPHP\Exception\InvalidValueException;
+
 use function count;
 use function in_array;
 use function is_array;
@@ -76,7 +78,8 @@ class Env implements EnvInterface, JsonSerializable
                     $value = preg_replace_callback('#\\$({\w+}|\w+)#', static function ($matches) use ($value) {
                         $ref_name = trim($matches[1], '{}');
                         if (($ref_value = getenv($ref_name)) === false) {
-                            throw new InvalidValueException(['`{1}` ref variable is not exists: {2}', $ref_name, $value]
+                            throw new InvalidValueException(
+                                ['`{1}` ref variable is not exists: {2}', $ref_name, $value]
                             );
                         }
                         return $ref_value;

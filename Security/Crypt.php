@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Security;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Security\Crypt\Exception as CryptException;
+
 use function strlen;
 
 class Crypt implements CryptInterface

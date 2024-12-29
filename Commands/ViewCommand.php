@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
@@ -8,6 +9,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Persistence\EntityMetadataInterface;
 use ReflectionProperty;
+
 use function in_array;
 
 class ViewCommand extends Command

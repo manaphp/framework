@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Eventing;
@@ -10,6 +11,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionUnionType;
 use SplDoublyLinkedList;
+
 use function count;
 use function is_string;
 

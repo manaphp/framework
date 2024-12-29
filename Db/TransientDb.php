@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Db;
@@ -12,14 +13,15 @@ class TransientDb extends Db
     /** @noinspection MagicMethodsValidityInspection
      * @noinspection PhpMissingParentConstructorInspection
      */
-    public function __construct(PoolsInterface $pools,
+    public function __construct(
+        PoolsInterface $pools,
         protected object $owner,
         ConnectionInterface $connection,
         protected string $type
     ) {
         $this->pools = $pools;
 
-        $this->context = new  DbContext();
+        $this->context = new DbContext();
         $this->context->connection = $connection;
     }
 

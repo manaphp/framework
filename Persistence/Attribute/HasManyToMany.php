@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence\Attribute;
@@ -7,6 +8,7 @@ use Attribute;
 use ManaPHP\Helper\Arr;
 use ManaPHP\Persistence\Entity;
 use ManaPHP\Query\QueryInterface;
+
 use function basename;
 use function class_exists;
 use function str_starts_with;
@@ -23,9 +25,11 @@ class HasManyToMany extends AbstractRelation
     protected string $pivotThatField;
     protected array $orderBy;
 
-    public function __construct(string $pivotEntity,
+    public function __construct(
+        string $pivotEntity,
         ?string $thatEntity = null,
-        ?string $pivotSelfField = null, ?string $pivotThatField = null,
+        ?string $pivotSelfField = null,
+        ?string $pivotThatField = null,
         array $orderBy = []
     ) {
         $this->pivotEntity = $pivotEntity;
@@ -104,7 +108,8 @@ class HasManyToMany extends AbstractRelation
         $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntity);
         $pivotRepository = $this->entityMetadata->getRepository($this->pivotEntity);
         $ids = $pivotRepository->values(
-            $this->pivotThatField, [$this->pivotSelfField => $entity->$selfField]
+            $this->pivotThatField,
+            [$this->pivotSelfField => $entity->$selfField]
         );
 
         return $this->getThatQuery()

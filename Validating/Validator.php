@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Validating;
@@ -8,6 +9,7 @@ use ManaPHP\Di\Lazy;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\I18n\LocaleInterface;
 use ManaPHP\Validating\Validator\ValidateFailedException;
+
 use function is_array;
 use function preg_replace_callback;
 

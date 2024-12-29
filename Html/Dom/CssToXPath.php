@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Html\Dom;
@@ -13,29 +14,32 @@ class CssToXPath
         if (str_contains($path, ':')) {
 
             $path = preg_replace_callback(
-                '#:(eq|gt|lt)\((-?\d+)\)#', static function ($match) {
-                $word = $match[1];
-                if ($word === 'eq') {
-                    if ($match[2] >= 0) {
-                        return '[' . ($match[2] + 1) . ']';
+                '#:(eq|gt|lt)\((-?\d+)\)#',
+                static function ($match) {
+                    $word = $match[1];
+                    if ($word === 'eq') {
+                        if ($match[2] >= 0) {
+                            return '[' . ($match[2] + 1) . ']';
+                        } else {
+                            return "[last()$match[2]]";
+                        }
+                    } elseif ($word === 'gt' || $word === 'lt') {
+                        if ($match[2] >= 0) {
+                            return '[position()' . ($word === 'gt' ? '>' : '<') . ($match[2] + 1) . ']';
+                        } else {
+                            return '[position()' . ($word === 'gt' ? '>' : '<') . "last()$match[2]]";
+                        }
                     } else {
-                        return "[last()$match[2]]";
+                        return '';
                     }
-                } elseif ($word === 'gt' || $word === 'lt') {
-                    if ($match[2] >= 0) {
-                        return '[position()' . ($word === 'gt' ? '>' : '<') . ($match[2] + 1) . ']';
-                    } else {
-                        return '[position()' . ($word === 'gt' ? '>' : '<') . "last()$match[2]]";
-                    }
-                } else {
-                    return '';
-                }
-            }, $path
+                },
+                $path
             );
 
             $path = (string)preg_replace(['#:contains\((["\'])([^\'"]+)\\1\)#'], ["[contains(.,'\\2')]"], $path);
             $path = strtr(
-                $path, [
+                $path,
+                [
                     ':header'      => '*[self::h1 or self::h2 or self::h3 or self::h4 or self::h5 or self::h6]',
                     ':first'       => '[first()]',
                     ':last'        => '[last()]',
@@ -109,7 +113,8 @@ class CssToXPath
 
         // arbitrary attribute strict equality
         $expression = preg_replace_callback(
-        /**@lang text */ '|\[@?([\w\-]*)([~*^$|!])?=([^\[]+)\]|',
+        /**@lang text */
+            '|\[@?([\w\-]*)([~*^$|!])?=([^\[]+)\]|',
             static function ($matches) {
                 $attr = strtolower($matches[1]);
                 $type = $matches[2];
@@ -141,7 +146,8 @@ class CssToXPath
 
         //attribute contains specified content
         $expression = preg_replace_callback(
-        /**@lang text */ '|\[(!?)([a-z][\w\-|&]*)\]|i',
+        /**@lang text */
+            '|\[(!?)([a-z][\w\-|&]*)\]|i',
             static function ($matches) {
                 $val = $matches[2];
                 $op = str_contains($val, '|') ? '|' : '&';

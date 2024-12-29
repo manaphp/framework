@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Middlewares;
@@ -173,7 +174,8 @@ class PageCacheMiddleware
         $etag = md5($content);
 
         $this->redisCache->hMSet(
-            $context->key, [
+            $context->key,
+            [
                 'ttl'          => $context->ttl,
                 'etag'         => $etag,
                 'content-type' => $this->response->getContentType(),

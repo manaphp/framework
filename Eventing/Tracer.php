@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Eventing;
@@ -17,6 +18,7 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionUnionType;
 use Stringable;
+
 use function count;
 use function is_string;
 use function strlen;
@@ -167,7 +169,8 @@ class Tracer implements TracerInterface
 
         if (str_contains(
             'ping,aggregate,count,distinct,group,mapReduce,geoNear,geoSearch,find,' .
-            'authenticate,listDatabases,listCollections,listIndexes', $command_name
+            'authenticate,listDatabases,listCollections,listIndexes',
+            $command_name
         )
         ) {
             $this->logger->debug($event, ['category' => 'mongodb.command.' . $command_name]);

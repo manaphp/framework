@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Validating\Constraint\Attribute;
@@ -8,6 +9,7 @@ use ManaPHP\Exception\MisuseException;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
+
 use function in_array;
 use function is_array;
 use function is_bool;

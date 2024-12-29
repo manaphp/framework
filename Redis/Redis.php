@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Redis;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Pooling\PoolsInterface;
+
 use function is_object;
 
 class Redis implements RedisInterface

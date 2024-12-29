@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
@@ -11,6 +12,7 @@ use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
 use ReflectionClass;
 use ReflectionMethod;
+
 use function array_slice;
 use function count;
 use function in_array;

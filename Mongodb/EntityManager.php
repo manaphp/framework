@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Mongodb;
@@ -18,6 +19,7 @@ use ManaPHP\Persistence\Event\EntityRestoring;
 use ManaPHP\Persistence\Event\EntityUpdated;
 use ManaPHP\Persistence\Event\EntityUpdating;
 use MongoDB\BSON\ObjectId;
+
 use function gettype;
 use function is_bool;
 use function is_float;
@@ -321,7 +323,9 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         list($connection, $collection) = $this->sharding->getUniqueShard($entityClass, []);
 
         return $this->mongodbConnector->get($connection)->aggregate(
-            $collection, $pipeline, $options
+            $collection,
+            $pipeline,
+            $options
         );
     }
 

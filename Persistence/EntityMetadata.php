@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence;
@@ -21,6 +22,7 @@ use ManaPHP\Validating\ConstraintInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
+
 use function preg_match;
 use function property_exists;
 use function sprintf;
@@ -322,7 +324,8 @@ class EntityMetadata implements EntityMetadataInterface
 
                 $propertyConstraints = [];
                 if (($attributes = $property->getAttributes(
-                        ConstraintInterface::class, ReflectionAttribute::IS_INSTANCEOF
+                        ConstraintInterface::class,
+                        ReflectionAttribute::IS_INSTANCEOF
                     )) !== []
                 ) {
                     foreach ($attributes as $attribute) {
@@ -358,7 +361,8 @@ class EntityMetadata implements EntityMetadataInterface
                     continue;
                 }
                 if (($attributes = $property->getAttributes(
-                        RelationInterface::class, ReflectionAttribute::IS_INSTANCEOF
+                        RelationInterface::class,
+                        ReflectionAttribute::IS_INSTANCEOF
                     )) !== []
                 ) {
                     $attribute = $attributes[0];

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Eventing;
@@ -6,6 +7,7 @@ namespace ManaPHP\Eventing;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\LocalFS;
+
 use function count;
 use function is_int;
 

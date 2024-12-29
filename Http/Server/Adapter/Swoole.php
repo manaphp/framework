@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Adapter;
@@ -41,6 +42,7 @@ use Swoole\Http\Response;
 use Swoole\Http\Server;
 use Swoole\Runtime;
 use Throwable;
+
 use function dirname;
 use function in_array;
 use function is_string;

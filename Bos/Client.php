@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Bos;
@@ -9,6 +10,7 @@ use ManaPHP\Exception\MissingFieldException;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Helper\Arr;
 use ManaPHP\Http\ClientInterface as HttpClientInterface;
+
 class Client implements ClientInterface
 {
     #[Autowired] protected AliasInterface $alias;

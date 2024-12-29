@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Token;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Security\CryptInterface;
+
 use function count;
 use function is_array;
 

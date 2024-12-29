@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Mongodb;
@@ -27,6 +28,7 @@ use ManaPHP\Mongodb\Exception as MongodbException;
 use ManaPHP\Pooling\PoolsInterface;
 use MongoDB\Driver\Exception\RuntimeException;
 use Psr\EventDispatcher\EventDispatcherInterface;
+
 use function count;
 use function strlen;
 
@@ -213,7 +215,11 @@ class Mongodb implements MongodbInterface
         return $count;
     }
 
-    public function fetchAll(string $source, array $filter = [], array $options = [], bool $secondaryPreferred = true
+    public function fetchAll(
+        string $source,
+        array $filter = [],
+        array $options = [],
+        bool $secondaryPreferred = true
     ): array {
         $namespace = $this->completeNamespace($source);
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Request;
@@ -15,7 +16,9 @@ interface FileInterface
 
     public function getType(bool $real = true): string;
 
-    public function moveTo(string $dst, string $allowedExtensions = 'jpg,jpeg,png,gif,doc,xls,pdf,zip',
+    public function moveTo(
+        string $dst,
+        string $allowedExtensions = 'jpg,jpeg,png,gif,doc,xls,pdf,zip',
         bool $overwrite = false
     ): void;
 

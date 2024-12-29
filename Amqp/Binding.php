@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Amqp;
@@ -10,7 +11,10 @@ class Binding
     public string $binding_key;
     public array $arguments;
 
-    public function __construct(string|Queue $queue, string|Exchange $exchange, string $binding_key,
+    public function __construct(
+        string|Queue $queue,
+        string|Exchange $exchange,
+        string $binding_key,
         array $arguments = []
     ) {
         $this->queue = $queue;

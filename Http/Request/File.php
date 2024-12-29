@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Request;
@@ -55,7 +56,9 @@ class File implements FileInterface, JsonSerializable
         return is_uploaded_file($this->file['tmp_name']);
     }
 
-    public function moveTo(string $dst, string $allowedExtensions = 'jpg,jpeg,png,gif,doc,xls,pdf,zip',
+    public function moveTo(
+        string $dst,
+        string $allowedExtensions = 'jpg,jpeg,png,gif,doc,xls,pdf,zip',
         bool $overwrite = false
     ): void {
         if ($allowedExtensions !== '*') {

@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Sharding\ShardingTooManyException;
+
 use function count;
 use function strlen;
 

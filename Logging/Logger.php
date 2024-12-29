@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Logging;
@@ -16,6 +17,7 @@ use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 use Stringable;
 use Throwable;
+
 use function dirname;
 use function is_array;
 use function is_object;

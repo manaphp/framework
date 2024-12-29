@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Pooling;
@@ -13,6 +14,7 @@ use ManaPHP\Pooling\Pool\Event\PoolPopping;
 use ManaPHP\Pooling\Pool\Event\PoolPush;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use WeakMap;
+
 use function is_array;
 use function microtime;
 

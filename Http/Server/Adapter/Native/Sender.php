@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Adapter\Native;
@@ -16,6 +17,7 @@ use ManaPHP\Http\Server\Event\RequestResponding;
 use ManaPHP\Http\Server\Event\ResponseStringify;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+
 use function is_string;
 use function strlen;
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Db;
@@ -137,7 +138,8 @@ abstract class AbstractConnection implements ConnectionInterface
                 $value = json_stringify($value);
             } else {
                 $type = gettype($value);
-                throw new NotSupportedException(['The `{1}` type of `{2}` parameter is not support', $parameter, $type]
+                throw new NotSupportedException(
+                    ['The `{1}` type of `{2}` parameter is not support', $parameter, $type]
                 );
             }
 

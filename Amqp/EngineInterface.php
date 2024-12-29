@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Amqp;
@@ -17,11 +18,20 @@ interface EngineInterface
 
     public function queueUnbind(Binding $binding): void;
 
-    public function basicPublish(string|Exchange $exchange, string|Queue $routing_key, string|array $body,
-        array $properties, bool $mandatory
+    public function basicPublish(
+        string|Exchange $exchange,
+        string|Queue $routing_key,
+        string|array $body,
+        array $properties,
+        bool $mandatory
     ): void;
 
-    public function basicConsume(string|Queue $queue, callable $callback, bool $no_ack, bool $exclusive, string $tag
+    public function basicConsume(
+        string|Queue $queue,
+        callable $callback,
+        bool $no_ack,
+        bool $exclusive,
+        string $tag
     ): string;
 
     public function wait(int $prefetchSize, int $prefetchCount): void;

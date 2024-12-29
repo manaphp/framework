@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Debugging;
@@ -10,6 +11,7 @@ use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\SuppressWarnings;
 use Throwable;
+
 use function count;
 use function dirname;
 use function is_array;

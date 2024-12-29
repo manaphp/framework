@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Client;
 
 use JsonSerializable;
+
 use function count;
 use function is_array;
 
@@ -17,7 +19,11 @@ class Request implements JsonSerializable
     public float $process_time;
     public string $remote_ip;
 
-    public function __construct(string $method, string|array $url, null|string|array $body, array $headers,
+    public function __construct(
+        string $method,
+        string|array $url,
+        null|string|array $body,
+        array $headers,
         array $options
     ) {
         $this->method = $method;

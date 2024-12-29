@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP;
 
 use ManaPHP\Helper\SuppressWarnings;
 use Stringable;
+
 use function is_array;
 use function is_string;
 

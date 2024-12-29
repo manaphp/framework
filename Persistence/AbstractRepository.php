@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence;
@@ -6,6 +7,7 @@ namespace ManaPHP\Persistence;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Query\Paginator;
 use ManaPHP\Query\QueryInterface;
+
 use function array_unshift;
 use function is_array;
 use function is_string;
@@ -200,7 +202,7 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         if (is_array($entity)) {
             $data = $entity;
-            $entity = new $this->entityClass;
+            $entity = new $this->entityClass();
             foreach ($data as $field => $value) {
                 if (property_exists($entity, $field)) {
                     $entity->$field = $value;
@@ -264,7 +266,7 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     public function fill(array $data): Entity
     {
-        $entity = new $this->entityClass;
+        $entity = new $this->entityClass();
 
         foreach ($this->entityMetadata->getFillable($this->entityClass) as $field => $type) {
             if (($value = $data[$field] ?? null) === null) {

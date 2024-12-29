@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http;
@@ -7,7 +8,12 @@ use ManaPHP\Http\Request\FileInterface;
 
 interface RequestInterface
 {
-    public function prepare(array $GET, array $POST, array $SERVER, ?string $RAW_BODY = null, array $COOKIE = [],
+    public function prepare(
+        array $GET,
+        array $POST,
+        array $SERVER,
+        ?string $RAW_BODY = null,
+        array $COOKIE = [],
         array $FILES = []
     ): void;
 

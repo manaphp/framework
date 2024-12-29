@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence\Hierarchy\Adapter;
@@ -6,6 +7,7 @@ namespace ManaPHP\Persistence\Hierarchy\Adapter;
 use ManaPHP\Helper\Str;
 use ManaPHP\Persistence\Hierarchy\Exception as HierarchyException;
 use ManaPHP\Query\QueryInterface;
+
 use function count;
 use function strlen;
 

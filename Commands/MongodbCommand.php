@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
@@ -14,6 +15,7 @@ use ManaPHP\Helper\Str;
 use ManaPHP\Mongodb\MongodbConnectorInterface;
 use ManaPHP\Mongodb\MongodbInterface;
 use Psr\Container\ContainerInterface;
+
 use function count;
 use function dirname;
 use function gettype;
@@ -301,7 +303,9 @@ class MongodbCommand extends Command
 
                     $this->console->writeLn(
                         sprintf(
-                            'write to `%s` success: %d [%f]', $fileName, $linesCount,
+                            'write to `%s` success: %d [%f]',
+                            $fileName,
+                            $linesCount,
                             round(microtime(true) - $startTime, 4)
                         )
                     );
@@ -319,7 +323,9 @@ class MongodbCommand extends Command
      *
      * @return void
      */
-    public function listAction(string $collection_pattern = '', string $field = '',
+    public function listAction(
+        string $collection_pattern = '',
+        string $field = '',
         array $db = []
     ): void {
         foreach ($this->getConnections() as $connection) {
@@ -338,7 +344,8 @@ class MongodbCommand extends Command
                     }
                     if ($field) {
                         if (!$docs = $mongodb->fetchAll(
-                            "$cdb.$collection", [$field => ['$exists' => 1]],
+                            "$cdb.$collection",
+                            [$field => ['$exists' => 1]],
                             ['limit' => 1]
                         )
                         ) {

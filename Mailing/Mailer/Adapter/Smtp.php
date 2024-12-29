@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Mailing\Mailer\Adapter;
@@ -14,6 +15,7 @@ use ManaPHP\Mailing\Mailer\Adapter\Exception\ConnectionException;
 use ManaPHP\Mailing\Mailer\Adapter\Exception\TransmitException;
 use ManaPHP\Mailing\Mailer\Message;
 use Psr\Log\LoggerInterface;
+
 use function count;
 use function dirname;
 use function in_array;
@@ -102,7 +104,8 @@ class Smtp extends AbstractMailer
 
         $uri = ($this->scheme === 'smtp' ? '' : "$this->scheme://") . $this->host;
         if (!$socket = fsockopen($uri, $this->port, $errno, $errstr, $this->timeout)) {
-            throw new ConnectionException(['connect to `{1}:{2}` mailer server failed: {3}', $uri, $this->port, $errstr]
+            throw new ConnectionException(
+                ['connect to `{1}:{2}` mailer server failed: {3}', $uri, $this->port, $errstr]
             );
         }
 

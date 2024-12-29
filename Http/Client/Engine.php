@@ -1,8 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Client;
-
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\MakerInterface;

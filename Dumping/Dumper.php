@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Dumping;
@@ -9,6 +10,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ReflectionClass;
 use ReflectionNamedType;
 use WeakMap;
+
 use function class_implements;
 use function is_array;
 use function is_object;

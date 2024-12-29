@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics;
@@ -56,7 +57,11 @@ class Formatter implements FormatterInterface
         return "# TYPE $name counter\n" . $this->number($name, $value, $labels, $levels);
     }
 
-    protected function histogramInternal(string $name, array|Histogram $histograms, array $labels, array $levels = []
+    protected function histogramInternal(
+        string $name,
+        array|Histogram $histograms,
+        array $labels,
+        array $levels = []
     ): string {
         $str = '';
         if ($levels === []) {

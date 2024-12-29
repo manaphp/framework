@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Helper;
@@ -8,6 +9,7 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
+
 use function array_slice;
 use function count;
 use function is_int;
@@ -196,21 +198,22 @@ class Collection implements JsonSerializable, Countable, IteratorAggregate, Arra
 
         $items = $this->items;
         usort(
-            $items, static function ($left, $right) use ($normalized_sorts) {
-            foreach ($normalized_sorts as $field => $sort) {
-                $left_value = $left[$field];
-                $right_value = $right[$field];
+            $items,
+            static function ($left, $right) use ($normalized_sorts) {
+                foreach ($normalized_sorts as $field => $sort) {
+                    $left_value = $left[$field];
+                    $right_value = $right[$field];
 
-                $cmp = is_string($left_value) ? strcmp($left_value, $right_value) : $left_value - $right_value;
-                if ($cmp > 0) {
-                    return $sort === SORT_ASC ? 1 : -1;
-                } elseif ($cmp < 0) {
-                    return $sort === SORT_ASC ? -1 : 1;
+                    $cmp = is_string($left_value) ? strcmp($left_value, $right_value) : $left_value - $right_value;
+                    if ($cmp > 0) {
+                        return $sort === SORT_ASC ? 1 : -1;
+                    } elseif ($cmp < 0) {
+                        return $sort === SORT_ASC ? -1 : 1;
+                    }
                 }
-            }
 
-            return 0;
-        }
+                return 0;
+            }
         );
 
         return new static($items);

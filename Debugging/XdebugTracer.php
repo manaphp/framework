@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Debugging;
@@ -10,6 +11,7 @@ use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\Server\Event\RequestBegin;
 use ManaPHP\Http\Server\Event\RequestEnd;
+
 use function dirname;
 
 class XdebugTracer implements XdebugTracerInterface

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Rendering\Engine\Sword;
@@ -11,6 +12,7 @@ use ManaPHP\Exception\InvalidArgumentException;
 use ManaPHP\Exception\RuntimeException;
 use ManaPHP\Helper\Str;
 use ManaPHP\Http\RouterInterface;
+
 use function count;
 use function dirname;
 use function in_array;
@@ -58,22 +60,24 @@ class Compiler
     protected function addFileHash(string $str): string
     {
         return preg_replace_callback(
-            '#="(/[-\w/.]+\.\w+)"#', function ($match) {
-            $url = $match[1];
+            '#="(/[-\w/.]+\.\w+)"#',
+            function ($match) {
+                $url = $match[1];
 
-            if (in_array(pathinfo($url, PATHINFO_EXTENSION), ['htm', 'html', 'php'], true)) {
-                return $match[0];
-            }
+                if (in_array(pathinfo($url, PATHINFO_EXTENSION), ['htm', 'html', 'php'], true)) {
+                    return $match[0];
+                }
 
-            $path = '@public' . $url;
-            $file = $this->alias->resolve($path);
-            if (!is_file($file)) {
-                return $match[0];
-            }
-            $hash = substr(md5_file($file), 0, $this->hash_length);
+                $path = '@public' . $url;
+                $file = $this->alias->resolve($path);
+                if (!is_file($file)) {
+                    return $match[0];
+                }
+                $hash = substr(md5_file($file), 0, $this->hash_length);
 
-            return "=\"$url?v=$hash\"";
-        }, $str
+                return "=\"$url?v=$hash\"";
+            },
+            $str
         );
     }
 
@@ -187,32 +191,33 @@ class Compiler
         ];
 
         uksort(
-            $methods, static function ($method1, $method2) use ($methods) {
-            // Ensure the longest tags are processed first
-            if ($methods[$method1] > $methods[$method2]) {
-                return -1;
-            }
-            if ($methods[$method1] < $methods[$method2]) {
-                return 1;
-            }
+            $methods,
+            static function ($method1, $method2) use ($methods) {
+                // Ensure the longest tags are processed first
+                if ($methods[$method1] > $methods[$method2]) {
+                    return -1;
+                }
+                if ($methods[$method1] < $methods[$method2]) {
+                    return 1;
+                }
 
-            // give preference to raw tags (assuming they've overridden)
-            if ($method1 === 'compileRawEchos') {
-                return -1;
-            }
-            if ($method2 === 'compileRawEchos') {
-                return 1;
-            }
+                // give preference to raw tags (assuming they've overridden)
+                if ($method1 === 'compileRawEchos') {
+                    return -1;
+                }
+                if ($method2 === 'compileRawEchos') {
+                    return 1;
+                }
 
-            if ($method1 === 'compileEscapedEchos') {
-                return -1;
-            }
-            if ($method2 === 'compileEscapedEchos') {
-                return 1;
-            }
+                if ($method1 === 'compileEscapedEchos') {
+                    return -1;
+                }
+                if ($method2 === 'compileEscapedEchos') {
+                    return 1;
+                }
 
-            return 0;
-        }
+                return 0;
+            }
         );
 
         return $methods;
@@ -239,7 +244,9 @@ class Compiler
         };
 
         return preg_replace_callback(
-        /** @lang text */ '/\B@(\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x', $callback,
+        /** @lang text */
+            '/\B@(\w+)([ \t]*)(\( ( (?>[^()]+) | (?3) )* \))?/x',
+            $callback,
             $value
         );
     }

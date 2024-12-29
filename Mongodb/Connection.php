@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Mongodb;
@@ -14,6 +15,7 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\WriteResult;
 use Psr\EventDispatcher\EventDispatcherInterface;
+
 use function is_bool;
 
 class Connection implements ConnectionInterface
@@ -173,16 +175,26 @@ class Connection implements ConnectionInterface
         return $this->bulkWrite($namespace, $bulk)->getDeletedCount();
     }
 
-    protected function fetchAllInternal(string $namespace, array $filter, array $options, ReadPreference $readPreference
+    protected function fetchAllInternal(
+        string $namespace,
+        array $filter,
+        array $options,
+        ReadPreference $readPreference
     ): array {
         $cursor = $this->getManager()->executeQuery(
-            $namespace, new MongodbQuery($filter, $options), $readPreference
+            $namespace,
+            new MongodbQuery($filter, $options),
+            $readPreference
         );
         $cursor->setTypeMap(['root' => 'array']);
         return $cursor->toArray();
     }
 
-    public function fetchAll(string $namespace, array $filter = [], array $options = [], bool $secondaryPreferred = true
+    public function fetchAll(
+        string $namespace,
+        array $filter = [],
+        array $options = [],
+        bool $secondaryPreferred = true
     ): array {
         if (is_bool($secondaryPreferred)) {
             if ($secondaryPreferred) {

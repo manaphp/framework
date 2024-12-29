@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Mongodb;
@@ -23,7 +24,11 @@ interface MongodbInterface
 
     public function delete(string $source, array $filter): int;
 
-    public function fetchAll(string $source, array $filter = [], array $options = [], bool $secondaryPreferred = true
+    public function fetchAll(
+        string $source,
+        array $filter = [],
+        array $options = [],
+        bool $secondaryPreferred = true
     ): array;
 
     public function command(array $command, ?string $db = null): array;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Redis;
@@ -16,6 +17,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Redis;
 use RedisCluster;
 use RedisException;
+
 use function in_array;
 use function microtime;
 

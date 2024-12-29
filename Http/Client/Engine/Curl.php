@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Client\Engine;
@@ -10,6 +11,7 @@ use ManaPHP\Http\Client\ConnectionException;
 use ManaPHP\Http\Client\EngineInterface;
 use ManaPHP\Http\Client\Request;
 use ManaPHP\Http\Client\Response;
+
 use function is_int;
 
 class Curl implements EngineInterface

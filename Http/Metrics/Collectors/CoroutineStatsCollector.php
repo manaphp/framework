@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics\Collectors;
@@ -39,7 +40,9 @@ class CoroutineStatsCollector implements WorkersCollectorInterface
 
                 if ($type === FormatterInterface::GAUGE) {
                     $str .= $this->formatter->gauge(
-                        'swoole_coroutine_stats_' . $name, $stats[$name], ['worker_id' => $worker_id]
+                        'swoole_coroutine_stats_' . $name,
+                        $stats[$name],
+                        ['worker_id' => $worker_id]
                     );
                 }
             }

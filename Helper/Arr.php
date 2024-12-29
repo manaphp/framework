@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Helper;
 
 use ManaPHP\Exception\MisuseException;
+
 use function in_array;
 use function is_array;
 use function is_int;
@@ -138,22 +140,23 @@ class Arr
     public static function sort(array &$ar, array $sort): array
     {
         usort(
-            $ar, static function ($a, $b) use ($sort) {
-            foreach ($sort as $k => $v) {
-                $field = is_int($k) ? $v : $k;
+            $ar,
+            static function ($a, $b) use ($sort) {
+                foreach ($sort as $k => $v) {
+                    $field = is_int($k) ? $v : $k;
 
-                $first = $a[$field];
-                $second = $b[$field];
+                    $first = $a[$field];
+                    $second = $b[$field];
 
-                $r = is_string($first) ? strcmp($first, $second) : $first - $second;
-                if ($r > 0) {
-                    return (is_int($k) || $v === SORT_ASC || $v === 'ASC' || $v === 'asc') ? 1 : -1;
-                } elseif ($r < 0) {
-                    return (is_int($k) || $v === SORT_ASC || $v === 'ASC' || $v === 'asc') ? -1 : 1;
+                    $r = is_string($first) ? strcmp($first, $second) : $first - $second;
+                    if ($r > 0) {
+                        return (is_int($k) || $v === SORT_ASC || $v === 'ASC' || $v === 'asc') ? 1 : -1;
+                    } elseif ($r < 0) {
+                        return (is_int($k) || $v === SORT_ASC || $v === 'ASC' || $v === 'asc') ? -1 : 1;
+                    }
                 }
+                return 0;
             }
-            return 0;
-        }
         );
 
         return $ar;
@@ -212,7 +215,8 @@ class Arr
 
                     $count_field = $field . '_count';
                     if (!isset($v[0][$count_field])) {
-                        throw new MisuseException(['`{1}` not in `{2}`', $count_field, implode(',', array_keys($v[0]))]
+                        throw new MisuseException(
+                            ['`{1}` not in `{2}`', $count_field, implode(',', array_keys($v[0]))]
                         );
                     }
                     $count = array_sum(array_column($v, $count_field));

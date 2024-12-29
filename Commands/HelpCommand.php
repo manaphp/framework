@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
@@ -14,6 +15,7 @@ use ManaPHP\Version;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionMethod;
+
 use function count;
 use function is_string;
 use function strlen;
@@ -53,7 +55,8 @@ class HelpCommand extends Command
                 $this->console->colorize($this->app_id, Console::FC_YELLOW | Console::AT_BOLD),
                 $this->console->colorize($this->app_env, Console::FC_YELLOW | Console::AT_BOLD),
                 $this->console->colorize(
-                    $this->app_debug ? 'true' : 'false', Console::FC_YELLOW | Console::AT_BOLD
+                    $this->app_debug ? 'true' : 'false',
+                    Console::FC_YELLOW | Console::AT_BOLD
                 )
             )
         );

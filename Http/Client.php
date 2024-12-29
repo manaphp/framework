@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http;
@@ -56,7 +57,11 @@ class Client implements ClientInterface
         throw new NonCloneableException($this);
     }
 
-    public function request(string $method, string|array $url, null|string|array $body = null, array $headers = [],
+    public function request(
+        string $method,
+        string|array $url,
+        null|string|array $body = null,
+        array $headers = [],
         mixed $options = []
     ): Response {
         $headers['User-Agent'] ??= $this->user_agent;
@@ -111,7 +116,8 @@ class Client implements ClientInterface
                 if (is_array($body)) {
                     if (isset($request->headers['Content-Type'])
                         && str_contains(
-                            $request->headers['Content-Type'], 'json'
+                            $request->headers['Content-Type'],
+                            'json'
                         )
                     ) {
                         $body = json_stringify($body);
@@ -188,7 +194,11 @@ class Client implements ClientInterface
         return $response;
     }
 
-    public function rest(string $method, string|array $url, string|array $body = [], array $headers = [],
+    public function rest(
+        string $method,
+        string|array $url,
+        string|array $body = [],
+        array $headers = [],
         mixed $options = []
     ): Response {
         if (is_string($body)) {
@@ -250,7 +260,11 @@ class Client implements ClientInterface
         return $this->request('PUT', $url, $body, $headers, $options);
     }
 
-    public function patch(string|array $url, string|array $body = [], array $headers = [], mixed $options = []
+    public function patch(
+        string|array $url,
+        string|array $body = [],
+        array $headers = [],
+        mixed $options = []
     ): Response {
         return $this->request('PATCH', $url, $body, $headers, $options);
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Ws\Chatting;
@@ -215,7 +216,8 @@ class Server implements ServerInterface
             $this->kickoutName($room, $receivers, $message);
         } else {
             $this->logger->warning(
-                'unknown `{0}` type message: {1}', [$type, $message, 'category' => 'chatServer.bad_type']
+                'unknown `{0}` type message: {1}',
+                [$type, $message, 'category' => 'chatServer.bad_type']
             );
         }
     }
@@ -225,17 +227,18 @@ class Server implements ServerInterface
         Coroutine::create(
             function () {
                 $this->pubSub->psubscribe(
-                    [$this->prefix . '*'], function ($channel, $message) {
-                    list($type, $room, $receivers) = explode(':', substr($channel, strlen($this->prefix)), 4);
-                    if ($type !== null && $room !== null && $receivers !== null) {
-                        $receivers = explode(',', $receivers);
-                        $this->eventDispatcher->dispatch(new ServerPushing($this, $type, $receivers, $message));
-                        $this->dispatch($type, $room, $receivers, $message);
-                        $this->eventDispatcher->dispatch(new ServerPushed($this, $type, $receivers, $message));
-                    } else {
-                        $this->logger->warning($channel, ['category' => 'chatServer.bad_channel']);
+                    [$this->prefix . '*'],
+                    function ($channel, $message) {
+                        list($type, $room, $receivers) = explode(':', substr($channel, strlen($this->prefix)), 4);
+                        if ($type !== null && $room !== null && $receivers !== null) {
+                            $receivers = explode(',', $receivers);
+                            $this->eventDispatcher->dispatch(new ServerPushing($this, $type, $receivers, $message));
+                            $this->dispatch($type, $room, $receivers, $message);
+                            $this->eventDispatcher->dispatch(new ServerPushed($this, $type, $receivers, $message));
+                        } else {
+                            $this->logger->warning($channel, ['category' => 'chatServer.bad_channel']);
+                        }
                     }
-                }
                 );
             }
         );

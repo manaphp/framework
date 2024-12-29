@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Imaging\Image\Adapter;
@@ -14,6 +15,7 @@ use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Exception\PreconditionException;
 use ManaPHP\Exception\RuntimeException;
 use ManaPHP\Imaging\AbstractImage;
+
 use function dirname;
 use function extension_loaded;
 

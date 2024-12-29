@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Event;
@@ -6,6 +7,7 @@ namespace ManaPHP\Http\Server\Event;
 use JsonSerializable;
 use ManaPHP\Eventing\Attribute\Verbosity;
 use Swoole\Http\Server;
+
 use function get_class;
 use function is_object;
 

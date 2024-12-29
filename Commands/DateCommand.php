@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
@@ -9,6 +10,7 @@ use ManaPHP\Cli\Command;
 use ManaPHP\Cli\OptionsInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\ClientInterface;
+
 use function count;
 use function strlen;
 

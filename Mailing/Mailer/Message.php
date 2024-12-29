@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Mailing\Mailer;
@@ -7,6 +8,7 @@ use JsonSerializable;
 use ManaPHP\Helper\Container;
 use ManaPHP\Mailing\MailerInterface;
 use ManaPHP\Rendering\RendererInterface;
+
 use function is_array;
 use function is_string;
 

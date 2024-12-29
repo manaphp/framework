@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence;
@@ -7,6 +8,7 @@ use ArrayAccess;
 use JsonSerializable;
 use ManaPHP\Persistence\Event\EntityEventInterface;
 use Stringable;
+
 use function get_object_vars;
 use function is_array;
 use function is_object;

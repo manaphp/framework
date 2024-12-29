@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Viewing;
@@ -15,6 +16,7 @@ use ManaPHP\Viewing\View\Event\ViewRendering;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionClass;
+
 use function basename;
 use function class_exists;
 use function dirname;

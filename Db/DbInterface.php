@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Db;
@@ -17,10 +18,18 @@ interface DbInterface
 
     public function executeDelete(string $sql, array $bind = []): int;
 
-    public function fetchOne(string $sql, array $bind = [], int $mode = PDO::FETCH_ASSOC, bool $useMaster = false
+    public function fetchOne(
+        string $sql,
+        array $bind = [],
+        int $mode = PDO::FETCH_ASSOC,
+        bool $useMaster = false
     ): ?array;
 
-    public function fetchAll(string $sql, array $bind = [], int $mode = PDO::FETCH_ASSOC, bool $useMaster = false
+    public function fetchAll(
+        string $sql,
+        array $bind = [],
+        int $mode = PDO::FETCH_ASSOC,
+        bool $useMaster = false
     ): array;
 
     public function insert(string $table, array $record, bool $fetchInsertId = false): mixed;
@@ -31,7 +40,10 @@ interface DbInterface
 
     public function updateBySql(string $table, string $sql, array $bind = []): int;
 
-    public function upsert(string $table, array $insertFieldValues, array $updateFieldValues = [],
+    public function upsert(
+        string $table,
+        array $insertFieldValues,
+        array $updateFieldValues = [],
         ?string $primaryKey = null
     ): int;
 

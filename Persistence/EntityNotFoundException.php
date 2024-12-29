@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence;
 
 use JetBrains\PhpStorm\ArrayShape;
+
 use function json_stringify;
 
 class EntityNotFoundException extends Exception

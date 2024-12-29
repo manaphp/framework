@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Commands;
@@ -16,6 +17,7 @@ use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Persistence\Attribute\Connection;
+
 use function count;
 use function dirname;
 use function in_array;
@@ -402,7 +404,10 @@ class DbCommand extends Command
      *
      * @return void
      */
-    public function tablesAction(array $connections = [], string $table_pattern = '', string $namespace = 'App\Tables'
+    public function tablesAction(
+        array $connections = [],
+        string $table_pattern = '',
+        string $namespace = 'App\Tables'
     ): void {
         if (!str_contains($namespace, '\\')) {
             $namespace = 'App\\' . ucfirst($namespace) . '\\Tables';

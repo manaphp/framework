@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Swoole;
@@ -17,6 +18,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use Swoole\Http\Server;
 use Swoole\Process;
+
 use function lcfirst;
 use function preg_match;
 use function sprintf;
@@ -49,15 +51,17 @@ class Processes implements ProcessesInterface
         }
 
         for ($index = 0; $index < $settings->nums; $index++) {
-            $proc = new Process(function (Process $proc) use ($process, $index, $server) {
-                swoole_set_process_name($this->getProcessTitle($process, $index));
+            $proc = new Process(
+                function (Process $proc) use ($process, $index, $server) {
+                    swoole_set_process_name($this->getProcessTitle($process, $index));
 
-                $this->listenerProvider->add($process);
+                    $this->listenerProvider->add($process);
 
-                $this->eventDispatcher->dispatch(new ProcessHandling($server, $proc, $index));
-                $process->handle();
-                $this->eventDispatcher->dispatch(new ProcessHandled($server, $proc, $index));
-            }, false,
+                    $this->eventDispatcher->dispatch(new ProcessHandling($server, $proc, $index));
+                    $process->handle();
+                    $this->eventDispatcher->dispatch(new ProcessHandled($server, $proc, $index));
+                },
+                false,
                 $settings->pipe_type,
                 $settings->enable_coroutine,
             );

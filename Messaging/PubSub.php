@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Messaging;
@@ -13,18 +14,20 @@ class PubSub implements PubSubInterface
     public function subscribe(array $channels, callable $callback): void
     {
         $this->redisBroker->subscribe(
-            $channels, static function ($redis, $channel, $msg) use ($callback) {
-            $callback($channel, $msg);
-        }
+            $channels,
+            static function ($redis, $channel, $msg) use ($callback) {
+                $callback($channel, $msg);
+            }
         );
     }
 
     public function psubscribe(array $patterns, callable $callback): void
     {
         $this->redisBroker->psubscribe(
-            $patterns, static function ($redis, $pattern, $channel, $msg) use ($callback) {
-            $callback($channel, $msg);
-        }
+            $patterns,
+            static function ($redis, $pattern, $channel, $msg) use ($callback) {
+                $callback($channel, $msg);
+            }
         );
     }
 

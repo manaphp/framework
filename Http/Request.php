@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http;
@@ -20,10 +21,10 @@ use function strtoupper;
 
 class Request implements RequestInterface, JsonSerializable
 {
+    use ContextTrait;
+
     #[Autowired] protected MakerInterface|Lazy $maker;
     #[Autowired] protected ValidatorInterface|Lazy $validator;
-
-    use ContextTrait;
 
     #[Autowired] protected bool $proxy = false;
 
@@ -39,7 +40,12 @@ class Request implements RequestInterface, JsonSerializable
         }
     }
 
-    public function prepare(array $GET, array $POST, array $SERVER, ?string $RAW_BODY = null, array $COOKIE = [],
+    public function prepare(
+        array $GET,
+        array $POST,
+        array $SERVER,
+        ?string $RAW_BODY = null,
+        array $COOKIE = [],
         array $FILES = []
     ): void {
         $context = $this->getContext();

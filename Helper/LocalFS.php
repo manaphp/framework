@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Helper;
@@ -7,6 +8,7 @@ use ManaPHP\AliasInterface;
 use ManaPHP\Exception\CreateDirectoryFailedException;
 use ManaPHP\Exception\FileNotFoundException;
 use ManaPHP\Exception\RuntimeException;
+
 use function dirname;
 
 class LocalFS
@@ -209,7 +211,8 @@ class LocalFS
             if (is_file($srcPath)) {
                 if (($overwrite || !file_exists($dstPath)) && !copy($srcPath, $dstPath)) {
                     $error = error_get_last()['message'] ?? '';
-                    throw new RuntimeException(['copy `{1}` file to `{2}` file failed: {3}', $srcPath, $dstPath, $error]
+                    throw new RuntimeException(
+                        ['copy `{1}` file to `{2}` file failed: {3}', $srcPath, $dstPath, $error]
                     );
                 }
             } elseif (is_dir($srcPath)) {

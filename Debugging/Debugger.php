@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Debugging;
@@ -43,6 +44,7 @@ use ManaPHP\Rendering\Renderer\Event\RendererRendering;
 use ManaPHP\Version;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+
 use function dirname;
 use function get_included_files;
 use function in_array;

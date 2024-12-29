@@ -1,4 +1,5 @@
 <?php
+
 /** @noinspection PhpUndefinedNamespaceInspection */
 /** @noinspection PhpUndefinedClassInspection */
 declare(strict_types=1);
@@ -17,6 +18,7 @@ use Throwable;
 use Workerman\Connection\ConnectionInterface;
 use Workerman\Protocols\Http;
 use Workerman\Worker;
+
 use function dirname;
 use function is_string;
 use function strlen;

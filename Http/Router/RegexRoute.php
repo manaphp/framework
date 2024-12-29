@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Router;
 
 use JsonSerializable;
+
 use function is_string;
 use function preg_match;
 

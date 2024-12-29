@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Logging\Appender;
@@ -8,6 +9,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Logging\AppenderInterface;
 use ManaPHP\Logging\Log;
+
 use function dirname;
 
 class FileAppender implements AppenderInterface

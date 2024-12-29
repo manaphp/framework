@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Html\Dom;
@@ -194,7 +195,10 @@ class Document
         return $this;
     }
 
-    public function absolutizeImgSrc(?string $selector = null, ?DOMElement $context = null, string $attr = 'src'
+    public function absolutizeImgSrc(
+        ?string $selector = null,
+        ?DOMElement $context = null,
+        string $attr = 'src'
     ): static {
         /** @var DOMElement $item */
         if ($selector) {

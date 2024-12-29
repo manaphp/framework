@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics\Collectors;
@@ -25,7 +26,7 @@ class HttpRequestDurationCollector implements WorkerCollectorInterface
 
     public function updated(array $data): void
     {
-        list ($handler, $elapsed) = $data;
+        list($handler, $elapsed) = $data;
 
         if (($histogram = $this->histograms[$handler] ?? null) === null) {
             $histogram = $this->histograms[$handler] = new Histogram($this->buckets);

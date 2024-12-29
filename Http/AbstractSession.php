@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http;
@@ -204,8 +205,7 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
             return $this->serialize($data);
         } elseif ($serializer === 'json') {
             return json_stringify($data);
-        } /** @noinspection SpellCheckingInspection */
-        elseif ($serializer === 'igbinary') {
+        } /** @noinspection SpellCheckingInspection */ elseif ($serializer === 'igbinary') {
             return igbinary_serialize($data);
         } else {
             throw new NotSupportedException(['`{serializer}` serializer is not support', 'serializer' => $serializer]);
@@ -249,8 +249,7 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
             return unserialize($data, ['allowed_classes' => true]);
         } elseif ($serializer === 'json') {
             return json_parse($data);
-        } /** @noinspection SpellCheckingInspection */
-        elseif ($serializer === 'igbinary') {
+        } /** @noinspection SpellCheckingInspection */ elseif ($serializer === 'igbinary') {
             return igbinary_unserialize($data);
         } else {
             throw new NotSupportedException(['`{serializer}` serializer is not support', 'serializer' => $serializer]);

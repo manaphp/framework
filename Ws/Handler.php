@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Ws;
@@ -56,7 +57,8 @@ class Handler implements HandlerInterface
             }
 
             $returnValue = $this->dispatcher->dispatch(
-                $matcher->getHandler(), $matcher->getParams()
+                $matcher->getHandler(),
+                $matcher->getParams()
             );
 
             if ($returnValue === null || $returnValue instanceof Response) {

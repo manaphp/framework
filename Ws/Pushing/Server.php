@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Ws\Pushing;
@@ -173,7 +174,8 @@ class Server implements ServerInterface
             $this->pushToRoom($receivers, $message);
         } else {
             $this->logger->warning(
-                'unknown `{0}` type message: {1}', [$type, $message, 'category' => 'wspServer.bad_type']
+                'unknown `{0}` type message: {1}',
+                [$type, $message, 'category' => 'wspServer.bad_type']
             );
         }
     }
@@ -184,19 +186,20 @@ class Server implements ServerInterface
             function () {
                 $prefix = $this->prefix . $this->endpoint;
                 $this->pubSub->psubscribe(
-                    ["$prefix:*"], function ($channel, $message) use ($prefix) {
-                    list($type, $receivers) = explode(':', substr($channel, strlen($prefix) + 1), 2);
+                    ["$prefix:*"],
+                    function ($channel, $message) use ($prefix) {
+                        list($type, $receivers) = explode(':', substr($channel, strlen($prefix) + 1), 2);
 
-                    if ($type !== null && $receivers !== null) {
-                        $receivers = explode(',', $receivers);
+                        if ($type !== null && $receivers !== null) {
+                            $receivers = explode(',', $receivers);
 
-                        $this->eventDispatcher->dispatch(new ServerPushing($this, $type, $receivers, $message));
-                        $this->dispatch($type, $receivers, $message);
-                        $this->eventDispatcher->dispatch(new ServerPushing($this, $type, $receivers, $message));
-                    } else {
-                        $this->logger->warning($channel, ['category' => 'wspServer.bad_channel']);
+                            $this->eventDispatcher->dispatch(new ServerPushing($this, $type, $receivers, $message));
+                            $this->dispatch($type, $receivers, $message);
+                            $this->eventDispatcher->dispatch(new ServerPushing($this, $type, $receivers, $message));
+                        } else {
+                            $this->logger->warning($channel, ['category' => 'wspServer.bad_channel']);
+                        }
                     }
-                }
                 );
             }
         );

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Helper;
@@ -27,7 +28,11 @@ class Uuid
         $bytes = unpack('N1a/n1b/n1c/n1d/n1e/N1f', random_bytes(16));
         return sprintf(
             '%08x-%04x-%04x-%04x-%04x%08x',
-            $bytes['a'], $bytes['b'], ($bytes['c'] & 0x0FFF) | 0x4000, ($bytes['d'] & 0x3FFF) | 0x8000, $bytes['e'],
+            $bytes['a'],
+            $bytes['b'],
+            ($bytes['c'] & 0x0FFF) | 0x4000,
+            ($bytes['d'] & 0x3FFF) | 0x8000,
+            $bytes['e'],
             $bytes['f']
         );
     }
@@ -43,8 +48,14 @@ class Uuid
         $bytes['c'] = (~$bytes['g'] ^ $n) & 0xFFFF;
 
         return sprintf(
-            '%04X%04X-%04X-%04X-%04X-%04X%08X', $bytes['a'], $bytes['g'], $bytes['b'], $bytes['c'], $bytes['d'],
-            $bytes['e'], $bytes['f']
+            '%04X%04X-%04X-%04X-%04X-%04X%08X',
+            $bytes['a'],
+            $bytes['g'],
+            $bytes['b'],
+            $bytes['c'],
+            $bytes['d'],
+            $bytes['e'],
+            $bytes['f']
         );
     }
 

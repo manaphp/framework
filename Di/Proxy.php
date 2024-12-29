@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Di;
@@ -14,7 +15,10 @@ class Proxy implements Lazy
     protected object $object;
     protected ?string $value = null;
 
-    public function __construct(ContainerInterface $container, ReflectionProperty $property, object $object,
+    public function __construct(
+        ContainerInterface $container,
+        ReflectionProperty $property,
+        object $object,
         ?string $value
     ) {
         $this->container = $container;

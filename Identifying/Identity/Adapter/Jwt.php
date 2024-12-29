@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Identifying\Identity\Adapter;
@@ -8,6 +9,7 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Identifying\Identity;
 use ManaPHP\Token\ScopedJwtInterface;
+
 use function count;
 
 class Jwt extends Identity

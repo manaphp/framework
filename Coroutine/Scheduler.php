@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Coroutine;
@@ -8,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 use Throwable;
+
 use function count;
 
 class Scheduler implements SchedulerInterface

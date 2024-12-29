@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Db;
@@ -195,12 +196,20 @@ class Db implements DbInterface
         return $this->execute('delete', $sql, $bind);
     }
 
-    public function fetchOne(string $sql, array $bind = [], int $mode = PDO::FETCH_ASSOC, bool $useMaster = false
+    public function fetchOne(
+        string $sql,
+        array $bind = [],
+        int $mode = PDO::FETCH_ASSOC,
+        bool $useMaster = false
     ): ?array {
         return $this->fetchAll($sql, $bind, $mode, $useMaster)[0] ?? null;
     }
 
-    public function fetchAll(string $sql, array $bind = [], int $mode = PDO::FETCH_ASSOC, bool $useMaster = false
+    public function fetchAll(
+        string $sql,
+        array $bind = [],
+        int $mode = PDO::FETCH_ASSOC,
+        bool $useMaster = false
     ): array {
         /** @var DbContext $context */
         $context = $this->getContext();
@@ -357,7 +366,10 @@ class Db implements DbInterface
         return $this->execute('update', /** @lang text */ "UPDATE $table SET $sql", $bind);
     }
 
-    public function upsert(string $table, array $insertFieldValues, array $updateFieldValues = [],
+    public function upsert(
+        string $table,
+        array $insertFieldValues,
+        array $updateFieldValues = [],
         ?string $primaryKey = null
     ): int {
         if (!$primaryKey) {

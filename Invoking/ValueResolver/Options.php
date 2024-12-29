@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Invoking\ValueResolver;
@@ -8,6 +9,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Str;
 use ManaPHP\Invoking\ScalarValueResolverInterface;
 use ReflectionParameter;
+
 use function in_array;
 
 class Options implements ScalarValueResolverInterface

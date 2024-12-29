@@ -1,10 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Eventing;
 
 use JsonSerializable;
 use Stringable;
+
 use function is_object;
 
 class EventWrapper implements JsonSerializable, Stringable

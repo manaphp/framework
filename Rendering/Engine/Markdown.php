@@ -1,4 +1,6 @@
-<?php /** @noinspection RegExpSimplifiable */
+<?php
+
+/** @noinspection RegExpSimplifiable */
 /** @noinspection HttpUrlsUsage */
 /** @noinspection HttpUrlsUsage */
 /** @noinspection NotOptimalRegularExpressionsInspection */
@@ -24,6 +26,7 @@ namespace ManaPHP\Rendering\Engine;
 
 use JetBrains\PhpStorm\ArrayShape;
 use ManaPHP\Rendering\EngineInterface;
+
 use function array_slice;
 use function count;
 use function in_array;
@@ -182,7 +185,8 @@ class Markdown implements EngineInterface
         foreach ($lines as $line) {
             if (rtrim($line) === '') {
                 if (isset($CurrentBlock)) {
-                    $CurrentBlock['interrupted'] = (isset($CurrentBlock['interrupted'])
+                    $CurrentBlock['interrupted'] = (
+                    isset($CurrentBlock['interrupted'])
                         ? $CurrentBlock['interrupted'] + 1 : 1
                     );
                 }
@@ -571,14 +575,16 @@ class Markdown implements EngineInterface
                 (
                     $Block['data']['type'] === 'ol'
                     && preg_match(
-                        '/^\d++' . $Block['data']['markerTypeRegex'] . '(?:[ ]++(.*)|$)/', $Line['text'],
+                        '/^\d++' . $Block['data']['markerTypeRegex'] . '(?:[ ]++(.*)|$)/',
+                        $Line['text'],
                         $matches
                     )
                 )
                 || (
                     $Block['data']['type'] === 'ul'
                     && preg_match(
-                        '/^' . $Block['data']['markerTypeRegex'] . '(?:[ ]++(.*)|$)/', $Line['text'],
+                        '/^' . $Block['data']['markerTypeRegex'] . '(?:[ ]++(.*)|$)/',
+                        $Line['text'],
                         $matches
                     )
                 )
@@ -770,7 +776,8 @@ class Markdown implements EngineInterface
         }
 
         if (preg_match(
-            '/^<[\/]?+(\w*)(?:[ ]*+' . $this->regexHtmlAttribute . ')*+[ ]*+(\/)?>/', $Line['text'],
+            '/^<[\/]?+(\w*)(?:[ ]*+' . $this->regexHtmlAttribute . ')*+[ ]*+(\/)?>/',
+            $Line['text'],
             $matches
         )
         ) {
@@ -805,7 +812,9 @@ class Markdown implements EngineInterface
     {
         if (str_contains($Line['text'], ']')
             && preg_match(
-            /**@lang text */ '/^\[(.+?)\]:[ ]*+<?(\S+?)>?(?:[ ]+["\'(](.+)["\')])?[ ]*+$/', $Line['text'],
+            /**@lang text */
+                '/^\[(.+?)\]:[ ]*+<?(\S+?)>?(?:[ ]+["\'(](.+)["\')])?[ ]*+$/',
+                $Line['text'],
                 $matches
             )
         ) {
@@ -1149,7 +1158,8 @@ class Markdown implements EngineInterface
 
         if (preg_match(
             '/^([' . $marker . ']++)[ ]*+(.+?)[ ]*+(?<![' . $marker . '])\1(?!' . $marker . ')/s',
-            $Excerpt['text'], $matches
+            $Excerpt['text'],
+            $matches
         )
         ) {
             $text = $matches[2];
@@ -1312,7 +1322,8 @@ class Markdown implements EngineInterface
         }
 
         if (preg_match(
-            '/^[(]\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+("[^"]*+"|\'[^\']*+\'))?\s*+[)]/', $remainder,
+            '/^[(]\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+("[^"]*+"|\'[^\']*+\'))?\s*+[)]/',
+            $remainder,
             $matches
         )
         ) {
@@ -1374,7 +1385,8 @@ class Markdown implements EngineInterface
 
         if ($Excerpt['text'][1] !== ' '
             && preg_match(
-                '/^<\w[\w-]*+(?:[ ]*+' . $this->regexHtmlAttribute . ')*+[ ]*+\/?>/s', $Excerpt['text'],
+                '/^<\w[\w-]*+(?:[ ]*+' . $this->regexHtmlAttribute . ')*+[ ]*+\/?>/s',
+                $Excerpt['text'],
                 $matches
             )
         ) {

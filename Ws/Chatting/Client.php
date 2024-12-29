@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Ws\Chatting;
@@ -12,7 +13,6 @@ use function is_string;
 
 class Client implements ClientInterface
 {
-
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected PubSubInterface $pubSub;
 

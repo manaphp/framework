@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Router;
@@ -13,6 +14,7 @@ use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
+
 use function basename;
 use function is_array;
 use function str_contains;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Mailing;
@@ -13,7 +14,6 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 abstract class AbstractMailer implements MailerInterface
 {
-
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected MakerInterface $maker;
 

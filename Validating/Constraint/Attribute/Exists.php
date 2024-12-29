@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Validating\Constraint\Attribute;
@@ -13,6 +14,7 @@ use ManaPHP\Persistence\Entity;
 use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
+
 use function get_class;
 use function sprintf;
 

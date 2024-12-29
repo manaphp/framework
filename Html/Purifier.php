@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Html;
@@ -8,6 +9,7 @@ use DOMElement;
 use DOMNode;
 use Exception;
 use ManaPHP\Di\Attribute\Autowired;
+
 use function in_array;
 use function is_string;
 

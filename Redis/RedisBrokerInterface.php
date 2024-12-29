@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Redis;
@@ -8,5 +9,4 @@ namespace ManaPHP\Redis;
  */
 interface RedisBrokerInterface extends TransientCopyable
 {
-
 }

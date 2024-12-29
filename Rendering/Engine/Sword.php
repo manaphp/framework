@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Rendering\Engine;
@@ -8,6 +9,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Rendering\Engine\Sword\Compiler;
 use ManaPHP\Rendering\EngineInterface;
+
 use function strlen;
 
 class Sword implements EngineInterface

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Mongodb;
@@ -13,6 +14,7 @@ use ManaPHP\Helper\Arr;
 use ManaPHP\Query\AbstractQuery;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Regex;
+
 use function array_slice;
 use function count;
 use function in_array;
@@ -195,7 +197,8 @@ class Query extends AbstractQuery
                 if ($cond = $this->compileCondExpression($operand)) {
                     $this->aggregate[$k] = ['$sum' => $cond];
                 } else {
-                    throw new MisuseException(['unknown COUNT_IF expression: `{expression}`', 'expression' => $operand]
+                    throw new MisuseException(
+                        ['unknown COUNT_IF expression: `{expression}`', 'expression' => $operand]
                     );
                 }
             } elseif ($accumulator === 'sum_if') {
@@ -314,7 +317,8 @@ class Query extends AbstractQuery
             if ($this->types && !isset($this->types[$field])) {
                 $entityClass = $this->entityClass;
                 $collection = $entityClass ? $this->entityMetadata->getTable($entityClass) : $this->table;
-                throw new InvalidArgumentException(['`{1}` field is not exist in `{2}` collection', $field, $collection]
+                throw new InvalidArgumentException(
+                    ['`{1}` field is not exist in `{2}` collection', $field, $collection]
                 );
             }
 

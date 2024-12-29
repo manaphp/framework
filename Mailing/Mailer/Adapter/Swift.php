@@ -1,7 +1,7 @@
 <?php
+
 declare(strict_types=1);
 /** @noinspection PhpUndefinedClassInspection */
-
 
 namespace ManaPHP\Mailing\Mailer\Adapter;
 

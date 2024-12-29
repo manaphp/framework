@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Http\Router;
 
 use ManaPHP\Helper\Str;
+
 use function preg_replace_callback;
 use function str_contains;
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace ManaPHP\Persistence;
@@ -9,6 +10,7 @@ use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Persistence\Attribute\RelationInterface;
 use ManaPHP\Query\QueryInterface;
+
 use function is_array;
 use function is_callable;
 use function is_string;
