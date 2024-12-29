@@ -8,7 +8,6 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\AbstractHandler;
 use ManaPHP\Http\Response;
-use ManaPHP\Viewing\View;
 use Throwable;
 use function is_array;
 use function is_int;
@@ -26,8 +25,6 @@ class Handler extends AbstractHandler
             $this->response->json(['code' => 0, 'msg' => '', 'data' => $actionReturnValue]);
         } elseif ($actionReturnValue instanceof Response) {
             SuppressWarnings::noop();
-        } elseif ($actionReturnValue instanceof View) {
-            $this->response->setContent($actionReturnValue->render($this->dispatcher->getHandler()));
         } elseif (is_string($actionReturnValue)) {
             $this->response->json(['code' => -1, 'msg' => $actionReturnValue]);
         } elseif (is_int($actionReturnValue)) {

@@ -34,8 +34,10 @@ class Dispatcher implements DispatcherInterface
 
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RequestInterface $request;
+    #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
+    #[Autowired] protected ViewInterface $view;
 
     public function getController(): ?string
     {
@@ -75,8 +77,6 @@ class Dispatcher implements DispatcherInterface
             $rMethod = new ReflectionMethod($object, $method);
             $attributes = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF);
             if ($attributes !== []) {
-                $view = $this->container->get(ViewInterface::class);
-
                 /** @var ViewMappingInterface $viewMapping */
                 $viewMapping = $attributes[0]->newInstance();
                 if ($viewMapping instanceof ViewMapping) {
@@ -84,11 +84,11 @@ class Dispatcher implements DispatcherInterface
 
                     $vars = $object->$method(...$arguments);
                     if (is_array($vars)) {
-                        $view->setVars($vars);
+                        $this->view->setVars($vars);
                     }
                 }
 
-                return $view;
+                return $this->response->setContent($this->view->render($this->getHandler()));
             }
         }
 
