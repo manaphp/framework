@@ -6,6 +6,7 @@ namespace ManaPHP\Http;
 
 use ManaPHP\Context\ContextTrait;
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Di\MakerInterface;
 use ManaPHP\Http\Dispatcher\NotFoundActionException;
 use ManaPHP\Http\Dispatcher\NotFoundControllerException;
 use ManaPHP\Http\Server\Event\RequestAuthorized;
@@ -35,6 +36,7 @@ class Dispatcher implements DispatcherInterface
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected MakerInterface $maker;
     #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
     #[Autowired] protected ViewInterface $view;
 
@@ -98,6 +100,29 @@ class Dispatcher implements DispatcherInterface
         return $controller->$method(...$arguments);
     }
 
+    /**
+     * @param ReflectionMethod $method
+     *
+     * @return InterceptorInterface[]
+     */
+    protected function getInterceptors(ReflectionMethod $method): array
+    {
+        $interceptors = [];
+        foreach ($method->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute)
+        {
+            $arguments = $attribute->getArguments();
+            $name = $attribute->getName();
+
+            if ($arguments === []) {
+                $interceptors[] = $this->container->get($name);
+            } else {
+                $interceptors[] = $this->maker->make($name, $arguments);
+            }
+        }
+
+        return $interceptors;
+    }
+
     public function dispatch(string $handler, array $params): mixed
     {
         /** @var DispatcherContext $context */
@@ -135,6 +160,14 @@ class Dispatcher implements DispatcherInterface
 
         $this->eventDispatcher->dispatch(new RequestReady($this, $method));
 
+        $interceptors = $this->getInterceptors($method);
+
+        foreach ($interceptors as $interceptor) {
+            if (!$interceptor->preHandle($method)) {
+                return $this->response;
+            }
+        }
+
         $this->eventDispatcher->dispatch(new RequestInvoking($this, $method));
 
         try {
@@ -145,6 +178,10 @@ class Dispatcher implements DispatcherInterface
         }
 
         $this->eventDispatcher->dispatch(new RequestInvoked($this, $method, $return));
+
+        foreach ($interceptors as $interceptor) {
+            $interceptor->postHandle($method, $return);
+        }
 
         return $return;
     }
