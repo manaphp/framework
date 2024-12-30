@@ -8,13 +8,7 @@ use ManaPHP\Http\Request\FileInterface;
 
 interface RequestInterface
 {
-    public function prepare(
-        array $GET,
-        array $POST,
-        array $SERVER,
-        ?string $RAW_BODY = null,
-        array $COOKIE = [],
-        array $FILES = []
+    public function prepare(array $GET, array $POST, array $SERVER, ?string $RAW_BODY, array $COOKIE, array $FILES
     ): void;
 
     public function getContext(int $cid = 0): RequestContext;
@@ -33,7 +27,9 @@ interface RequestInterface
 
     public function query(string $name, mixed $default = null): string;
 
-    public function header(string $name, mixed $default = null): mixed;
+    public function header(string $name, ?string $default = null): ?string;
+
+    public function headers(): array;
 
     public function set(string $name, mixed $value): static;
 

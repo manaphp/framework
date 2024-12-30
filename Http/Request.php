@@ -17,7 +17,8 @@ use function count;
 use function in_array;
 use function is_array;
 use function is_int;
-use function strtoupper;
+use function str_starts_with;
+use function strtolower;
 
 class Request implements RequestInterface, JsonSerializable
 {
@@ -73,6 +74,23 @@ class Request implements RequestInterface, JsonSerializable
         $context->rawBody = $RAW_BODY;
         $context->_COOKIE = $COOKIE;
         $context->_FILES = $FILES;
+
+        $headers = [];
+        foreach ($SERVER as $key => $val) {
+            if (str_starts_with($key, 'HTTP_')) {
+                $headers[strtolower(str_replace('_', '-', substr($key, 5)))] = $val;
+            }
+        }
+
+        if (isset($SERVER['CONTENT_TYPE'])) {
+            $headers['content-type'] = $SERVER['CONTENT_TYPE'];
+        }
+
+        if (isset($SERVER['CONTENT_LENGTH'])) {
+            $headers['content-length'] = $SERVER['CONTENT_LENGTH'];
+        }
+
+        $context->headers = $headers;
     }
 
     public function getContext(int $cid = 0): RequestContext
@@ -150,9 +168,16 @@ class Request implements RequestInterface, JsonSerializable
         return $this;
     }
 
-    public function header(string $name, mixed $default = null): mixed
+    public function header(string $name, ?string $default = null): ?string
     {
-        return $this->server('HTTP_' . strtr(strtoupper($name), '-', '_'), $default);
+        return $this->headers()[strtolower($name)] ?? $default;
+    }
+
+    public function headers(): array
+    {
+        $context = $this->getContext();
+
+        return $context->headers;
     }
 
     public function server(?string $name = null, mixed $default = null): mixed

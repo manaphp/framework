@@ -106,8 +106,11 @@ class Swoole implements ServerInterface
         $_server = array_merge($_SERVER, $_server);
 
         $_get = $request->get ?: [];
+        $_post = [];
+        $cookies = $request->cookie ?? [];
+        $files = [];
 
-        $this->request->prepare($_get, [], $_server, null, $request->cookie ?? []);
+        $this->request->prepare($_get, $_post, $_server, null, $cookies, $files);
     }
 
     /** @noinspection PhpUnusedParameterInspection */

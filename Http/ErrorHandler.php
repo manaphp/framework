@@ -31,7 +31,7 @@ class ErrorHandler implements ErrorHandlerInterface
         }
 
         if ($this->format === 'json'
-            || str_contains($this->request->server('CONTENT_TYPE'), 'application/json')
+            || str_contains($this->request->header('content-type'), 'application/json')
             || str_contains($this->request->header('accept'), 'application/json')
         ) {
             if ($throwable instanceof Exception) {

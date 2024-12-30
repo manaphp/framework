@@ -42,7 +42,6 @@ use Swoole\Http\Response;
 use Swoole\Http\Server;
 use Swoole\Runtime;
 use Throwable;
-
 use function dirname;
 use function in_array;
 use function is_string;
@@ -130,7 +129,10 @@ class Swoole extends AbstractServer
         $_get = $request->get ?: [];
         $_post = $request->post ?: [];
         $raw_body = $request->rawContent();
-        $this->request->prepare($_get, $_post, $_server, $raw_body, $request->cookie ?? [], $request->files ?? []);
+        $cookies = $request->cookie ?? [];
+        $files = $request->files ?? [];
+
+        $this->request->prepare($_get, $_post, $_server, $raw_body, $cookies, $files);
     }
 
     protected function dispatchEvent(object $object): void
