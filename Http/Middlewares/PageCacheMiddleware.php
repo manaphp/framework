@@ -41,7 +41,7 @@ class PageCacheMiddleware
         $this->prefix = $prefix ?? sprintf('cache:%s:page_cache:', $this->app_id);
     }
 
-    protected function getPageCache(object $controller, string $action): PageCacheAttribute|false
+    protected function getPageCache(string $controller, string $action): PageCacheAttribute|false
     {
         $rMethod = new ReflectionMethod($controller, $action . 'Action');
 
@@ -62,7 +62,7 @@ class PageCacheMiddleware
         $controller = $event->controller;
         $action = $event->action;
 
-        $key = $controller::class . '::' . $action;
+        $key = $controller . '::' . $action;
         if (($pageCache = $this->pageCaches[$key] ?? null) === null) {
             $pageCache = $this->pageCaches[$key] = $this->getPageCache($controller, $action);
         }

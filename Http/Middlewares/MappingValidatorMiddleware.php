@@ -11,7 +11,6 @@ use ManaPHP\Http\Router\Attribute\MappingInterface;
 use ManaPHP\Http\Router\MethodNotAllowedException;
 use ManaPHP\Http\Server\Event\RequestValidating;
 use ReflectionAttribute;
-use ReflectionMethod;
 
 class MappingValidatorMiddleware
 {
@@ -19,11 +18,9 @@ class MappingValidatorMiddleware
 
     public function onValidating(#[Event] RequestValidating $event): void
     {
-        $controller = $event->controller;
-        $action = $event->action;
-        $rm = new ReflectionMethod($controller, $action);
-
-        if (($attributes = $rm->getAttributes(MappingInterface::class, ReflectionAttribute::IS_INSTANCEOF)) !== []) {
+        if (($attributes = $event->method->getAttributes(MappingInterface::class, ReflectionAttribute::IS_INSTANCEOF))
+            !== []
+        ) {
             $allowed = false;
 
             $method = $this->request->method();

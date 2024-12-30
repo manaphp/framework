@@ -70,9 +70,10 @@ class Dispatcher implements DispatcherInterface
         return $context->handler;
     }
 
-    protected function invoke(object $object, string $method): mixed
+    protected function invoke(ReflectionMethod $rMethod): mixed
     {
-        $rMethod = new ReflectionMethod($object, $method);
+        $controller = $this->container->get($rMethod->class);
+        $method = $rMethod->name;
 
         if ($this->request->method() === 'GET' && !$this->request->isAjax()) {
             $attributes = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF);
@@ -82,7 +83,7 @@ class Dispatcher implements DispatcherInterface
                 if ($viewMapping instanceof ViewMapping) {
                     $arguments = $this->argumentsResolver->resolve($rMethod);
 
-                    $vars = $object->$method(...$arguments);
+                    $vars = $controller->$method(...$arguments);
                     if (is_array($vars)) {
                         $this->view->setVars($vars);
                     }
@@ -94,7 +95,7 @@ class Dispatcher implements DispatcherInterface
 
         $arguments = $this->argumentsResolver->resolve($rMethod);
 
-        return $object->$method(...$arguments);
+        return $controller->$method(...$arguments);
     }
 
     public function dispatch(string $handler, array $params): mixed
@@ -112,37 +113,38 @@ class Dispatcher implements DispatcherInterface
                 $globals->_REQUEST[$k] = $v;
             }
         }
-        list($context->controller, $context->action) = explode('::', $handler);
-        $action = $context->action;
+        list($controller, $action) = explode('::', $handler);
+        $context->controller = $controller;
+        $context->action = $action;
 
-        if (!class_exists($context->controller)) {
-            throw new NotFoundControllerException(['`{1}` class cannot be loaded', $context->controller]);
+        if (!class_exists($controller)) {
+            throw new NotFoundControllerException(['`{1}` class cannot be loaded', $controller]);
         }
-
-        $controller = $this->container->get($context->controller);
 
         if (!method_exists($controller, $action)) {
-            throw new NotFoundActionException(['`{1}::{2}` method does not exist', $controller::class, $action]);
+            throw new NotFoundActionException(['`{1}::{2}` method does not exist', $controller, $action]);
         }
 
-        $this->eventDispatcher->dispatch(new RequestAuthorizing($this, $controller, $action));
-        $this->eventDispatcher->dispatch(new RequestAuthorized($this, $controller, $action));
+        $method = new ReflectionMethod($controller, $action);
 
-        $this->eventDispatcher->dispatch(new RequestValidating($this, $controller, $action));
-        $this->eventDispatcher->dispatch(new RequestValidated($this, $controller, $action));
+        $this->eventDispatcher->dispatch(new RequestAuthorizing($this, $method));
+        $this->eventDispatcher->dispatch(new RequestAuthorized($this, $method));
 
-        $this->eventDispatcher->dispatch(new RequestReady($this, $controller, $action));
+        $this->eventDispatcher->dispatch(new RequestValidating($this, $method));
+        $this->eventDispatcher->dispatch(new RequestValidated($this, $method));
 
-        $this->eventDispatcher->dispatch(new RequestInvoking($this, $controller, $action));
+        $this->eventDispatcher->dispatch(new RequestReady($this, $method));
+
+        $this->eventDispatcher->dispatch(new RequestInvoking($this, $method));
 
         try {
             $context->isInvoking = true;
-            $return = $this->invoke($controller, $action);
+            $return = $this->invoke($method);
         } finally {
             $context->isInvoking = false;
         }
 
-        $this->eventDispatcher->dispatch(new RequestInvoked($this, $controller, $action, $return));
+        $this->eventDispatcher->dispatch(new RequestInvoked($this, $method, $return));
 
         return $return;
     }

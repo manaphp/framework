@@ -47,7 +47,7 @@ class RateLimitMiddleware
     public function onValidating(#[Event] RequestValidating $event): void
     {
         $dispatcher = $event->dispatcher;
-        $controller = $event->controller::class;
+        $controller = $event->controller;
         $action = $event->action;
         $key = "$controller::$action";
         if (($rateLimit = $this->rateLimits[$key] ?? null) === null) {
