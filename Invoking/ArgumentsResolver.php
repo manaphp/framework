@@ -78,10 +78,8 @@ class ArgumentsResolver implements ArgumentsResolverInterface
         return null;
     }
 
-    public function resolve(object $controller, string $method): array
+    public function resolve(ReflectionMethod $rMethod): array
     {
-        $rMethod = new ReflectionMethod($controller, $method);
-
         if (($numOfParameters = $rMethod->getNumberOfParameters()) === 0) {
             return [];
         }

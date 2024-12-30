@@ -6,7 +6,6 @@ namespace ManaPHP\Http;
 
 use ManaPHP\Context\ContextTrait;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Http\Action\ArgumentsResolverInterface;
 use ManaPHP\Http\Dispatcher\NotFoundActionException;
 use ManaPHP\Http\Dispatcher\NotFoundControllerException;
 use ManaPHP\Http\Server\Event\RequestAuthorized;
@@ -73,14 +72,15 @@ class Dispatcher implements DispatcherInterface
 
     protected function invoke(object $object, string $method): mixed
     {
+        $rMethod = new ReflectionMethod($object, $method);
+
         if ($this->request->method() === 'GET' && !$this->request->isAjax()) {
-            $rMethod = new ReflectionMethod($object, $method);
             $attributes = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF);
             if ($attributes !== []) {
                 /** @var ViewMappingInterface $viewMapping */
                 $viewMapping = $attributes[0]->newInstance();
                 if ($viewMapping instanceof ViewMapping) {
-                    $arguments = $this->argumentsResolver->resolve($object, $method);
+                    $arguments = $this->argumentsResolver->resolve($rMethod);
 
                     $vars = $object->$method(...$arguments);
                     if (is_array($vars)) {
@@ -92,7 +92,7 @@ class Dispatcher implements DispatcherInterface
             }
         }
 
-        $arguments = $this->argumentsResolver->resolve($object, $method);
+        $arguments = $this->argumentsResolver->resolve($rMethod);
 
         return $object->$method(...$arguments);
     }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ManaPHP\Http\Action;
+namespace ManaPHP\Http;
 
 use ManaPHP\Di\Attribute\Autowired;
 

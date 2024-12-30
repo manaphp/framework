@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace ManaPHP\Cli\Action;
+namespace ManaPHP\Cli;
 
 interface ArgumentsResolverInterface extends \ManaPHP\Invoking\ArgumentsResolverInterface
 {
-    public function resolve(object $controller, string $method): array;
 }

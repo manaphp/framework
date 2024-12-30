@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace ManaPHP\Cli;
 
-use ManaPHP\Cli\Action\ArgumentsResolverInterface;
 use ManaPHP\Cli\Event\CliInvoked;
 use ManaPHP\Cli\Event\CliInvoking;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Str;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use ReflectionMethod;
 use function count;
 use function is_int;
 
@@ -122,7 +122,7 @@ class Handler implements HandlerInterface
         }
 
         $this->eventDispatcher->dispatch(new CliInvoking($this, $instance, $method, $action));
-        $arguments = $this->argumentsResolver->resolve($instance, $method);
+        $arguments = $this->argumentsResolver->resolve(new ReflectionMethod($instance, $method));
         $return = $instance->$method(...$arguments);
         $this->eventDispatcher->dispatch(new CliInvoked($this, $instance, $method, $action, $return));
         if ($return === null) {
