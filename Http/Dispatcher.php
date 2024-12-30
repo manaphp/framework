@@ -107,9 +107,18 @@ class Dispatcher implements DispatcherInterface
      */
     protected function getInterceptors(ReflectionMethod $method): array
     {
+        $attributes = [];
         $controller = $method->getDeclaringClass();
-        $attributes = [...$controller->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF),
-                       ...$method->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF)];
+        foreach (
+            $controller->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute
+        ) {
+            $attributes[$attribute->getName()] = $attribute;
+        }
+
+        foreach ($method->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute)
+        {
+            $attributes[$attribute->getName()] = $attribute;
+        }
 
         $interceptors = [];
         foreach ($attributes as $attribute) {
