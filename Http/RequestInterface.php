@@ -63,4 +63,12 @@ interface RequestInterface
     public function elapsed(int $precision = 3): float;
 
     public function path(): string;
+
+    public function getAttribute(string $name): mixed;
+
+    public function getAttributes(): array;
+
+    public function setAttribute(string $name, mixed $value): void;
+
+    public function removeAttribute(string $name): void;
 }

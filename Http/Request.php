@@ -303,4 +303,24 @@ class Request implements RequestInterface, JsonSerializable
     {
         return $this->server('REQUEST_URI');
     }
+
+    public function getAttribute(string $name): mixed
+    {
+        return $this->getContext()->attributes[$name] ?? null;
+    }
+
+    public function getAttributes(): array
+    {
+        return $this->getContext()->attributes;
+    }
+
+    public function setAttribute(string $name, mixed $value): void
+    {
+        $this->getContext()->attributes[$name] = $value;
+    }
+
+    public function removeAttribute(string $name): void
+    {
+        unset($this->getContext()->attributes[$name]);
+    }
 }
