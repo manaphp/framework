@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class RequestResponding
 {
     public function __construct(public RequestInterface $request, public ResponseInterface $response)

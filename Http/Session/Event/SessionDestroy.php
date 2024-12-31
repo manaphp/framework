@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Session\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\AbstractSessionContext;
 use ManaPHP\Http\SessionInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class SessionDestroy
 {
     public function __construct(

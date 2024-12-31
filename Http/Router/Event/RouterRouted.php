@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace ManaPHP\Http\Router\Event;
 
 use JsonSerializable;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\Router\MatcherInterface;
 use ManaPHP\Http\RouterInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class RouterRouted implements JsonSerializable
 {
     public function __construct(

@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace ManaPHP\Mailing\Mailer\Event;
 
 use JsonSerializable;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Mailing\Mailer\Message;
 use ManaPHP\Mailing\MailerInterface;
+use Psr\Log\LogLevel;
 use Stringable;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class MailerSending implements JsonSerializable, Stringable
 {
     public function __construct(

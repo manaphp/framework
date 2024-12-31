@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ManaPHP\Viewing\View\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Viewing\ViewInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class ViewRendering
 {
     public function __construct(

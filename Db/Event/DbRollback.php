@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace ManaPHP\Db\Event;
 
 use ManaPHP\Db\DbInterface;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class DbRollback
 {
     public function __construct(

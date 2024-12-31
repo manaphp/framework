@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace ManaPHP\Http\Server\Event;
 
 use JsonSerializable;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
+use Psr\Log\LogLevel;
 use Swoole\Http\Server;
-
 use function get_class;
 use function is_object;
 
-#[Verbosity(Verbosity::MEDIUM)]
+#[TraceLevel(LogLevel::INFO)]
 class ServerPipeMessage implements JsonSerializable
 {
     public function __construct(public Server $server, public int $src_worker_id, public mixed $message)

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ManaPHP\Mongodb\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Mongodb\Connection;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::MEDIUM)]
+#[TraceLevel(LogLevel::INFO)]
 class MongodbConnect extends AbstractEvent
 {
     public function __construct(

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ManaPHP\Ws\Chatting\Client\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Ws\Chatting\ClientInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::MEDIUM)]
+#[TraceLevel(LogLevel::INFO)]
 class ChatClientPush
 {
     public function __construct(

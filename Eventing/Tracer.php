@@ -7,20 +7,21 @@ namespace ManaPHP\Eventing;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Eventing\Attribute\Event;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Logging\Event\LoggerLog;
 use ManaPHP\Mongodb\Event\MongodbCommanded;
 use ManaPHP\Redis\Event\RedisCalled;
 use ManaPHP\Redis\Event\RedisCalling;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionUnionType;
 use Stringable;
-
 use function count;
 use function is_string;
+use function str_replace;
 use function strlen;
 
 class Tracer implements TracerInterface
@@ -28,11 +29,8 @@ class Tracer implements TracerInterface
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected LoggerInterface $logger;
 
-    #[Autowired] protected array $events = [];
     #[Autowired] protected bool $verbose = true;
-    #[Autowired] protected int $verbosity = Verbosity::HIGH;
-    #[Autowired] protected array $verbosities = [];
-
+    #[Autowired] protected array $levels = [];
     #[Autowired] protected bool $enabled = true;
 
     #[Config] protected bool $app_debug;
@@ -70,41 +68,23 @@ class Tracer implements TracerInterface
     {
         $name = $event::class;
 
-        if (($verbosity = $this->verbosities[$name] ?? null) === null) {
-            $rClass = new ReflectionClass($name);
-            if (($attributes = $rClass->getAttributes(Verbosity::class)) !== []) {
-                /** @var Verbosity $attribute */
-                $attribute = $attributes[0]->newInstance();
-                $verbosity = $this->verbosities[$name] = $attribute->verbosity;
-            } else {
-                $verbosity = $this->verbosities[$name] = false;
-            }
-        }
-
-        if ($verbosity !== false && $verbosity > $this->verbosity) {
-            return;
-        }
-
         if (($listener = $this->listeners[$name] ?? null) !== null) {
             $this->$listener($event);
         } else {
-            if (($evt = $this->events[$name] ?? null) !== null) {
-                if ($evt === '') {
-                    return;
+            if (($level = $this->levels[$name] ?? null) === null) {
+                $rClass = new ReflectionClass($name);
+                if (($attributes = $rClass->getAttributes(TraceLevel::class)) !== []) {
+                    /** @var TraceLevel $traceLevel */
+                    $traceLevel = $attributes[0]->newInstance();
+                    $level = $traceLevel->level;
+                } else {
+                    $level = LogLevel::DEBUG;
                 }
 
-                if (str_contains($evt, ':')) {
-                    list($level, $fields) = explode($evt, ':', 2);
-                } else {
-                    $level = 'debug';
-                    $fields = $evt;
-                }
-                $message = new EventWrapper($event, $fields);
-            } else {
-                $message = $event instanceof Stringable ? $event : new EventWrapper($event);
-                $level = 'debug';
+                $this->levels[$name] = $level;
             }
 
+            $message = $event instanceof Stringable ? $event : new EventWrapper($event);
             $this->logger->$level($message, ['category' => str_replace('\\', '.', $name)]);
         }
     }

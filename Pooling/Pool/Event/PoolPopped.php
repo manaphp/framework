@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Pooling\Pool\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Pooling\PoolsInterface;
+use Psr\Log\LogLevel;
 use Stringable;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class PoolPopped implements Stringable
 {
     public function __construct(

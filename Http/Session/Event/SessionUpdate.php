@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace ManaPHP\Http\Session\Event;
 
 use JsonSerializable;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\AbstractSessionContext;
 use ManaPHP\Http\SessionInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::MEDIUM)]
+#[TraceLevel(LogLevel::INFO)]
 class SessionUpdate implements JsonSerializable
 {
     public function __construct(

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Ws\Server\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Ws\ServerInterface;
+use Psr\Log\LogLevel;
 use Swoole\Http\Server;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class ServerStop
 {
     public function __construct(

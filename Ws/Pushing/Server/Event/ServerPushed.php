@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ManaPHP\Ws\Pushing\Server\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Ws\Pushing\ServerInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class ServerPushed extends AbstractEvent
 {
     public function __construct(

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ManaPHP\Ws\Chatting\Server\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Ws\Chatting\ServerInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class UserLeave
 {
     public function __construct(

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\DispatcherInterface;
+use Psr\Log\LogLevel;
 use ReflectionMethod;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class RequestInvoked
 {
     public string $controller;

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Logging\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Logging\Log;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class LoggerLog
 {
     public function __construct(

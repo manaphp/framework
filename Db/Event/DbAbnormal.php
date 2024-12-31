@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace ManaPHP\Db\Event;
 
 use ManaPHP\Db\ConnectionInterface;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use PDO;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::WARNING)]
 class DbAbnormal
 {
     public function __construct(

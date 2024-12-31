@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ManaPHP\Redis\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Redis\Connection;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class RedisCalled
 {
     public function __construct(

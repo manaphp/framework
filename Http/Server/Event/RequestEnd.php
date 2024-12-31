@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace ManaPHP\Http\Server\Event;
 
 use JsonSerializable;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class RequestEnd implements JsonSerializable
 {
     public function __construct(

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class RequestValidating extends RequestDispatchBase
 {
 }

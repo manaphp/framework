@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace ManaPHP\Db\Event;
 
 use ManaPHP\Db\DbInterface;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class DbMetadata extends AbstractEvent
 {
     public function __construct(

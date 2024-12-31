@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ManaPHP\Ws\Pushing\Client\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Ws\Pushing\ClientInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class PushClientPush
 {
     public function __construct(

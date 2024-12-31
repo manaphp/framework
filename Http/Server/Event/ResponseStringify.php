@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Event;
 
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\ResponseInterface;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::HIGH)]
+#[TraceLevel(LogLevel::DEBUG)]
 class ResponseStringify
 {
     public function __construct(public ResponseInterface $response)

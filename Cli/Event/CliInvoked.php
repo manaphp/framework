@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace ManaPHP\Cli\Event;
 
 use ManaPHP\Cli\HandlerInterface;
-use ManaPHP\Eventing\Attribute\Verbosity;
+use ManaPHP\Eventing\Attribute\TraceLevel;
+use Psr\Log\LogLevel;
 
-#[Verbosity(Verbosity::LOW)]
+#[TraceLevel(LogLevel::NOTICE)]
 class CliInvoked
 {
     public function __construct(
