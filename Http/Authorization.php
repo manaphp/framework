@@ -12,7 +12,6 @@ use ManaPHP\Http\Authorization\RoleRepositoryInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Identifying\Identity\NoCredentialException;
 use ManaPHP\Identifying\IdentityInterface;
-use ReflectionClass;
 use ReflectionMethod;
 use function basename;
 use function in_array;
@@ -64,7 +63,7 @@ class Authorization implements AuthorizationInterface
         $rMethod = new ReflectionMethod($controller, $action);
 
         if (($attribute = $rMethod->getAttributes(Authorize::class)[0] ?? null) === null) {
-            $rClass = new ReflectionClass($controller);
+            $rClass = $rMethod->getDeclaringClass();
             if (($attribute = $rClass->getAttributes(Authorize::class)[0] ?? null) === null) {
                 return null;
             }

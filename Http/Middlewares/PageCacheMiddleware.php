@@ -41,10 +41,8 @@ class PageCacheMiddleware
         $this->prefix = $prefix ?? sprintf('cache:%s:page_cache:', $this->app_id);
     }
 
-    protected function getPageCache(string $controller, string $action): PageCacheAttribute|false
+    protected function getPageCache(ReflectionMethod $rMethod): PageCacheAttribute|false
     {
-        $rMethod = new ReflectionMethod($controller, $action . 'Action');
-
         if (($attributes = $rMethod->getAttributes(PageCacheAttribute::class)) !== []) {
             return $attributes[0]->newInstance();
         } else {
@@ -64,7 +62,7 @@ class PageCacheMiddleware
 
         $key = $controller . '::' . $action;
         if (($pageCache = $this->pageCaches[$key] ?? null) === null) {
-            $pageCache = $this->pageCaches[$key] = $this->getPageCache($controller, $action);
+            $pageCache = $this->pageCaches[$key] = $this->getPageCache($event->method);
         }
 
         if ($pageCache === false) {

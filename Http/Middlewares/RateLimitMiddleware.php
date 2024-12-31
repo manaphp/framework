@@ -13,7 +13,6 @@ use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\Server\Event\RequestValidating;
 use ManaPHP\Identifying\IdentityInterface;
 use ManaPHP\Redis\RedisCacheInterface;
-use ReflectionClass;
 use ReflectionMethod;
 use function strlen;
 
@@ -29,14 +28,13 @@ class RateLimitMiddleware
 
     protected array $rateLimits = [];
 
-    protected function getRateLimit($controller, $action): RateLimitAttribute|false
+    protected function getRateLimit(ReflectionMethod $rMethod): RateLimitAttribute|false
     {
-        $rMethod = new ReflectionMethod($controller, $action . 'Action');
         if (($attributes = $rMethod->getAttributes(RateLimitAttribute::class)) !== []) {
             return $attributes[0]->newInstance();
         }
 
-        $rClass = new ReflectionClass($controller);
+        $rClass = $rMethod->getDeclaringClass();
         if (($attributes = $rClass->getAttributes(RateLimitAttribute::class)) !== []) {
             return $attributes[0]->newInstance();
         }
@@ -51,7 +49,7 @@ class RateLimitMiddleware
         $action = $event->action;
         $key = "$controller::$action";
         if (($rateLimit = $this->rateLimits[$key] ?? null) === null) {
-            $rateLimit = $this->rateLimits[$key] = $this->getRateLimit($controller, $action);
+            $rateLimit = $this->rateLimits[$key] = $this->getRateLimit($event->method);
         }
 
         if ($rateLimit === false) {

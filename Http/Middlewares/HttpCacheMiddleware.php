@@ -27,7 +27,7 @@ class HttpCacheMiddleware
 
     protected function getHttpCache(string $controller, string $action): HttpCacheAttribute|false
     {
-        $rMethod = new ReflectionMethod($controller, $action . 'Action');
+        $rMethod = new ReflectionMethod($controller, $action);
 
         if (($attributes = $rMethod->getAttributes(HttpCacheAttribute::class)) !== []) {
             return $attributes[0]->newInstance();
