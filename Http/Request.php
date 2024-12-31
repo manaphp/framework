@@ -175,9 +175,7 @@ class Request implements RequestInterface, JsonSerializable
 
     public function headers(): array
     {
-        $context = $this->getContext();
-
-        return $context->headers;
+        return $this->getContext()->headers;
     }
 
     public function server(?string $name = null, mixed $default = null): mixed

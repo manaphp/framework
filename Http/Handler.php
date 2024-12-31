@@ -23,7 +23,6 @@ use function is_string;
 class Handler implements HandlerInterface
 {
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
-    #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected RouterInterface $router;
@@ -34,11 +33,11 @@ class Handler implements HandlerInterface
 
     #[Autowired] protected array $middlewares = [];
 
-    public function __construct()
+    public function __construct(ListenerProviderInterface $listenerProvider)
     {
         foreach ($this->middlewares as $middleware) {
             if ($middleware !== '' && $middleware !== null) {
-                $this->listenerProvider->add($middleware);
+                $listenerProvider->add($middleware);
             }
         }
     }
