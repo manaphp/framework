@@ -56,14 +56,6 @@ class Dispatcher implements DispatcherInterface
         return $context->action;
     }
 
-    public function getParams(): array
-    {
-        /** @var DispatcherContext $context */
-        $context = $this->getContext();
-
-        return $context->params;
-    }
-
     public function getHandler(): ?string
     {
         /** @var DispatcherContext $context */
@@ -141,7 +133,6 @@ class Dispatcher implements DispatcherInterface
         $context = $this->getContext();
 
         $context->handler = $handler;
-        $context->params = $params;
 
         $globals = $this->request->getContext();
 

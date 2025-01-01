@@ -12,8 +12,6 @@ interface DispatcherInterface
 
     public function getController(): ?string;
 
-    public function getParams(): array;
-
     public function dispatch(string $handler, array $params): mixed;
 
     public function isInvoking(): bool;
