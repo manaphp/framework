@@ -8,6 +8,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\ResponseInterface;
+use function hash;
 use function in_array;
 
 class EtagAppender implements AppenderInterface
@@ -20,15 +21,17 @@ class EtagAppender implements AppenderInterface
             return;
         }
 
-        if (($etag = $response->getHeader('ETag', '')) === '') {
-            $etag = hash($this->algo, $response->getContent());
-            $response->setETag($etag);
-        }
+        if (($content = $response->getContent()) !== null) {
+            if (($etag = $response->getHeader('ETag', '')) === '') {
+                $etag = hash($this->algo, $content);
+                $response->setETag($etag);
+            }
 
-        $if_none_match = $request->header('if-none-match');
-        if ($if_none_match === $etag) {
-            $response->removeHeader('ETag');
-            $response->setNotModified();
+            $if_none_match = $request->header('if-none-match');
+            if ($if_none_match === $etag) {
+                $response->removeHeader('ETag');
+                $response->setNotModified();
+            }
         }
     }
 }

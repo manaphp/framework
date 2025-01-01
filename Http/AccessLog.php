@@ -9,6 +9,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function strlen;
 use function substr;
 
 class AccessLog implements AccessLogInterface
@@ -71,7 +72,7 @@ time=$time_iso8601
         } elseif ($name === 'status') {
             return (string)$this->response->getStatusCode();
         } elseif ($name === 'body_bytes_sent') {
-            return (string)$this->response->getContentLength();
+            return (string)strlen($this->response->getContent() ?? '');
         } elseif ($name === 'is_args') {
             return $this->request->server('QUERY_STRING', '') === '' ? '' : '?';
         } elseif ($name === 'query_string') {

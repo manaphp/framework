@@ -168,7 +168,7 @@ class PageCacheMiddleware
             return;
         }
 
-        $content = $this->response->getContent();
+        $content = $this->response->getContent() ?? '';
         $etag = md5($content);
 
         $this->redisCache->hMSet(

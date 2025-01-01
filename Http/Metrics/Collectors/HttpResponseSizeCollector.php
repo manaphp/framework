@@ -9,6 +9,7 @@ use ManaPHP\Http\Metrics\FormatterInterface;
 use ManaPHP\Http\Metrics\Histogram;
 use ManaPHP\Http\Metrics\WorkerCollectorInterface;
 use ManaPHP\Http\ResponseInterface;
+use function strlen;
 
 class HttpResponseSizeCollector implements WorkerCollectorInterface
 {
@@ -21,7 +22,7 @@ class HttpResponseSizeCollector implements WorkerCollectorInterface
 
     public function updating(?string $handler): ?array
     {
-        return $handler ? [$handler, $this->response->getContentLength()] : null;
+        return $handler ? [$handler, strlen($this->response->getContent() ?? '')] : null;
     }
 
     public function updated(array $data): void

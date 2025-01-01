@@ -66,7 +66,7 @@ class Sender implements SenderInterface
             );
         }
 
-        $content = $this->response->getContent();
+        $content = $this->response->getContent() ?? '';
         if ($this->response->getStatusCode() === 304) {
             SuppressWarnings::noop();
         } elseif ($this->request->method() === 'HEAD') {

@@ -340,13 +340,6 @@ class Response implements ResponseInterface
         return $context->content;
     }
 
-    public function getContentLength(): int
-    {
-        $content = $this->getContent();
-
-        return is_string($content) ? strlen($content) : 0;
-    }
-
     public function hasContent(): bool
     {
         /** @var ResponseContext $context */

@@ -89,9 +89,9 @@ class Handler implements HandlerInterface
             $this->errorHandler->handle($exception);
         }
 
-        if (!is_string($this->response->getContent()) && !$this->response->hasFile()) {
+        if (is_array($this->response->getContent())) {
             $this->eventDispatcher->dispatch(new ResponseStringify($this->response));
-            if (!is_string($content = $this->response->getContent())) {
+            if (is_array($content = $this->response->getContent())) {
                 $this->response->setContent(json_stringify($content));
             }
         }

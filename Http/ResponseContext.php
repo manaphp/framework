@@ -10,6 +10,6 @@ class ResponseContext
     public string $status_text = 'OK';
     public array $headers = [];
     public array $cookies = [];
-    public mixed $content = '';
+    public mixed $content = null;
     public ?string $file = null;
 }

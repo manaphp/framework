@@ -56,8 +56,6 @@ interface ResponseInterface
 
     public function getContent(): mixed;
 
-    public function getContentLength(): int;
-
     public function hasContent(): bool;
 
     public function download(string $file, ?string $name = null): static;

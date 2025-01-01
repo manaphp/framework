@@ -16,6 +16,7 @@ use ManaPHP\Http\Server\Event\RequestResponding;
 use ReflectionMethod;
 use function in_array;
 use function is_int;
+use function md5;
 
 class HttpCacheMiddleware
 {
@@ -61,15 +62,17 @@ class HttpCacheMiddleware
         foreach ($httpCache->headers as $k => $v) {
             if (is_int($k)) {
                 if ($v === 'etag' || $v === 'ETag') {
-                    if (($etag = $this->response->getHeader('ETag', '')) === '') {
-                        $etag = md5($this->response->getContent());
-                        $this->response->setETag($etag);
-                    }
+                    if (($content = $this->response->getContent()) !== null) {
+                        if (($etag = $this->response->getHeader('ETag', '')) === '') {
+                            $etag = md5($content);
+                            $this->response->setETag($etag);
+                        }
 
-                    $if_none_match = $this->request->header('if-none-match');
-                    if ($if_none_match === $etag) {
-                        $this->response->setNotModified();
-                        return;
+                        $if_none_match = $this->request->header('if-none-match');
+                        if ($if_none_match === $etag) {
+                            $this->response->setNotModified();
+                            return;
+                        }
                     }
                 } else {
                     $this->response->setCacheControl($v);

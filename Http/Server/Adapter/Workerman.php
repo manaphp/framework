@@ -154,7 +154,7 @@ class Workerman extends AbstractServer
 
         /** @var WorkermanContext $context */
         $context = $this->getContext();
-        $content = $this->response->getContent();
+        $content = $this->response->getContent() ?? '';
         if ($this->response->getStatusCode() === 304) {
             $context->connection->close('');
         } elseif ($this->request->method() === 'HEAD') {

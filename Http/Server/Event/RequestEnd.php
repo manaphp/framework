@@ -9,6 +9,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use Psr\Log\LogLevel;
+use function strlen;
 
 #[TraceLevel(LogLevel::NOTICE)]
 class RequestEnd implements JsonSerializable
@@ -26,7 +27,7 @@ class RequestEnd implements JsonSerializable
             'uri'            => $this->request->path(),
             'http_code'      => $this->response->getStatusCode(),
             'content-type'   => $this->response->getContentType(),
-            'content-length' => $this->response->getContentLength(),
+            'content-length' => strlen($this->response->getContent() ?? ''),
         ];
     }
 }

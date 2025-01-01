@@ -332,7 +332,7 @@ class Swoole extends AbstractServer
             );
         }
 
-        $content = $this->response->getContent();
+        $content = $this->response->getContent() ?? '';
         if ($this->response->getStatusCode() === 304) {
             $response->end('');
         } elseif ($this->request->method() === 'HEAD') {
