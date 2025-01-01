@@ -8,7 +8,6 @@ use ManaPHP\Context\ContextTrait;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\LocalFS;
-use ManaPHP\Http\DispatcherInterface;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Rendering\RendererInterface;
 use ManaPHP\Viewing\View\Event\ViewRendered;
@@ -34,7 +33,6 @@ class View implements ViewInterface
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RouterInterface $router;
     #[Autowired] protected RendererInterface $renderer;
-    #[Autowired] protected DispatcherInterface $dispatcher;
 
     #[Autowired] protected bool $autofix_url = true;
     #[Autowired] protected ?string $layout = '@views/Layouts/Default';
