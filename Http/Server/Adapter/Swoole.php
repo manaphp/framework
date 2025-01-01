@@ -14,8 +14,6 @@ use ManaPHP\Helper\Ip;
 use ManaPHP\Http\AbstractServer;
 use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\RouterInterface;
-use ManaPHP\Http\Server\Event\RequestResponded;
-use ManaPHP\Http\Server\Event\RequestResponding;
 use ManaPHP\Http\Server\Event\ServerBeforeShutdown;
 use ManaPHP\Http\Server\Event\ServerClose;
 use ManaPHP\Http\Server\Event\ServerConnect;
@@ -296,8 +294,6 @@ class Swoole extends AbstractServer
 
     public function send(): void
     {
-        $this->dispatchEvent(new RequestResponding($this->request, $this->response));
-
         foreach ($this->response->getAppenders() as $appender) {
             if ($appender !== '' && $appender !== null) {
                 /** @var string|AppenderInterface $appender */
@@ -343,7 +339,5 @@ class Swoole extends AbstractServer
         } else {
             $response->end($content);
         }
-
-        $this->dispatchEvent(new RequestResponded($this->request, $this->response));
     }
 }

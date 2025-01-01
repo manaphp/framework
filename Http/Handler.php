@@ -15,6 +15,8 @@ use ManaPHP\Http\Server\Event\RequestAuthenticating;
 use ManaPHP\Http\Server\Event\RequestBegin;
 use ManaPHP\Http\Server\Event\RequestEnd;
 use ManaPHP\Http\Server\Event\RequestException;
+use ManaPHP\Http\Server\Event\RequestResponded;
+use ManaPHP\Http\Server\Event\RequestResponding;
 use ManaPHP\Http\Server\Event\ResponseStringify;
 use Throwable;
 use function is_array;
@@ -96,7 +98,9 @@ class Handler implements HandlerInterface
             }
         }
 
+        $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));
         $this->httpServer->send();
+        $this->eventDispatcher->dispatch(new RequestResponded($this->request, $this->response));
 
         $this->accessLog->log();
 

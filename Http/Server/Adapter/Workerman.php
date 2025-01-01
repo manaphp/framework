@@ -10,8 +10,6 @@ use ManaPHP\Context\ContextTrait;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\AbstractServer;
 use ManaPHP\Http\Response\AppenderInterface;
-use ManaPHP\Http\Server\Event\RequestResponded;
-use ManaPHP\Http\Server\Event\RequestResponding;
 use ManaPHP\Http\Server\Event\ServerReady;
 use Throwable;
 use Workerman\Connection\ConnectionInterface;
@@ -123,8 +121,6 @@ class Workerman extends AbstractServer
 
     public function send(): void
     {
-        $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));
-
         foreach ($this->response->getAppenders() as $appender) {
             if ($appender !== '' && $appender !== null) {
                 /** @var string|AppenderInterface $appender */
@@ -163,7 +159,5 @@ class Workerman extends AbstractServer
         } else {
             $context->connection->close($content);
         }
-
-        $this->eventDispatcher->dispatch(new RequestResponded($this->request, $this->response));
     }
 }

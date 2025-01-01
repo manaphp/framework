@@ -12,8 +12,6 @@ use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\RouterInterface;
-use ManaPHP\Http\Server\Event\RequestResponded;
-use ManaPHP\Http\Server\Event\RequestResponding;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use function strlen;
@@ -32,8 +30,6 @@ class Sender implements SenderInterface
         if (headers_sent($file, $line)) {
             throw new MisuseException("Headers has been sent in $file:$line");
         }
-
-        $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));
 
         foreach ($this->response->getAppenders() as $appender) {
             if ($appender !== '' && $appender !== null) {
@@ -76,7 +72,5 @@ class Sender implements SenderInterface
         } else {
             echo $content;
         }
-
-        $this->eventDispatcher->dispatch(new RequestResponded($this->request, $this->response));
     }
 }
