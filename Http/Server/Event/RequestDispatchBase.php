@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Event;
 
-use ManaPHP\Http\DispatcherInterface;
 use ReflectionMethod;
 
 class RequestDispatchBase
@@ -13,7 +12,6 @@ class RequestDispatchBase
     public string $action;
 
     public function __construct(
-        public DispatcherInterface $dispatcher,
         public ReflectionMethod $method,
     ) {
         $this->controller = $this->method->class;

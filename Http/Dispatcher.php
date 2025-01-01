@@ -155,13 +155,13 @@ class Dispatcher implements DispatcherInterface
 
         $method = new ReflectionMethod($controller, $action);
 
-        $this->eventDispatcher->dispatch(new RequestAuthorizing($this, $method));
-        $this->eventDispatcher->dispatch(new RequestAuthorized($this, $method));
+        $this->eventDispatcher->dispatch(new RequestAuthorizing($method));
+        $this->eventDispatcher->dispatch(new RequestAuthorized($method));
 
-        $this->eventDispatcher->dispatch(new RequestValidating($this, $method));
-        $this->eventDispatcher->dispatch(new RequestValidated($this, $method));
+        $this->eventDispatcher->dispatch(new RequestValidating($method));
+        $this->eventDispatcher->dispatch(new RequestValidated($method));
 
-        $this->eventDispatcher->dispatch(new RequestReady($this, $method));
+        $this->eventDispatcher->dispatch(new RequestReady($method));
 
         $interceptors = $this->getInterceptors($method);
 
@@ -171,7 +171,7 @@ class Dispatcher implements DispatcherInterface
             }
         }
 
-        $this->eventDispatcher->dispatch(new RequestInvoking($this, $method));
+        $this->eventDispatcher->dispatch(new RequestInvoking($method));
 
         try {
             $context->isInvoking = true;
@@ -180,7 +180,7 @@ class Dispatcher implements DispatcherInterface
             $context->isInvoking = false;
         }
 
-        $this->eventDispatcher->dispatch(new RequestInvoked($this, $method, $return));
+        $this->eventDispatcher->dispatch(new RequestInvoked($method, $return));
 
         foreach ($interceptors as $interceptor) {
             $interceptor->postHandle($method, $return);

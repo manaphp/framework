@@ -56,7 +56,6 @@ class PageCacheMiddleware
             return;
         }
 
-        $dispatcher = $event->dispatcher;
         $controller = $event->controller;
         $action = $event->action;
 
@@ -110,10 +109,11 @@ class PageCacheMiddleware
             $key = http_build_query($params);
         }
 
+        $handler = $controller . '::' . $action;
         if ($key === '') {
-            $context->key = $this->prefix . $dispatcher->getHandler();
+            $context->key = $this->prefix . $handler;
         } else {
-            $context->key = $this->prefix . $dispatcher->getHandler() . ':' . $key;
+            $context->key = $this->prefix . $handler . ':' . $key;
         }
 
         if ($this->request->isAjax()) {

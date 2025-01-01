@@ -44,7 +44,6 @@ class RateLimitMiddleware
 
     public function onValidating(#[Event] RequestValidating $event): void
     {
-        $dispatcher = $event->dispatcher;
         $controller = $event->controller;
         $action = $event->action;
         $key = "$controller::$action";
@@ -58,7 +57,7 @@ class RateLimitMiddleware
 
         $uid = $this->identity->isGuest() ? $this->request->ip() : $this->identity->getName();
         $prefix = ($this->prefix ?? sprintf('cache:%s:rate_limit:', $this->app_id))
-            . $dispatcher->getHandler() . ':' . $uid . ':';
+            . $event->controller . ':' . $event->action . ':' . $uid . ':';
 
         foreach ($rateLimit->limits as $k => $v) {
             $v = trim($v);

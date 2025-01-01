@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ManaPHP\Http\Server\Event;
 
 use ManaPHP\Eventing\Attribute\TraceLevel;
-use ManaPHP\Http\DispatcherInterface;
 use Psr\Log\LogLevel;
 use ReflectionMethod;
 
@@ -16,7 +15,6 @@ class RequestInvoked
     public string $action;
 
     public function __construct(
-        public DispatcherInterface $dispatcher,
         public ReflectionMethod $method,
         public mixed $return,
     ) {
