@@ -9,6 +9,7 @@ use ManaPHP\Eventing\EventDispatcherInterface;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Exception\AbortException;
 use ManaPHP\Helper\SuppressWarnings;
+use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\Router\NotFoundRouteException;
 use ManaPHP\Http\Server\Event\RequestAuthenticated;
 use ManaPHP\Http\Server\Event\RequestAuthenticating;
@@ -18,6 +19,7 @@ use ManaPHP\Http\Server\Event\RequestException;
 use ManaPHP\Http\Server\Event\RequestResponded;
 use ManaPHP\Http\Server\Event\RequestResponding;
 use ManaPHP\Http\Server\Event\ResponseStringify;
+use Psr\Container\ContainerInterface;
 use Throwable;
 use function is_array;
 use function is_int;
@@ -26,6 +28,7 @@ use function json_stringify;
 
 class Handler implements HandlerInterface
 {
+    #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
@@ -95,6 +98,14 @@ class Handler implements HandlerInterface
             $this->eventDispatcher->dispatch(new ResponseStringify($this->response));
             if (is_array($content = $this->response->getContent())) {
                 $this->response->setContent(json_stringify($content));
+            }
+        }
+
+        foreach ($this->response->getAppenders() as $appender) {
+            if ($appender !== '' && $appender !== null) {
+                /** @var string|AppenderInterface $appender */
+                $appender = $this->container->get($appender);
+                $appender->append($this->request, $this->response);
             }
         }
 

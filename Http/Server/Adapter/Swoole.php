@@ -12,7 +12,6 @@ use ManaPHP\Di\ConfigInterface;
 use ManaPHP\Di\Lazy;
 use ManaPHP\Helper\Ip;
 use ManaPHP\Http\AbstractServer;
-use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Http\Server\Event\ServerBeforeShutdown;
 use ManaPHP\Http\Server\Event\ServerClose;
@@ -294,14 +293,6 @@ class Swoole extends AbstractServer
 
     public function send(): void
     {
-        foreach ($this->response->getAppenders() as $appender) {
-            if ($appender !== '' && $appender !== null) {
-                /** @var string|AppenderInterface $appender */
-                $appender = $this->container->get($appender);
-                $appender->append($this->request, $this->response);
-            }
-        }
-
         /** @var SwooleContext $context */
         $context = $this->getContext();
 

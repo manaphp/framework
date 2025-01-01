@@ -9,7 +9,6 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\RequestInterface;
-use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\RouterInterface;
 use Psr\Container\ContainerInterface;
@@ -29,14 +28,6 @@ class Sender implements SenderInterface
     {
         if (headers_sent($file, $line)) {
             throw new MisuseException("Headers has been sent in $file:$line");
-        }
-
-        foreach ($this->response->getAppenders() as $appender) {
-            if ($appender !== '' && $appender !== null) {
-                /** @var string|AppenderInterface $appender */
-                $appender = $this->container->get($appender);
-                $appender->append($this->request, $this->response);
-            }
         }
 
         header('HTTP/1.1 ' . $this->response->getStatus());

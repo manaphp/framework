@@ -9,7 +9,6 @@ namespace ManaPHP\Http\Server\Adapter;
 use ManaPHP\Context\ContextTrait;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\AbstractServer;
-use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\Server\Event\ServerReady;
 use Throwable;
 use Workerman\Connection\ConnectionInterface;
@@ -121,14 +120,6 @@ class Workerman extends AbstractServer
 
     public function send(): void
     {
-        foreach ($this->response->getAppenders() as $appender) {
-            if ($appender !== '' && $appender !== null) {
-                /** @var string|AppenderInterface $appender */
-                $appender = $this->container->get($appender);
-                $appender->append($this->request, $this->response);
-            }
-        }
-
         Http::header('HTTP', true, $this->response->getStatusCode());
 
         foreach ($this->response->getHeaders() as $name => $value) {

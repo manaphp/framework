@@ -20,7 +20,6 @@ use ManaPHP\Http\Response\Appenders\RouteAppender;
 use function basename;
 use function is_array;
 use function is_string;
-use function strlen;
 
 class Response implements ResponseInterface
 {
