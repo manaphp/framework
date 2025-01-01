@@ -15,10 +15,12 @@ use ManaPHP\Http\Server\Event\RequestAuthenticating;
 use ManaPHP\Http\Server\Event\RequestBegin;
 use ManaPHP\Http\Server\Event\RequestEnd;
 use ManaPHP\Http\Server\Event\RequestException;
+use ManaPHP\Http\Server\Event\ResponseStringify;
 use Throwable;
 use function is_array;
 use function is_int;
 use function is_string;
+use function json_stringify;
 
 class Handler implements HandlerInterface
 {
@@ -85,6 +87,13 @@ class Handler implements HandlerInterface
         } catch (Throwable $exception) {
             $this->eventDispatcher->dispatch(new RequestException($exception));
             $this->errorHandler->handle($exception);
+        }
+
+        if (!is_string($this->response->getContent()) && !$this->response->hasFile()) {
+            $this->eventDispatcher->dispatch(new ResponseStringify($this->response));
+            if (!is_string($content = $this->response->getContent())) {
+                $this->response->setContent(json_stringify($content));
+            }
         }
 
         $this->httpServer->send();

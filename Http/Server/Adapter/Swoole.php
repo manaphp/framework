@@ -16,7 +16,6 @@ use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Http\Server\Event\RequestResponded;
 use ManaPHP\Http\Server\Event\RequestResponding;
-use ManaPHP\Http\Server\Event\ResponseStringify;
 use ManaPHP\Http\Server\Event\ServerBeforeShutdown;
 use ManaPHP\Http\Server\Event\ServerClose;
 use ManaPHP\Http\Server\Event\ServerConnect;
@@ -44,7 +43,6 @@ use Swoole\Runtime;
 use Throwable;
 use function dirname;
 use function in_array;
-use function is_string;
 use function strlen;
 
 class Swoole extends AbstractServer
@@ -298,13 +296,6 @@ class Swoole extends AbstractServer
 
     public function send(): void
     {
-        if (!is_string($this->response->getContent()) && !$this->response->hasFile()) {
-            $this->dispatchEvent(new ResponseStringify($this->response));
-            if (!is_string($content = $this->response->getContent())) {
-                $this->response->setContent(json_stringify($content));
-            }
-        }
-
         $this->dispatchEvent(new RequestResponding($this->request, $this->response));
 
         foreach ($this->response->getAppenders() as $appender) {

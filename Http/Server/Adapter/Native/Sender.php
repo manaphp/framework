@@ -14,11 +14,8 @@ use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Http\Server\Event\RequestResponded;
 use ManaPHP\Http\Server\Event\RequestResponding;
-use ManaPHP\Http\Server\Event\ResponseStringify;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-
-use function is_string;
 use function strlen;
 
 class Sender implements SenderInterface
@@ -34,13 +31,6 @@ class Sender implements SenderInterface
     {
         if (headers_sent($file, $line)) {
             throw new MisuseException("Headers has been sent in $file:$line");
-        }
-
-        if (!is_string($this->response->getContent()) && !$this->response->hasFile()) {
-            $this->eventDispatcher->dispatch(new ResponseStringify($this->response));
-            if (!is_string($content = $this->response->getContent())) {
-                $this->response->setContent(json_stringify($content));
-            }
         }
 
         $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));

@@ -12,7 +12,6 @@ use ManaPHP\Http\AbstractServer;
 use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\Server\Event\RequestResponded;
 use ManaPHP\Http\Server\Event\RequestResponding;
-use ManaPHP\Http\Server\Event\ResponseStringify;
 use ManaPHP\Http\Server\Event\ServerReady;
 use Throwable;
 use Workerman\Connection\ConnectionInterface;
@@ -20,7 +19,6 @@ use Workerman\Protocols\Http;
 use Workerman\Worker;
 
 use function dirname;
-use function is_string;
 use function strlen;
 
 class Workerman extends AbstractServer
@@ -125,14 +123,6 @@ class Workerman extends AbstractServer
 
     public function send(): void
     {
-        if (!is_string($this->response->getContent()) && !$this->response->hasFile()) {
-            $this->eventDispatcher->dispatch(new ResponseStringify($this->response));
-
-            if (!is_string($content = $this->response->getContent())) {
-                $this->response->setContent(json_stringify($content));
-            }
-        }
-
         $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));
 
         foreach ($this->response->getAppenders() as $appender) {
