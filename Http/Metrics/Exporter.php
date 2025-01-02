@@ -94,7 +94,7 @@ class Exporter implements ExporterInterface
     {
         SuppressWarnings::unused($event);
 
-        $handler = $this->request->getHandler();
+        $handler = $this->request->handler();
 
         $data = [];
         foreach ($this->collectors as $name) {

@@ -124,7 +124,7 @@ class Debugger implements DebuggerInterface
                 $key = implode(
                     ':',
                     ['__debugger', $this->app_id, $this->request->ip(),
-                     $this->request->getHandler()]
+                     $this->request->handler()]
                 );
                 $redisCache->publish($key, $this->response->getHeader('X-Debugger-Link'));
             }
@@ -340,7 +340,7 @@ class Debugger implements DebuggerInterface
         $memory_usage = (int)(memory_get_usage(true) / 1024) . 'k/' . (int)(memory_get_peak_usage(true) / 1024) . 'k';
 
         return [
-            'handler'            => (string)$this->request->getHandler(),
+            'handler'            => (string)$this->request->handler(),
             'request_method'     => $this->request->method(),
             'request_url'        => $this->request->url(),
             'request_query'      => $this->request->server('QUERY_STRING'),

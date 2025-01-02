@@ -304,12 +304,12 @@ class Request implements RequestInterface, JsonSerializable
         return $this->server('REQUEST_URI');
     }
 
-    public function getAttribute(string $name): mixed
+    public function attribute(string $name): mixed
     {
         return $this->getContext()->attributes[$name] ?? null;
     }
 
-    public function getAttributes(): array
+    public function attributes(): array
     {
         return $this->getContext()->attributes;
     }
@@ -329,7 +329,7 @@ class Request implements RequestInterface, JsonSerializable
         $this->getContext()->handler = $handler;
     }
 
-    public function getHandler(): ?string
+    public function handler(): ?string
     {
         return $this->getContext()->handler;
     }

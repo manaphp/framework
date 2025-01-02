@@ -64,9 +64,9 @@ interface RequestInterface
 
     public function path(): string;
 
-    public function getAttribute(string $name): mixed;
+    public function attribute(string $name): mixed;
 
-    public function getAttributes(): array;
+    public function attributes(): array;
 
     public function setAttribute(string $name, mixed $value): void;
 
@@ -74,5 +74,5 @@ interface RequestInterface
 
     public function setHandler(string $handler): void;
 
-    public function getHandler(): ?string;
+    public function handler(): ?string;
 }

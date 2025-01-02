@@ -54,7 +54,7 @@ time=$time_iso8601
             } elseif ($name === 'request_time') {
                 return sprintf('%.3f', $this->request->elapsed());
             } elseif ($name === 'request_handler') {
-                return (string)$this->request->getHandler();
+                return (string)$this->request->handler();
             } else {
                 return $this->default_value;
             }

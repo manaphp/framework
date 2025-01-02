@@ -57,7 +57,7 @@ class SlowlogMiddleware
 
         $message = [
             'method'   => $this->request->method(),
-            'handler'  => (string)$this->request->getHandler(),
+            'handler'  => (string)$this->request->handler(),
             'url'      => $this->request->url(),
             '_REQUEST' => $this->request->all(),
             'elapsed'  => $elapsed,

@@ -59,7 +59,7 @@ class Dispatcher implements DispatcherInterface
                     }
                 }
 
-                return $this->response->setContent($this->view->render($this->request->getHandler()));
+                return $this->response->setContent($this->view->render($this->request->handler()));
             }
         }
 
