@@ -7,7 +7,5 @@ namespace ManaPHP\Http;
 class DispatcherContext
 {
     public ?string $handler = null;
-    public ?string $controller = null;
-    public ?string $action = null;
     public bool $isInvoking = false;
 }

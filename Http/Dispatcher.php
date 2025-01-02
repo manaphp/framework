@@ -40,22 +40,6 @@ class Dispatcher implements DispatcherInterface
     #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
     #[Autowired] protected ViewInterface $view;
 
-    public function getController(): ?string
-    {
-        /** @var DispatcherContext $context */
-        $context = $this->getContext();
-
-        return $context->controller;
-    }
-
-    public function getAction(): ?string
-    {
-        /** @var DispatcherContext $context */
-        $context = $this->getContext();
-
-        return $context->action;
-    }
-
     public function getHandler(): ?string
     {
         /** @var DispatcherContext $context */
@@ -142,8 +126,6 @@ class Dispatcher implements DispatcherInterface
             }
         }
         list($controller, $action) = explode('::', $handler);
-        $context->controller = $controller;
-        $context->action = $action;
 
         if (!class_exists($controller)) {
             throw new NotFoundControllerException(['`{1}` class cannot be loaded', $controller]);

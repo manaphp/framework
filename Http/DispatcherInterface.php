@@ -8,10 +8,6 @@ interface DispatcherInterface
 {
     public function getHandler(): ?string;
 
-    public function getAction(): ?string;
-
-    public function getController(): ?string;
-
     public function dispatch(string $handler, array $params): mixed;
 
     public function isInvoking(): bool;
