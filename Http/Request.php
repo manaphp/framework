@@ -323,4 +323,14 @@ class Request implements RequestInterface, JsonSerializable
     {
         unset($this->getContext()->attributes[$name]);
     }
+
+    public function setHandler(string $handler): void
+    {
+        $this->getContext()->handler = $handler;
+    }
+
+    public function getHandler(): ?string
+    {
+        return $this->getContext()->handler;
+    }
 }

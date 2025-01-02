@@ -40,14 +40,6 @@ class Dispatcher implements DispatcherInterface
     #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
     #[Autowired] protected ViewInterface $view;
 
-    public function getHandler(): ?string
-    {
-        /** @var DispatcherContext $context */
-        $context = $this->getContext();
-
-        return $context->handler;
-    }
-
     protected function invoke(ReflectionMethod $rMethod): mixed
     {
         $controller = $this->container->get($rMethod->class);
@@ -67,7 +59,7 @@ class Dispatcher implements DispatcherInterface
                     }
                 }
 
-                return $this->response->setContent($this->view->render($this->getHandler()));
+                return $this->response->setContent($this->view->render($this->request->getHandler()));
             }
         }
 
@@ -116,7 +108,7 @@ class Dispatcher implements DispatcherInterface
         /** @var DispatcherContext $context */
         $context = $this->getContext();
 
-        $context->handler = $handler;
+        $this->request->setHandler($handler);
 
         $globals = $this->request->getContext();
 

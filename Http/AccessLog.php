@@ -17,7 +17,6 @@ class AccessLog implements AccessLogInterface
     #[Autowired] protected LoggerInterface $logger;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
-    #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected CookiesInterface $cookies;
 
     #[Autowired] protected bool $enabled = true;
@@ -55,7 +54,7 @@ time=$time_iso8601
             } elseif ($name === 'request_time') {
                 return sprintf('%.3f', $this->request->elapsed());
             } elseif ($name === 'request_handler') {
-                return (string)$this->dispatcher->getHandler();
+                return (string)$this->request->getHandler();
             } else {
                 return $this->default_value;
             }

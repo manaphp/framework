@@ -25,7 +25,6 @@ use ManaPHP\Helper\Arr;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
 use ManaPHP\Helper\SuppressWarnings;
-use ManaPHP\Http\DispatcherInterface;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\RouterInterface;
@@ -62,7 +61,6 @@ class Debugger implements DebuggerInterface
     #[Autowired] protected LoggerInterface $logger;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
-    #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected RouterInterface $router;
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected PreparedEmulatorInterface|Lazy $preparedEmulator;
@@ -126,7 +124,7 @@ class Debugger implements DebuggerInterface
                 $key = implode(
                     ':',
                     ['__debugger', $this->app_id, $this->request->ip(),
-                     $this->dispatcher->getHandler()]
+                     $this->request->getHandler()]
                 );
                 $redisCache->publish($key, $this->response->getHeader('X-Debugger-Link'));
             }
@@ -342,7 +340,7 @@ class Debugger implements DebuggerInterface
         $memory_usage = (int)(memory_get_usage(true) / 1024) . 'k/' . (int)(memory_get_peak_usage(true) / 1024) . 'k';
 
         return [
-            'handler'            => (string)$this->dispatcher->getHandler(),
+            'handler'            => (string)$this->request->getHandler(),
             'request_method'     => $this->request->method(),
             'request_url'        => $this->request->url(),
             'request_query'      => $this->request->server('QUERY_STRING'),

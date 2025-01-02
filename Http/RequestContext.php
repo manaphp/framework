@@ -17,4 +17,5 @@ class RequestContext implements Stickyable
     public ?string $rawBody;
     public array $headers = [];
     public array $attributes = [];
+    public ?string $handler = null;
 }

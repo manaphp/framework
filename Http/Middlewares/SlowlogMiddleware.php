@@ -8,7 +8,6 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Helper\LocalFS;
-use ManaPHP\Http\DispatcherInterface;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Server\Event\RequestEnd;
@@ -18,7 +17,6 @@ class SlowlogMiddleware
 {
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
-    #[Autowired] protected DispatcherInterface $dispatcher;
 
     #[Autowired] protected float $threshold = 1.0;
     #[Autowired] protected string $file = '@runtime/slowlog/{app_id}.log';
@@ -57,11 +55,9 @@ class SlowlogMiddleware
             return;
         }
 
-        $dispatcher = $this->dispatcher;
-
         $message = [
             'method'   => $this->request->method(),
-            'handler'  => (string)$dispatcher->getHandler(),
+            'handler'  => (string)$this->request->getHandler(),
             'url'      => $this->request->url(),
             '_REQUEST' => $this->request->all(),
             'elapsed'  => $elapsed,

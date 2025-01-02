@@ -71,4 +71,8 @@ interface RequestInterface
     public function setAttribute(string $name, mixed $value): void;
 
     public function removeAttribute(string $name): void;
+
+    public function setHandler(string $handler): void;
+
+    public function getHandler(): ?string;
 }

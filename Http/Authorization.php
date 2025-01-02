@@ -27,7 +27,6 @@ class Authorization implements AuthorizationInterface
     use ContextTrait;
 
     #[Autowired] protected IdentityInterface $identity;
-    #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected ControllersInterface $controllers;

@@ -8,7 +8,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Helper\SuppressWarnings;
-use ManaPHP\Http\DispatcherInterface;
+use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Server\Event\RequestEnd;
 use ManaPHP\Swoole\WorkersTrait;
@@ -21,8 +21,8 @@ class Exporter implements ExporterInterface
 
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
-    #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected WorkersDataInterface $workersData;
 
     #[Autowired] protected array $collectors
@@ -94,7 +94,7 @@ class Exporter implements ExporterInterface
     {
         SuppressWarnings::unused($event);
 
-        $handler = $this->dispatcher->getHandler();
+        $handler = $this->request->getHandler();
 
         $data = [];
         foreach ($this->collectors as $name) {
