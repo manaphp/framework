@@ -14,9 +14,9 @@ use ManaPHP\Identifying\Identity\NoCredentialException;
 use ManaPHP\Identifying\IdentityInterface;
 use ReflectionMethod;
 use function basename;
+use function explode;
 use function in_array;
 use function str_contains;
-use function str_ends_with;
 use function str_replace;
 use function str_starts_with;
 use function strpos;
@@ -85,15 +85,8 @@ class Authorization implements AuthorizationInterface
             return true;
         }
 
-        if (!str_contains($permission, '::')) {
-            if (($controller = $this->dispatcher->getController()) === null) {
-                return false;
-            }
-
-            $action = Str::camelize($permission);
-            if (!str_ends_with($action, 'Action')) {
-                $action .= 'Action';
-            }
+        if (str_contains($permission, '\\')) {
+            list($controller, $action) = explode('::', $permission);
 
             if (($authorize = $this->getAuthorize($controller, $action)) !== null) {
                 if (in_array(Authorize::GUEST, $authorize->roles, true)) {
@@ -138,9 +131,9 @@ class Authorization implements AuthorizationInterface
         return false;
     }
 
-    public function authorize(): void
+    public function authorize(string $handler): void
     {
-        if ($this->isAllowed($this->dispatcher->getAction())) {
+        if ($this->isAllowed($handler)) {
             return;
         }
 

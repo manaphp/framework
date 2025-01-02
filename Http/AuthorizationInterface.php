@@ -10,5 +10,5 @@ interface AuthorizationInterface
 
     public function isAllowed(string $permission, ?array $roles = null): bool;
 
-    public function authorize(): void;
+    public function authorize(string $handler): void;
 }
