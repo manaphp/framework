@@ -46,7 +46,7 @@ use function is_string;
 use function json_stringify;
 use function method_exists;
 
-class Handler implements HandlerInterface, ContextAware
+class RequestHandler implements RequestHandlerInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected ContainerInterface $container;
@@ -72,7 +72,7 @@ class Handler implements HandlerInterface, ContextAware
         }
     }
 
-    public function getContext(): HandlerContext
+    public function getContext(): RequestHandlerContext
     {
         return $this->contextManager->getContext($this);
     }

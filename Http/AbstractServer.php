@@ -21,7 +21,7 @@ abstract class AbstractServer implements ServerInterface
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected RouterInterface $router;
-    #[Autowired] protected HandlerInterface $httpHandler;
+    #[Autowired] protected RequestHandlerInterface $requestHandler;
 
     #[Autowired] protected string $host = '0.0.0.0';
     #[Autowired] protected int $port = 9501;

@@ -79,7 +79,7 @@ class Php extends AbstractServer
         } else {
             $this->eventDispatcher->dispatch(new ServerReady());
 
-            $this->httpHandler->handle();
+            $this->requestHandler->handle();
         }
     }
 

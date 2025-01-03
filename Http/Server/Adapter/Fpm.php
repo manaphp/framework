@@ -27,7 +27,7 @@ class Fpm extends AbstractServer
 
         $this->eventDispatcher->dispatch(new ServerReady());
 
-        $this->httpHandler->handle();
+        $this->requestHandler->handle();
     }
 
     public function send(): void
