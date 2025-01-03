@@ -34,7 +34,6 @@ class Handler implements HandlerInterface
     #[Autowired] protected RouterInterface $router;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
-    #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected ErrorHandler $errorHandler;
 
     /**
@@ -57,7 +56,7 @@ class Handler implements HandlerInterface
                 throw new NotFoundRouteException(['router does not have matched route']);
             }
 
-            $returnValue = $this->dispatcher->dispatch(
+            $returnValue = $this->dispatch(
                 $matcher->getHandler(),
                 $matcher->getParams()
             );
@@ -111,5 +110,10 @@ class Handler implements HandlerInterface
         $this->request->set('data', $data);
         $this->handle($fd, 'message');
         $this->request->delete('data');
+    }
+
+    public function dispatch(string $handler, array $params): mixed
+    {
+        return 0;
     }
 }

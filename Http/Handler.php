@@ -4,39 +4,62 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http;
 
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Di\MakerInterface;
 use ManaPHP\Eventing\EventDispatcherInterface;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Exception\AbortException;
 use ManaPHP\Helper\SuppressWarnings;
+use ManaPHP\Http\Dispatcher\NotFoundActionException;
+use ManaPHP\Http\Dispatcher\NotFoundControllerException;
 use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\Router\NotFoundRouteException;
 use ManaPHP\Http\Server\Event\RequestAuthenticated;
 use ManaPHP\Http\Server\Event\RequestAuthenticating;
+use ManaPHP\Http\Server\Event\RequestAuthorized;
+use ManaPHP\Http\Server\Event\RequestAuthorizing;
 use ManaPHP\Http\Server\Event\RequestBegin;
 use ManaPHP\Http\Server\Event\RequestEnd;
 use ManaPHP\Http\Server\Event\RequestException;
+use ManaPHP\Http\Server\Event\RequestInvoked;
+use ManaPHP\Http\Server\Event\RequestInvoking;
+use ManaPHP\Http\Server\Event\RequestReady;
 use ManaPHP\Http\Server\Event\RequestResponded;
 use ManaPHP\Http\Server\Event\RequestResponding;
+use ManaPHP\Http\Server\Event\RequestValidated;
+use ManaPHP\Http\Server\Event\RequestValidating;
 use ManaPHP\Http\Server\Event\ResponseStringify;
+use ManaPHP\Viewing\View\Attribute\ViewMapping;
+use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
+use ManaPHP\Viewing\ViewInterface;
 use Psr\Container\ContainerInterface;
+use ReflectionAttribute;
+use ReflectionMethod;
 use Throwable;
+use function class_exists;
+use function explode;
 use function is_array;
 use function is_int;
 use function is_string;
 use function json_stringify;
+use function method_exists;
 
-class Handler implements HandlerInterface
+class Handler implements HandlerInterface, ContextAware
 {
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected MakerInterface $maker;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected RouterInterface $router;
-    #[Autowired] protected DispatcherInterface $dispatcher;
     #[Autowired] protected AccessLogInterface $accessLog;
     #[Autowired] protected ServerInterface $httpServer;
     #[Autowired] protected ErrorHandlerInterface $errorHandler;
+    #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
+    #[Autowired] protected ViewInterface $view;
 
     #[Autowired] protected array $middlewares = [];
 
@@ -47,6 +70,11 @@ class Handler implements HandlerInterface
                 $listenerProvider->add($middleware);
             }
         }
+    }
+
+    public function getContext(): HandlerContext
+    {
+        return $this->contextManager->getContext($this);
     }
 
     protected function handleInternal(mixed $actionReturnValue): void
@@ -84,7 +112,7 @@ class Handler implements HandlerInterface
                 );
             }
 
-            $actionReturnValue = $this->dispatcher->dispatch($matcher->getHandler(), $matcher->getParams());
+            $actionReturnValue = $this->dispatch($matcher->getHandler(), $matcher->getParams());
 
             $this->handleInternal($actionReturnValue);
         } catch (AbortException) {
@@ -116,5 +144,132 @@ class Handler implements HandlerInterface
         $this->accessLog->log();
 
         $this->eventDispatcher->dispatch(new RequestEnd($this->request, $this->response));
+    }
+
+    protected function invoke(ReflectionMethod $rMethod): mixed
+    {
+        $controller = $this->container->get($rMethod->class);
+        $method = $rMethod->name;
+
+        if ($this->request->method() === 'GET' && !$this->request->isAjax()) {
+            $attributes = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+            if ($attributes !== []) {
+                /** @var ViewMappingInterface $viewMapping */
+                $viewMapping = $attributes[0]->newInstance();
+                if ($viewMapping instanceof ViewMapping) {
+                    $arguments = $this->argumentsResolver->resolve($rMethod);
+
+                    $vars = $controller->$method(...$arguments);
+                    if (is_array($vars)) {
+                        $this->view->setVars($vars);
+                    }
+                }
+
+                return $this->response->setContent($this->view->render($this->request->handler()));
+            }
+        }
+
+        $arguments = $this->argumentsResolver->resolve($rMethod);
+
+        return $controller->$method(...$arguments);
+    }
+
+    /**
+     * @param ReflectionMethod $method
+     *
+     * @return InterceptorInterface[]
+     */
+    protected function getInterceptors(ReflectionMethod $method): array
+    {
+        $attributes = [];
+        $controller = $method->getDeclaringClass();
+        foreach (
+            $controller->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute
+        ) {
+            $attributes[$attribute->getName()] = $attribute;
+        }
+
+        foreach ($method->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute)
+        {
+            $attributes[$attribute->getName()] = $attribute;
+        }
+
+        $interceptors = [];
+        foreach ($attributes as $attribute) {
+            $arguments = $attribute->getArguments();
+            $name = $attribute->getName();
+
+            if ($arguments === []) {
+                $interceptors[] = $this->container->get($name);
+            } else {
+                $interceptors[] = $this->maker->make($name, $arguments);
+            }
+        }
+
+        return $interceptors;
+    }
+
+    public function dispatch(string $handler, array $params): mixed
+    {
+        $context = $this->getContext();
+
+        $this->request->setHandler($handler);
+
+        $globals = $this->request->getContext();
+
+        foreach ($params as $k => $v) {
+            if (is_string($k)) {
+                $globals->_REQUEST[$k] = $v;
+            }
+        }
+        list($controller, $action) = explode('::', $handler);
+
+        if (!class_exists($controller)) {
+            throw new NotFoundControllerException(['`{1}` class cannot be loaded', $controller]);
+        }
+
+        if (!method_exists($controller, $action)) {
+            throw new NotFoundActionException(['`{1}::{2}` method does not exist', $controller, $action]);
+        }
+
+        $method = new ReflectionMethod($controller, $action);
+
+        $this->eventDispatcher->dispatch(new RequestAuthorizing($method));
+        $this->eventDispatcher->dispatch(new RequestAuthorized($method));
+
+        $this->eventDispatcher->dispatch(new RequestValidating($method));
+        $this->eventDispatcher->dispatch(new RequestValidated($method));
+
+        $this->eventDispatcher->dispatch(new RequestReady($method));
+
+        $interceptors = $this->getInterceptors($method);
+
+        foreach ($interceptors as $interceptor) {
+            if (!$interceptor->preHandle($method)) {
+                return $this->response;
+            }
+        }
+
+        $this->eventDispatcher->dispatch(new RequestInvoking($method));
+
+        try {
+            $context->isInvoking = true;
+            $return = $this->invoke($method);
+        } finally {
+            $context->isInvoking = false;
+        }
+
+        $this->eventDispatcher->dispatch(new RequestInvoked($method, $return));
+
+        foreach ($interceptors as $interceptor) {
+            $interceptor->postHandle($method, $return);
+        }
+
+        return $return;
+    }
+
+    public function isInvoking(): bool
+    {
+        return $this->getContext()->isInvoking;
     }
 }

@@ -8,7 +8,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Ws\Server\Event\ServerStop;
 
-class Dispatcher extends \ManaPHP\Http\Dispatcher implements DispatcherInterface
+class Dispatcher implements DispatcherInterface
 {
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
 
