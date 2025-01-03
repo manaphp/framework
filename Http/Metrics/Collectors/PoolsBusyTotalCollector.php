@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics\Collectors;
 
-use ManaPHP\Context\ContextManagerInterface;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Http\Metrics\FormatterInterface;
@@ -13,7 +14,7 @@ use ManaPHP\Pooling\Pool\Event\PoolBusy;
 use ManaPHP\Pooling\Pool\Event\PoolPopping;
 use function get_class;
 
-class PoolsBusyTotalCollector implements WorkerCollectorInterface
+class PoolsBusyTotalCollector implements WorkerCollectorInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected FormatterInterface $formatter;
@@ -21,9 +22,9 @@ class PoolsBusyTotalCollector implements WorkerCollectorInterface
     protected array $busy_totals = [];
     protected array $pop_totals = [];
 
-    public function getContext(int $cid = 0): PoolsBusyTotalCollectorContext
+    public function getContext(): PoolsBusyTotalCollectorContext
     {
-        return $this->contextManager->getContext($this, $cid);
+        return $this->contextManager->getContext($this);
     }
 
     public function updating(?string $handler): ?array

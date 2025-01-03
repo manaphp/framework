@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Middlewares;
 
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Eventing\Attribute\Event;
@@ -21,10 +22,9 @@ use function in_array;
 use function is_array;
 use function is_int;
 
-class PageCacheMiddleware
+class PageCacheMiddleware implements ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected RedisCacheInterface $redisCache;
@@ -39,6 +39,11 @@ class PageCacheMiddleware
     public function __construct(?string $prefix = null)
     {
         $this->prefix = $prefix ?? sprintf('cache:%s:page_cache:', $this->app_id);
+    }
+
+    public function getContext(): PageCacheMiddlewareContext
+    {
+        return $this->contextManager->getContext($this);
     }
 
     protected function getPageCache(ReflectionMethod $rMethod): PageCacheAttribute|false
@@ -68,7 +73,6 @@ class PageCacheMiddleware
             return;
         }
 
-        /** @var PageCacheMiddlewareContext $context */
         $context = $this->getContext();
 
         $context->ttl = $pageCache->ttl;
@@ -157,7 +161,6 @@ class PageCacheMiddleware
     {
         SuppressWarnings::unused($event);
 
-        /** @var PageCacheMiddlewareContext $context */
         $context = $this->getContext();
 
         if ($context->cache_used === true || $context->ttl === null || $context->ttl <= 0) {

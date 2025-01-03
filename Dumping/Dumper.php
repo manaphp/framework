@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace ManaPHP\Dumping;
 
 use JsonSerializable;
-use ManaPHP\Context\ContextManagerInterface;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ReflectionClass;
 use ReflectionNamedType;
@@ -59,7 +60,7 @@ class Dumper implements DumperInterface
             $data[$name] = $value;
         }
 
-        if ($this->contextManager->hasContext($object)) {
+        if ($object instanceof ContextAware) {
             $data['context'] = (array)$this->contextManager->getContext($object);
         }
 

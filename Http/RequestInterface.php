@@ -11,7 +11,7 @@ interface RequestInterface
     public function prepare(array $GET, array $POST, array $SERVER, ?string $RAW_BODY, array $COOKIE, array $FILES
     ): void;
 
-    public function getContext(int $cid = 0): RequestContext;
+    public function getContext(): RequestContext;
 
     public function rawBody(): string;
 

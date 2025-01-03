@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ManaPHP\Mailing\Mailer\Adapter;
 
-use ManaPHP\Context\ContextInseparable;
+use ManaPHP\Coroutine\ContextInseparable;
 
 class SmtpContext implements ContextInseparable
 {

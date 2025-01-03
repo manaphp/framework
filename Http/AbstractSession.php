@@ -6,7 +6,8 @@ namespace ManaPHP\Http;
 
 use ArrayAccess;
 use JsonSerializable;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Eventing\ListenerProviderInterface;
@@ -26,10 +27,9 @@ use function is_array;
 use function ord;
 use function strlen;
 
-abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSerializable
+abstract class AbstractSession implements SessionInterface, ContextAware, ArrayAccess, JsonSerializable
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
 
@@ -53,9 +53,13 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
         $this->listenerProvider->add($this);
     }
 
+    public function getContext(): AbstractSessionContext
+    {
+        return $this->contextManager->getContext($this);
+    }
+
     public function all(): array
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if (!$context->started) {
@@ -67,7 +71,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     protected function start(): void
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if ($context->started) {
@@ -99,7 +102,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
     {
         SuppressWarnings::unused($event);
 
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if (!$context->started) {
@@ -157,7 +159,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
             $this->eventDispatcher->dispatch(new SessionDestroy($this, null, $session_id));
             $this->do_destroy($session_id);
         } else {
-            /** @var AbstractSessionContext $context */
             $context = $this->getContext();
 
             if (!$context->started) {
@@ -269,7 +270,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function get(string $name, mixed $default = null): mixed
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if (!$context->started) {
@@ -281,7 +281,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function set(string $name, mixed $value): static
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if (!$context->started) {
@@ -296,7 +295,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function has(string $name): bool
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if (!$context->started) {
@@ -308,7 +306,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function remove(string $name): static
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if (!$context->started) {
@@ -323,7 +320,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function getId(): string
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if (!$context->started) {
@@ -335,7 +331,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function setId(string $id): static
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         if (!$context->started) {
@@ -349,7 +344,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function getTtl(): int
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         return $context->ttl ?? $this->ttl;
@@ -357,7 +351,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function setTtl(int $ttl): static
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         $context->ttl = $ttl;
@@ -404,7 +397,6 @@ abstract class AbstractSession implements SessionInterface, ArrayAccess, JsonSer
 
     public function write(string $session_id, array $data): static
     {
-        /** @var AbstractSessionContext $context */
         $context = $this->getContext();
 
         $session = $this->serialize($data);

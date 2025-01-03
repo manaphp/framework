@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace ManaPHP\Db;
 
 use JetBrains\PhpStorm\ArrayShape;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Db\Event\DbBegin;
 use ManaPHP\Db\Event\DbCommit;
 use ManaPHP\Db\Event\DbDeleted;
@@ -36,10 +37,9 @@ use function is_int;
 use function is_string;
 use function strlen;
 
-class Db implements DbInterface
+class Db implements DbInterface, ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected PoolsInterface $pools;
     #[Autowired] protected MakerInterface $maker;
@@ -140,6 +140,11 @@ class Db implements DbInterface
         throw new NonCloneableException($this);
     }
 
+    public function getContext(): DbContext
+    {
+        return $this->contextManager->getContext($this);
+    }
+
     public function getPrefix(): string
     {
         return $this->prefix;
@@ -153,7 +158,6 @@ class Db implements DbInterface
                      'insert' => [DbInserting::class, DbInserted::class]
                  ][$type] ?? null;
 
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         $this->eventDispatcher->dispatch(new DbExecuting($this, $type, $sql, $bind));
@@ -211,7 +215,6 @@ class Db implements DbInterface
         int $mode = PDO::FETCH_ASSOC,
         bool $useMaster = false
     ): array {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         if ($context->connection) {
@@ -258,7 +261,6 @@ class Db implements DbInterface
 
     public function insert(string $table, array $record, bool $fetchInsertId = false): mixed
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         $table = $this->completeTable($table);
@@ -439,7 +441,6 @@ class Db implements DbInterface
 
     public function begin(): void
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         if ($context->transaction_level === 0) {
@@ -465,7 +466,6 @@ class Db implements DbInterface
 
     public function isUnderTransaction(): bool
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         return $context->transaction_level !== 0;
@@ -473,7 +473,6 @@ class Db implements DbInterface
 
     public function rollback(): void
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         if ($context->transaction_level > 0) {
@@ -496,7 +495,6 @@ class Db implements DbInterface
 
     public function commit(): void
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         if ($context->transaction_level === 0) {
@@ -520,7 +518,6 @@ class Db implements DbInterface
 
     public function getTables(?string $schema = null): array
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         if ($context->connection) {
@@ -554,7 +551,6 @@ class Db implements DbInterface
 
     public function buildSql(array $params): string
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         if ($context->connection) {
@@ -580,7 +576,6 @@ class Db implements DbInterface
                   self::METADATA_INT_TYPE_ATTRIBUTES => 'array'])]
     public function getMetadata(string $table): array
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         if ($context->connection) {
@@ -609,7 +604,6 @@ class Db implements DbInterface
 
     public function close(): void
     {
-        /** @var DbContext $context */
         $context = $this->getContext();
 
         if ($context->connection) {

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics\Collectors;
 
-use ManaPHP\Context\ContextManagerInterface;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Db\Event\DbExecuted;
 use ManaPHP\Db\Event\DbQueried;
 use ManaPHP\Di\Attribute\Autowired;
@@ -13,7 +14,7 @@ use ManaPHP\Http\Metrics\FormatterInterface;
 use ManaPHP\Http\Metrics\Histogram;
 use ManaPHP\Http\Metrics\WorkerCollectorInterface;
 
-class SqlStatementDurationCollector implements WorkerCollectorInterface
+class SqlStatementDurationCollector implements WorkerCollectorInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected FormatterInterface $formatter;
@@ -22,9 +23,9 @@ class SqlStatementDurationCollector implements WorkerCollectorInterface
 
     protected array $histograms = [];
 
-    public function getContext(int $cid = 0): SqlStatementDurationCollectorContext
+    public function getContext(): SqlStatementDurationCollectorContext
     {
-        return $this->contextManager->getContext($this, $cid);
+        return $this->contextManager->getContext($this);
     }
 
     public function updating(?string $handler): ?array

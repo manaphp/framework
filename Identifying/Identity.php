@@ -4,22 +4,27 @@ declare(strict_types=1);
 
 namespace ManaPHP\Identifying;
 
-use ManaPHP\Context\ContextCreatorInterface;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextCreatorInterface;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Exception\UnauthorizedException;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 
-class Identity implements IdentityInterface, ContextCreatorInterface
+class Identity implements IdentityInterface, ContextCreatorInterface, ContextAware
 {
-    use ContextTrait;
+    #[Autowired] protected ContextManagerInterface $contextManager;
 
     #[Autowired] protected array $keys = [];
 
+    public function getContext(): IdentityContext
+    {
+        return $this->contextManager->getContext($this);
+    }
+
     public function createContext(): IdentityContext
     {
-        /** @var IdentityContext $context */
         $context = $this->contextManager->makeContext($this);
         $context->claims = $this->authenticate();
 
@@ -28,7 +33,6 @@ class Identity implements IdentityInterface, ContextCreatorInterface
 
     public function isGuest(): bool
     {
-        /** @var IdentityContext $context */
         $context = $this->getContext();
 
         return !$context->claims;
@@ -36,7 +40,6 @@ class Identity implements IdentityInterface, ContextCreatorInterface
 
     public function getId(): int
     {
-        /** @var IdentityContext $context */
         $context = $this->getContext();
 
         $claims = $context->claims;
@@ -66,7 +69,6 @@ class Identity implements IdentityInterface, ContextCreatorInterface
 
     public function getName(): string
     {
-        /** @var IdentityContext $context */
         $context = $this->getContext();
 
         $claims = $context->claims;
@@ -96,7 +98,6 @@ class Identity implements IdentityInterface, ContextCreatorInterface
 
     public function getRole(string $default = 'guest'): string
     {
-        /** @var IdentityContext $context */
         $context = $this->getContext();
 
         $claims = $context->claims;
@@ -125,7 +126,6 @@ class Identity implements IdentityInterface, ContextCreatorInterface
 
     public function set(array $claims): void
     {
-        /** @var IdentityContext $context */
         $context = $this->getContext();
 
         $context->claims = $claims;

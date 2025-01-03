@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ManaPHP\Db;
 
-use ManaPHP\Context\ContextInseparable;
+use ManaPHP\Coroutine\ContextInseparable;
 use ManaPHP\Exception\MisuseException;
 
 class DbContext implements ContextInseparable

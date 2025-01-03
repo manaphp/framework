@@ -4,19 +4,24 @@ declare(strict_types=1);
 
 namespace ManaPHP\I18n;
 
-use ManaPHP\Context\ContextCreatorInterface;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextCreatorInterface;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 
-class Locale implements LocaleInterface, ContextCreatorInterface
+class Locale implements LocaleInterface, ContextCreatorInterface, ContextAware
 {
-    use ContextTrait;
+    #[Autowired] protected ContextManagerInterface $contextManager;
 
     #[Autowired] protected string $default = 'en';
 
+    public function getContext(): LocaleContext
+    {
+        return $this->contextManager->getContext($this);
+    }
+
     public function createContext(): LocaleContext
     {
-        /** @var LocaleContext $context */
         $context = $this->contextManager->makeContext($this);
 
         $context->locale = $this->default;
@@ -26,15 +31,11 @@ class Locale implements LocaleInterface, ContextCreatorInterface
 
     public function get(): string
     {
-        /** @var LocaleContext $context */
-        $context = $this->getContext();
-
-        return $context->locale;
+        return $this->getContext()->locale;
     }
 
     public function set(string $locale): static
     {
-        /** @var LocaleContext $context */
         $context = $this->getContext();
 
         $context->locale = $locale;

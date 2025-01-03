@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace ManaPHP\Mailing\Mailer\Adapter;
 
 use ManaPHP\AliasInterface;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Mailing\AbstractMailer;
@@ -23,10 +24,9 @@ use function is_int;
 use function is_string;
 use function strlen;
 
-class Smtp extends AbstractMailer
+class Smtp extends AbstractMailer implements ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected LoggerInterface $logger;
 
@@ -93,9 +93,13 @@ class Smtp extends AbstractMailer
         }
     }
 
+    public function getContext(): SmtpContext
+    {
+        return $this->contextManager->getContext($this);
+    }
+
     protected function connect(): mixed
     {
-        /** @var SmtpContext $context */
         $context = $this->getContext();
 
         if ($context->socket) {
@@ -150,7 +154,6 @@ class Smtp extends AbstractMailer
 
     protected function writeLine(?string $data = null): static
     {
-        /** @var SmtpContext $context */
         $context = $this->getContext();
 
         if ($data !== null) {
@@ -171,7 +174,6 @@ class Smtp extends AbstractMailer
 
     protected function readLine(): string
     {
-        /** @var SmtpContext $context */
         $context = $this->getContext();
 
         if (($str = fgets($context->socket)) === false) {

@@ -6,7 +6,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Server\Adapter;
 
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\AbstractServer;
 use ManaPHP\Http\Server\Event\ServerReady;
@@ -18,9 +19,9 @@ use Workerman\Worker;
 use function dirname;
 use function strlen;
 
-class Workerman extends AbstractServer
+class Workerman extends AbstractServer implements ContextAware
 {
-    use ContextTrait;
+    #[Autowired] protected ContextManagerInterface $contextManager;
 
     #[Autowired] protected array $settings = [];
 
@@ -43,6 +44,11 @@ class Workerman extends AbstractServer
         ];
 
         unset($_GET, $_POST, $_REQUEST, $_FILES, $_COOKIE);
+    }
+
+    public function getContext(): WorkermanContext
+    {
+        return $this->contextManager->getContext($this);
     }
 
     protected function prepareGlobals(): void
@@ -100,7 +106,6 @@ class Workerman extends AbstractServer
         $this->prepareGlobals();
 
         try {
-            /** @var WorkermanContext $context */
             $context = $this->getContext();
             $context->connection = $connection;
             $this->httpHandler->handle();
@@ -139,7 +144,6 @@ class Workerman extends AbstractServer
             );
         }
 
-        /** @var WorkermanContext $context */
         $context = $this->getContext();
         $content = $this->response->getContent() ?? '';
         if ($this->response->getStatusCode() === 304) {

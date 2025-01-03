@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http;
 
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\MakerInterface;
 use ManaPHP\Http\Dispatcher\NotFoundActionException;
@@ -28,10 +29,9 @@ use function is_array;
 use function is_string;
 use function method_exists;
 
-class Dispatcher implements DispatcherInterface
+class Dispatcher implements DispatcherInterface, ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
@@ -39,6 +39,11 @@ class Dispatcher implements DispatcherInterface
     #[Autowired] protected MakerInterface $maker;
     #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
     #[Autowired] protected ViewInterface $view;
+
+    public function getContext(): DispatcherContext
+    {
+        return $this->contextManager->getContext($this);
+    }
 
     protected function invoke(ReflectionMethod $rMethod): mixed
     {
@@ -105,7 +110,6 @@ class Dispatcher implements DispatcherInterface
 
     public function dispatch(string $handler, array $params): mixed
     {
-        /** @var DispatcherContext $context */
         $context = $this->getContext();
 
         $this->request->setHandler($handler);
@@ -165,9 +169,6 @@ class Dispatcher implements DispatcherInterface
 
     public function isInvoking(): bool
     {
-        /** @var DispatcherContext $context */
-        $context = $this->getContext();
-
-        return $context->isInvoking;
+        return $this->getContext()->isInvoking;
     }
 }

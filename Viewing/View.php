@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Viewing;
 
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\LocalFS;
@@ -25,10 +26,9 @@ use function sprintf;
 use function str_contains;
 use function ucfirst;
 
-class View implements ViewInterface
+class View implements ViewInterface, ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RouterInterface $router;
@@ -40,9 +40,13 @@ class View implements ViewInterface
     protected array $dirs = [];
     protected array $exists = [];
 
+    public function getContext(): ViewContext
+    {
+        return $this->contextManager->getContext($this);
+    }
+
     public function setLayout(string $layout = 'Default'): static
     {
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         $context->layout = $layout;
@@ -52,7 +56,6 @@ class View implements ViewInterface
 
     public function disableLayout(): static
     {
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         $context->layout = '';
@@ -62,7 +65,6 @@ class View implements ViewInterface
 
     public function setVar(string $name, mixed $value): static
     {
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         $context->vars[$name] = $value;
@@ -72,7 +74,6 @@ class View implements ViewInterface
 
     public function setVars(array $vars): static
     {
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         $context->vars = array_merge($context->vars, $vars);
@@ -82,7 +83,6 @@ class View implements ViewInterface
 
     public function getVar(?string $name = null): mixed
     {
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         if ($name === null) {
@@ -94,7 +94,6 @@ class View implements ViewInterface
 
     public function hasVar(string $name): bool
     {
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         return isset($context->_vars[$name]);
@@ -102,7 +101,6 @@ class View implements ViewInterface
 
     public function render(string $template, array $vars = []): string
     {
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         if ($vars !== []) {
@@ -158,7 +156,6 @@ class View implements ViewInterface
             return;
         }
 
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         $context->content = preg_replace_callback(
@@ -203,7 +200,6 @@ class View implements ViewInterface
 
     public function setContent(string $content): static
     {
-        /** @var ViewContext $context */
         $context = $this->getContext();
 
         $context->content = $content;
@@ -213,9 +209,6 @@ class View implements ViewInterface
 
     public function getContent(): string
     {
-        /** @var ViewContext $context */
-        $context = $this->getContext();
-
-        return $context->content;
+        return $this->getContext()->content;
     }
 }

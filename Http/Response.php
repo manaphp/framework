@@ -7,7 +7,8 @@ namespace ManaPHP\Http;
 use DateTime;
 use DateTimeZone;
 use JsonSerializable;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Exception\AbortException;
@@ -21,9 +22,9 @@ use function basename;
 use function is_array;
 use function is_string;
 
-class Response implements ResponseInterface
+class Response implements ResponseInterface, ContextAware
 {
-    use ContextTrait;
+    #[Autowired] protected ContextManagerInterface $contextManager;
 
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected RouterInterface $router;
@@ -39,6 +40,11 @@ class Response implements ResponseInterface
 
     #[Config] protected bool $app_debug;
 
+    public function getContext(): ResponseContext
+    {
+        return $this->contextManager->getContext($this);
+    }
+
     public function setCookie(
         string $name,
         mixed $value,
@@ -48,7 +54,6 @@ class Response implements ResponseInterface
         bool $secure = false,
         bool $httponly = true
     ): static {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         if ($expire > 0) {
@@ -73,15 +78,11 @@ class Response implements ResponseInterface
 
     public function getCookies(): array
     {
-        /** @var ResponseContext $context */
-        $context = $this->getContext();
-
-        return $context->cookies;
+        return $this->getContext()->cookies;
     }
 
     public function setStatus(int $code, ?string $text = null): static
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         $context->status_code = $code;
@@ -92,7 +93,6 @@ class Response implements ResponseInterface
 
     public function getStatus(): string
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         return $context->status_code . ' ' . $context->status_text;
@@ -100,19 +100,13 @@ class Response implements ResponseInterface
 
     public function getStatusCode(): int
     {
-        /** @var ResponseContext $context */
-        $context = $this->getContext();
-
-        return $context->status_code;
+        return $this->getContext()->status_code;
     }
 
     public function getStatusText(?int $code = null): string
     {
         if ($code === null) {
-            /** @var ResponseContext $context */
-            $context = $this->getContext();
-
-            return $context->status_text;
+            return $this->getContext()->status_text;
         } else {
             $texts = [
                 200 => 'OK',
@@ -180,7 +174,6 @@ class Response implements ResponseInterface
 
     public function setHeader(string $name, string $value): static
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         $context->headers[$name] = $value;
@@ -190,7 +183,6 @@ class Response implements ResponseInterface
 
     public function getHeader(string $name, ?string $default = null): ?string
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         return $context->headers[$name] ?? $default;
@@ -198,7 +190,6 @@ class Response implements ResponseInterface
 
     public function hasHeader(string $name): bool
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         return isset($context->headers[$name]);
@@ -206,7 +197,6 @@ class Response implements ResponseInterface
 
     public function removeHeader(string $name): static
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         unset($context->headers[$name]);
@@ -232,7 +222,6 @@ class Response implements ResponseInterface
 
     public function setNotModified(): static
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         $context->status_code = 304;
@@ -280,7 +269,6 @@ class Response implements ResponseInterface
 
     public function getContentType(): ?string
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         return $context->headers['Content-Type'] ?? null;
@@ -304,7 +292,6 @@ class Response implements ResponseInterface
 
     public function setContent(mixed $content): static
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         $context->content = $content;
@@ -314,7 +301,6 @@ class Response implements ResponseInterface
 
     public function json(mixed $content, int $status = 200): static
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         $this->setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -333,15 +319,11 @@ class Response implements ResponseInterface
 
     public function getContent(): mixed
     {
-        /** @var ResponseContext $context */
-        $context = $this->getContext();
-
-        return $context->content;
+        return $this->getContext()->content;
     }
 
     public function hasContent(): bool
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         $content = $context->content;
@@ -351,7 +333,6 @@ class Response implements ResponseInterface
 
     public function download(string $file, ?string $name = null): static
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         if (!LocalFS::fileExists($file)) {
@@ -368,15 +349,11 @@ class Response implements ResponseInterface
 
     public function getFile(): ?string
     {
-        /** @var ResponseContext $context */
-        $context = $this->getContext();
-
-        return $context->file;
+        return $this->getContext()->file;
     }
 
     public function hasFile(): bool
     {
-        /** @var ResponseContext $context */
         $context = $this->getContext();
 
         return (bool)$context->file;
@@ -432,10 +409,7 @@ class Response implements ResponseInterface
 
     public function getHeaders(): array
     {
-        /** @var ResponseContext $context */
-        $context = $this->getContext();
-
-        return $context->headers;
+        return $this->getContext()->headers;
     }
 
     public function getAppenders(): array

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http;
 
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\ForbiddenException;
 use ManaPHP\Helper\Str;
@@ -22,15 +23,19 @@ use function str_starts_with;
 use function strpos;
 use function substr;
 
-class Authorization implements AuthorizationInterface
+class Authorization implements AuthorizationInterface, ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected IdentityInterface $identity;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected ControllersInterface $controllers;
     #[Autowired] protected RoleRepositoryInterface $roleRepository;
+
+    public function getContext(): AuthorizationContext
+    {
+        return $this->contextManager->getContext($this);
+    }
 
     public function getPermission(string $controller, string $action): string
     {
@@ -46,7 +51,6 @@ class Authorization implements AuthorizationInterface
 
     public function getAllowed(string $role): string
     {
-        /** @var AuthorizationContext $context */
         $context = $this->getContext();
 
         if (!isset($context->role_permissions[$role])) {

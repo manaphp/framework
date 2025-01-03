@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace ManaPHP\Context;
+namespace ManaPHP\Coroutine;
 
+use ReflectionMethod;
 use Swoole\Coroutine;
 
 class ContextManager implements ContextManagerInterface
@@ -12,39 +13,31 @@ class ContextManager implements ContextManagerInterface
     protected array $contexts = [];
     protected array $roots = [];
 
-    public function findContext(object $object): ?string
+    public function findContext(ContextAware $object): string
     {
         $class = $object::class;
         if (($context = $this->classes[$class] ?? null) === null) {
-            $parent = $class;
-            do {
-                $try = $parent . 'Context';
-                if (class_exists($try)) {
-                    $context = $try;
-                    break;
-                }
-            } while ($parent = get_parent_class($parent));
+            $method = new ReflectionMethod($object, 'getContext');
+            $returnType = $method->getReturnType();
 
-            if ($context === null) {
-                return null;
+            if ($returnType !== null && !$returnType->isBuiltin()) {
+                $context = $this->classes[$class] = $returnType->getName();
+            } else {
+                throw new ContextException(['The context class of `{1}` can not be inferred', $class]);
             }
-
-            $this->classes[$class] = $context;
         }
 
         return $context;
     }
 
-    public function makeContext(object $object)
+    public function makeContext(ContextAware $object): mixed
     {
-        if (($context = $this->findContext($object)) === null) {
-            throw new Exception(['`{1}` context class is not exists', $object::class . 'Context']);
-        }
+        $context = $this->findContext($object);
 
         return new $context();
     }
 
-    public function createContext(object $object): object
+    public function createContext(ContextAware $object): mixed
     {
         if ($object instanceof ContextCreatorInterface) {
             return $object->createContext();
@@ -53,7 +46,7 @@ class ContextManager implements ContextManagerInterface
         }
     }
 
-    public function getContext(object $object, int $cid = 0): mixed
+    public function getContext(ContextAware $object, int $cid = 0): mixed
     {
         $object_id = spl_object_id($object);
 
@@ -94,10 +87,6 @@ class ContextManager implements ContextManagerInterface
         }
     }
 
-    public function hasContext(object $object): bool
-    {
-        return $this->findContext($object) !== null;
-    }
 
     public function resetContexts(): void
     {

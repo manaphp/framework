@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace ManaPHP\Viewing;
 
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 
-class Flash implements FlashInterface
+class Flash implements FlashInterface, ContextAware
 {
-    use ContextTrait;
+    #[Autowired] protected ContextManagerInterface $contextManager;
 
     #[Autowired] protected array $css
         = [
@@ -18,6 +19,11 @@ class Flash implements FlashInterface
             'success' => 'flash-success',
             'warning' => 'flash-warning'
         ];
+
+    public function getContext(): FlashContext
+    {
+        return $this->contextManager->getContext($this);
+    }
 
     public function error(string $message): void
     {
@@ -41,7 +47,6 @@ class Flash implements FlashInterface
 
     public function output(bool $remove = true): void
     {
-        /** @var FlashContext $context */
         $context = $this->getContext();
 
         foreach ($context->messages as $message) {
@@ -55,7 +60,6 @@ class Flash implements FlashInterface
 
     protected function message(string $type, string $message): void
     {
-        /** @var FlashContext $context */
         $context = $this->getContext();
 
         $css = $this->css[$type] ?? '';

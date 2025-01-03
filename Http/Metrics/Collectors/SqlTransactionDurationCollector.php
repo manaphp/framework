@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics\Collectors;
 
-use ManaPHP\Context\ContextManagerInterface;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Db\Event\DbBegin;
 use ManaPHP\Db\Event\DbCommit;
 use ManaPHP\Db\Event\DbRollback;
@@ -16,7 +17,7 @@ use ManaPHP\Http\Metrics\Histogram;
 use ManaPHP\Http\Metrics\WorkerCollectorInterface;
 use function microtime;
 
-class SqlTransactionDurationCollector implements WorkerCollectorInterface
+class SqlTransactionDurationCollector implements WorkerCollectorInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected FormatterInterface $formatter;
@@ -25,9 +26,9 @@ class SqlTransactionDurationCollector implements WorkerCollectorInterface
 
     protected array $histograms = [];
 
-    public function getContext(int $cid = 0): SqlTransactionDurationCollectorContext
+    public function getContext(): SqlTransactionDurationCollectorContext
     {
-        return $this->contextManager->getContext($this, $cid);
+        return $this->contextManager->getContext($this);
     }
 
     public function updating(?string $handler): ?array

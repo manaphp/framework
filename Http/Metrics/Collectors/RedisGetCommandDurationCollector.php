@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics\Collectors;
 
-use ManaPHP\Context\ContextManagerInterface;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Http\Metrics\FormatterInterface;
@@ -13,7 +14,7 @@ use ManaPHP\Http\Metrics\WorkerCollectorInterface;
 use ManaPHP\Redis\Event\RedisCalled;
 use function preg_match;
 
-class RedisGetCommandDurationCollector implements WorkerCollectorInterface
+class RedisGetCommandDurationCollector implements WorkerCollectorInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected FormatterInterface $formatter;
@@ -23,9 +24,9 @@ class RedisGetCommandDurationCollector implements WorkerCollectorInterface
 
     protected array $histograms = [];
 
-    public function getContext(int $cid = 0): RedisGetCommandDurationCollectorContext
+    public function getContext(): RedisGetCommandDurationCollectorContext
     {
-        return $this->contextManager->getContext($this, $cid);
+        return $this->contextManager->getContext($this);
     }
 
     public function updating(?string $handler): ?array

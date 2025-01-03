@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace ManaPHP\Http;
 
 use JsonSerializable;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Lazy;
 use ManaPHP\Di\MakerInterface;
@@ -20,10 +21,9 @@ use function is_int;
 use function str_starts_with;
 use function strtolower;
 
-class Request implements RequestInterface, JsonSerializable
+class Request implements RequestInterface, JsonSerializable, ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected MakerInterface|Lazy $maker;
     #[Autowired] protected ValidatorInterface|Lazy $validator;
 
@@ -39,6 +39,11 @@ class Request implements RequestInterface, JsonSerializable
             $_COOKIE = new Proxy($this, '_COOKIE');
             $_SERVER = new Proxy($this, '_SERVER');
         }
+    }
+
+    public function getContext(): RequestContext
+    {
+        return $this->contextManager->getContext($this);
     }
 
     public function prepare(
@@ -91,11 +96,6 @@ class Request implements RequestInterface, JsonSerializable
         }
 
         $context->headers = $headers;
-    }
-
-    public function getContext(int $cid = 0): RequestContext
-    {
-        return $this->contextManager->getContext($this, $cid);
     }
 
     public function rawBody(): string

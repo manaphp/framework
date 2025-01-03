@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace ManaPHP\Http\Server\Adapter;
 
 use ManaPHP\AliasInterface;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Di\ConfigInterface;
@@ -42,10 +43,9 @@ use function dirname;
 use function in_array;
 use function strlen;
 
-class Swoole extends AbstractServer
+class Swoole extends AbstractServer implements ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected StaticHandlerInterface|Lazy $staticHandler;
     #[Autowired] protected ConfigInterface $config;
@@ -104,6 +104,11 @@ class Swoole extends AbstractServer
         $this->swoole->on('WorkerError', [$this, 'onWorkerError']);
         $this->swoole->on('ManagerStop', [$this, 'onManagerStop']);
         $this->swoole->on('Request', [$this, 'onRequest']);
+    }
+
+    public function getContext(): SwooleContext
+    {
+        return $this->contextManager->getContext($this);
     }
 
     protected function prepareGlobals(Request $request): void
@@ -273,7 +278,6 @@ class Swoole extends AbstractServer
                 $response->end('');
             }
         } else {
-            /** @var SwooleContext $context */
             $context = $this->getContext();
 
             $context->response = $response;
@@ -293,7 +297,6 @@ class Swoole extends AbstractServer
 
     public function send(): void
     {
-        /** @var SwooleContext $context */
         $context = $this->getContext();
 
         $response = $context->response;

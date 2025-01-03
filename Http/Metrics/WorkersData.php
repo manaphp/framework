@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics;
 
-use ManaPHP\Context\ContextManagerInterface;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Swoole\WorkersTrait;
 use Psr\Container\ContainerInterface;
@@ -12,16 +13,16 @@ use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 use function count;
 
-class WorkersData implements WorkersDataInterface
+class WorkersData implements WorkersDataInterface, ContextAware
 {
     use WorkersTrait;
 
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected ContainerInterface $container;
 
-    public function getContext(int $cid = 0): WorkersDataContext
+    public function getContext(): WorkersDataContext
     {
-        return $this->contextManager->getContext($this, $cid);
+        return $this->contextManager->getContext($this);
     }
 
     public function getWorkerRequest(string $collector, int $cid, $worker_id): void
@@ -33,7 +34,7 @@ class WorkersData implements WorkersDataInterface
 
     public function getWorkerResponse(int $cid, int $worker_id, array $data): void
     {
-        $context = $this->getContext($cid);
+        $context = $this->contextManager->getContext($this, $cid);
         $context->data[$worker_id] = $data;
         $context->channel->push(1);
     }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics\Collectors;
 
-use ManaPHP\Context\ContextManagerInterface;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Http\Metrics\FormatterInterface;
@@ -13,7 +14,7 @@ use ManaPHP\Http\Server\Event\RequestException;
 use function get_class;
 use function in_array;
 
-class HttpExceptionsTotalCollector implements WorkerCollectorInterface
+class HttpExceptionsTotalCollector implements WorkerCollectorInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected FormatterInterface $formatter;
@@ -22,9 +23,9 @@ class HttpExceptionsTotalCollector implements WorkerCollectorInterface
 
     protected array $totals = [];
 
-    public function getContext(int $cid = 0): HttpExceptionsTotalCollectorContext
+    public function getContext(): HttpExceptionsTotalCollectorContext
     {
-        return $this->contextManager->getContext($this, $cid);
+        return $this->contextManager->getContext($this);
     }
 
     public function updating(?string $handler): ?array

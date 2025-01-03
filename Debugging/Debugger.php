@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Debugging;
 
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Db\Event\DbBegin;
 use ManaPHP\Db\Event\DbCommit;
 use ManaPHP\Db\Event\DbExecuted;
@@ -53,10 +54,9 @@ use function is_object;
 use function is_string;
 use function str_contains;
 
-class Debugger implements DebuggerInterface
+class Debugger implements DebuggerInterface, ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected LoggerInterface $logger;
     #[Autowired] protected RequestInterface $request;
@@ -82,6 +82,11 @@ class Debugger implements DebuggerInterface
     {
         $this->ttl = class_exists('Redis') ? $ttl : 0;
         $this->prefix = $prefix ?? sprintf('cache:%s:debugger:', $this->app_id);
+    }
+
+    public function getContext(): DebuggerContext
+    {
+        return $this->contextManager->getContext($this);
     }
 
     public function onServerReady(): void
@@ -137,7 +142,6 @@ class Debugger implements DebuggerInterface
     {
         SuppressWarnings::unused($event);
 
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         if (($debugger = $this->request->input('__debugger')) !== null
@@ -179,7 +183,6 @@ class Debugger implements DebuggerInterface
     {
         SuppressWarnings::unused($event);
 
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         if ($context->enabled) {
@@ -208,7 +211,6 @@ class Debugger implements DebuggerInterface
         $data['event'] = $event::class;
         $data['source'] = array_keys(get_object_vars($event));
 
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         $context->events[] = $data;
@@ -216,7 +218,6 @@ class Debugger implements DebuggerInterface
 
     public function onLoggerLog(#[Event] LoggerLog $event): void
     {
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         $log = $event->log;
@@ -233,7 +234,6 @@ class Debugger implements DebuggerInterface
 
     public function onDb(#[Event] object $event): void
     {
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         if ($event instanceof DbQuerying || $event instanceof DbExecuting) {
@@ -280,7 +280,6 @@ class Debugger implements DebuggerInterface
 
     public function onRendererRendering(#[Event] RendererRendering $event): void
     {
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         $vars = $event->vars;
@@ -295,7 +294,6 @@ class Debugger implements DebuggerInterface
 
     public function onMongodb(#[Event] object $event): void
     {
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         if ($event instanceof MongodbQueried) {
@@ -332,7 +330,6 @@ class Debugger implements DebuggerInterface
 
     protected function getBasic(): array
     {
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         $loaded_extensions = get_loaded_extensions();
@@ -363,7 +360,6 @@ class Debugger implements DebuggerInterface
 
     protected function getData(): array
     {
-        /** @var DebuggerContext $context */
         $context = $this->getContext();
 
         $data = [];

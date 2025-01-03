@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics\Collectors;
 
-use ManaPHP\Context\ContextManagerInterface;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Http\Metrics\FormatterInterface;
@@ -15,7 +16,7 @@ use function is_string;
 use function preg_match;
 use function strlen;
 
-class RedisGetResponseSizeCollector implements WorkerCollectorInterface
+class RedisGetResponseSizeCollector implements WorkerCollectorInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected FormatterInterface $formatter;
@@ -25,9 +26,9 @@ class RedisGetResponseSizeCollector implements WorkerCollectorInterface
 
     protected array $histograms = [];
 
-    public function getContext(int $cid = 0): RedisGetResponseSizeCollectorContext
+    public function getContext(): RedisGetResponseSizeCollectorContext
     {
-        return $this->contextManager->getContext($this, $cid);
+        return $this->contextManager->getContext($this);
     }
 
     public function updating(?string $handler): ?array

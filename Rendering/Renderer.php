@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace ManaPHP\Rendering;
 
 use ManaPHP\AliasInterface;
-use ManaPHP\Context\ContextTrait;
+use ManaPHP\Coroutine\ContextAware;
+use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Coroutine\Mutex;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\FileNotFoundException;
@@ -18,10 +19,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 use function dirname;
 
-class Renderer implements RendererInterface
+class Renderer implements RendererInterface, ContextAware
 {
-    use ContextTrait;
-
+    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected ContainerInterface $container;
@@ -32,6 +32,11 @@ class Renderer implements RendererInterface
 
     protected array $files = [];
     protected Mutex $mutex;
+
+    public function getContext(): RendererContext
+    {
+        return $this->contextManager->getContext($this);
+    }
 
     protected function getMutex(): Mutex
     {
@@ -50,7 +55,6 @@ class Renderer implements RendererInterface
 
     public function render(string $template, array $vars = [], bool $directOutput = false): ?string
     {
-        /** @var RendererContext $context */
         $context = $this->getContext();
 
         if (!$this->getMutex()->isLocked()) {
@@ -144,7 +148,6 @@ class Renderer implements RendererInterface
 
     public function exists(string $template): bool
     {
-        /** @var RendererContext $context */
         $context = $this->getContext();
 
         if (DIRECTORY_SEPARATOR === '\\' && str_contains($template, '\\')) {
@@ -187,7 +190,6 @@ class Renderer implements RendererInterface
      */
     public function getSection(string $section, string $default = ''): string
     {
-        /** @var RendererContext $context */
         $context = $this->getContext();
 
         return $context->sections[$section] ?? $default;
@@ -195,7 +197,6 @@ class Renderer implements RendererInterface
 
     public function startSection(string $section, ?string $default = null): void
     {
-        /** @var RendererContext $context */
         $context = $this->getContext();
 
         if ($default === null) {
@@ -209,7 +210,6 @@ class Renderer implements RendererInterface
 
     public function stopSection(bool $overwrite = false): void
     {
-        /** @var RendererContext $context */
         $context = $this->getContext();
 
         if (!$context->stack) {
@@ -226,7 +226,6 @@ class Renderer implements RendererInterface
 
     public function appendSection(): void
     {
-        /** @var RendererContext $context */
         $context = $this->getContext();
 
         if (!$context->stack) {

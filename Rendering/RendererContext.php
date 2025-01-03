@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ManaPHP\Rendering;
 
-use ManaPHP\Context\ContextInseparable;
+use ManaPHP\Coroutine\ContextInseparable;
 
 class RendererContext implements ContextInseparable
 {

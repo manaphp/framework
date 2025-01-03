@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ManaPHP\Context;
+namespace ManaPHP\Coroutine;
 
 class Exception extends \ManaPHP\Exception
 {
