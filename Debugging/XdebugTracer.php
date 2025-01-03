@@ -9,8 +9,8 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Helper\SuppressWarnings;
-use ManaPHP\Http\Server\Event\RequestBegin;
-use ManaPHP\Http\Server\Event\RequestEnd;
+use ManaPHP\Http\Event\RequestBegin;
+use ManaPHP\Http\Event\RequestEnd;
 
 use function dirname;
 

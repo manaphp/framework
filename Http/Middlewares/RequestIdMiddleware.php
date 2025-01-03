@@ -7,8 +7,8 @@ namespace ManaPHP\Http\Middlewares;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Helper\SuppressWarnings;
+use ManaPHP\Http\Event\RequestBegin;
 use ManaPHP\Http\RequestInterface;
-use ManaPHP\Http\Server\Event\RequestBegin;
 use function bin2hex;
 use function random_bytes;
 

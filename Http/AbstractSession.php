@@ -14,7 +14,7 @@ use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Exception\NotSupportedException;
 use ManaPHP\Helper\Str;
 use ManaPHP\Helper\SuppressWarnings;
-use ManaPHP\Http\Server\Event\RequestResponding;
+use ManaPHP\Http\Event\RequestResponding;
 use ManaPHP\Http\Session\Event\SessionCreate;
 use ManaPHP\Http\Session\Event\SessionDestroy;
 use ManaPHP\Http\Session\Event\SessionEnd;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ManaPHP\Http\Server\Event;
+namespace ManaPHP\Http\Event;
 
 use JsonSerializable;
 use ManaPHP\Eventing\Attribute\TraceLevel;

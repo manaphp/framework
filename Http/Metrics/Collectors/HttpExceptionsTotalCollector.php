@@ -8,9 +8,9 @@ use ManaPHP\Coroutine\ContextAware;
 use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
+use ManaPHP\Http\Event\RequestException;
 use ManaPHP\Http\Metrics\FormatterInterface;
 use ManaPHP\Http\Metrics\WorkerCollectorInterface;
-use ManaPHP\Http\Server\Event\RequestException;
 use function get_class;
 use function in_array;
 

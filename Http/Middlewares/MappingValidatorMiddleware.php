@@ -6,10 +6,10 @@ namespace ManaPHP\Http\Middlewares;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
+use ManaPHP\Http\Event\RequestValidating;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\Router\Attribute\MappingInterface;
 use ManaPHP\Http\Router\MethodNotAllowedException;
-use ManaPHP\Http\Server\Event\RequestValidating;
 use ReflectionAttribute;
 
 class MappingValidatorMiddleware

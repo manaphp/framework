@@ -8,9 +8,9 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Helper\LocalFS;
+use ManaPHP\Http\Event\RequestEnd;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
-use ManaPHP\Http\Server\Event\RequestEnd;
 use function is_string;
 
 class SlowlogMiddleware

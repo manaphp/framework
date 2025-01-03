@@ -7,7 +7,7 @@ namespace ManaPHP\Http\Middlewares;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Http\AuthorizationInterface;
-use ManaPHP\Http\Server\Event\RequestAuthorizing;
+use ManaPHP\Http\Event\RequestAuthorizing;
 
 class AuthorizationMiddleware
 {
