@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace ManaPHP\Identifying;
 
 use ManaPHP\Coroutine\ContextAware;
-use ManaPHP\Coroutine\ContextCreatorInterface;
 use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Exception\UnauthorizedException;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 
-class Identity implements IdentityInterface, ContextCreatorInterface, ContextAware
+class Identity implements IdentityInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
 
@@ -20,13 +19,11 @@ class Identity implements IdentityInterface, ContextCreatorInterface, ContextAwa
 
     public function getContext(): IdentityContext
     {
-        return $this->contextManager->getContext($this);
-    }
+        $context = $this->contextManager->getContext($this);
 
-    public function createContext(): IdentityContext
-    {
-        $context = $this->contextManager->makeContext($this);
-        $context->claims = $this->authenticate();
+        if (!isset($context->claims)) {
+            $context->claims = $this->authenticate();
+        }
 
         return $context;
     }

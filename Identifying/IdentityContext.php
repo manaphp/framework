@@ -8,5 +8,5 @@ use ManaPHP\Coroutine\Context\Stickyable;
 
 class IdentityContext implements Stickyable
 {
-    public array $claims = [];
+    public ?array $claims;
 }

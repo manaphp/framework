@@ -30,20 +30,11 @@ class ContextManager implements ContextManagerInterface
         return $context;
     }
 
-    public function makeContext(ContextAware $object): mixed
+    public function createContext(ContextAware $object): mixed
     {
         $context = $this->findContext($object);
 
         return new $context();
-    }
-
-    public function createContext(ContextAware $object): mixed
-    {
-        if ($object instanceof ContextCreatorInterface) {
-            return $object->createContext();
-        } else {
-            return $this->makeContext($object);
-        }
     }
 
     public function getContext(ContextAware $object, int $cid = 0): mixed
