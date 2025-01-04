@@ -33,7 +33,10 @@ use ManaPHP\Http\Server\Event\ServerWorkerExit;
 use ManaPHP\Http\Server\Event\ServerWorkerStart;
 use ManaPHP\Http\Server\Event\ServerWorkerStop;
 use ManaPHP\Http\Server\StaticHandlerInterface;
+use ManaPHP\Swoole\Attribute\ServerCallback;
 use Psr\Log\LoggerInterface;
+use ReflectionClass;
+use ReflectionMethod;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Http\Server;
@@ -42,6 +45,7 @@ use Throwable;
 use function dirname;
 use function in_array;
 use function strlen;
+use function substr;
 
 class Swoole extends AbstractServer implements ContextAware
 {
@@ -88,22 +92,7 @@ class Swoole extends AbstractServer implements ContextAware
 
         $this->swoole = new Server($this->host, $this->port);
         $this->swoole->set($this->settings);
-        $this->swoole->on('Start', [$this, 'onStart']);
-        $this->swoole->on('BeforeShutdown', [$this, 'onBeforeShutdown']);
-        $this->swoole->on('Shutdown', [$this, 'onShutdown']);
-        $this->swoole->on('ManagerStart', [$this, 'onManagerStart']);
-        $this->swoole->on('WorkerStart', [$this, 'onWorkerStart']);
-        $this->swoole->on('WorkerStop', [$this, 'onWorkerStop']);
-        $this->swoole->on('WorkerExit', [$this, 'onWorkerExit']);
-        $this->swoole->on('Connect', [$this, 'onConnect']);
-        $this->swoole->on('Packet', [$this, 'onPacket']);
-        $this->swoole->on('Close', [$this, 'onClose']);
-        $this->swoole->on('Task', [$this, 'onTask']);
-        $this->swoole->on('Finish', [$this, 'onFinish']);
-        $this->swoole->on('PipeMessage', [$this, 'onPipeMessage']);
-        $this->swoole->on('WorkerError', [$this, 'onWorkerError']);
-        $this->swoole->on('ManagerStop', [$this, 'onManagerStop']);
-        $this->swoole->on('Request', [$this, 'onRequest']);
+        $this->registerServerCallbacks($this->swoole);
     }
 
     public function getContext(): SwooleContext
@@ -144,6 +133,7 @@ class Swoole extends AbstractServer implements ContextAware
         }
     }
 
+    #[ServerCallback]
     public function onStart(Server $server): void
     {
         @cli_set_process_title(sprintf('%s.swoole-master', $this->app_id));
@@ -151,16 +141,19 @@ class Swoole extends AbstractServer implements ContextAware
         $this->dispatchEvent(new ServerStart($server));
     }
 
+    #[ServerCallback]
     public function onBeforeShutdown(Server $server): void
     {
         $this->dispatchEvent(new ServerBeforeShutdown($server));
     }
 
+    #[ServerCallback]
     public function onShutdown(Server $server): void
     {
         $this->dispatchEvent(new ServerShutdown($server));
     }
 
+    #[ServerCallback]
     public function onManagerStart(Server $server): void
     {
         @cli_set_process_title(sprintf('%s.swoole-manager', $this->app_id));
@@ -168,6 +161,7 @@ class Swoole extends AbstractServer implements ContextAware
         $this->dispatchEvent(new ServerManagerStart($server));
     }
 
+    #[ServerCallback]
     public function onWorkerStart(Server $server, int $worker_id): void
     {
         $worker_num = $server->setting['worker_num'];
@@ -182,6 +176,7 @@ class Swoole extends AbstractServer implements ContextAware
         $this->dispatchEvent(new ServerWorkerStart($server, $worker_id, $worker_num));
     }
 
+    #[ServerCallback]
     public function onWorkerStop(Server $server, int $worker_id): void
     {
         $worker_num = $server->setting['worker_num'];
@@ -191,49 +186,70 @@ class Swoole extends AbstractServer implements ContextAware
         $this->dispatchEvent(new ServerWorkerStop($server, $worker_id, $worker_num));
     }
 
+    #[ServerCallback]
     public function onWorkerExit(Server $server, int $worker_id): void
     {
         $this->dispatchEvent(new ServerWorkerExit($server, $worker_id));
     }
 
+    #[ServerCallback]
     public function onConnect(Server $server, int $fd, int $reactor_id): void
     {
         $this->dispatchEvent(new ServerConnect($server, $fd, $reactor_id));
     }
 
+    #[ServerCallback]
     public function onPacket(Server $server, string $data, array $client): void
     {
         $this->dispatchEvent(new ServerPacket($server, $data, $client));
     }
 
+    #[ServerCallback]
     public function onClose(Server $server, int $fd, int $reactor_id): void
     {
         $this->dispatchEvent(new ServerClose($server, $fd, $reactor_id));
     }
 
+    #[ServerCallback]
     public function onTask(Server $server, int $worker_id, int $src_worker_id, mixed $data): void
     {
         $this->dispatchEvent(new ServerTask($server, $worker_id, $src_worker_id, $data));
     }
 
+    #[ServerCallback]
     public function onFinish(Server $server, int $worker_id, mixed $data): void
     {
         $this->dispatchEvent(new ServerFinish($server, $worker_id, $data));
     }
 
+    #[ServerCallback]
     public function onPipeMessage(Server $server, int $src_worker_id, mixed $message): void
     {
         $this->dispatchEvent(new ServerPipeMessage($server, $src_worker_id, $message));
     }
 
+    #[ServerCallback]
     public function onWorkerError(Server $server, int $worker_id, int $worker_pid, int $exit_code, int $signal): void
     {
         $this->dispatchEvent(new ServerWorkerError($server, $worker_id, $worker_pid, $exit_code, $signal));
     }
 
+    #[ServerCallback]
     public function onManagerStop(Server $server): void
     {
         $this->dispatchEvent(new ServerManagerStop($server));
+    }
+
+    protected function registerServerCallbacks(Server $server): void
+    {
+        $rClass = new ReflectionClass($this);
+
+        foreach ($rClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->getAttributes(ServerCallback::class) !== []) {
+                $name = $method->getName();
+                $server->on(substr($name, 2), [$this, $name]);
+            }
+        }
     }
 
     public function start(): void
@@ -258,6 +274,7 @@ class Swoole extends AbstractServer implements ContextAware
         console_log('info', 'shutdown');
     }
 
+    #[ServerCallback]
     public function onRequest(Request $request, Response $response): void
     {
         $uri = $request->server['request_uri'];
