@@ -100,7 +100,6 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
         }
     }
 
-    /** @noinspection PhpRedundantCatchClauseInspection */
     public function handle(): void
     {
         try {
@@ -118,9 +117,59 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
             }
             $this->eventDispatcher->dispatch(new RequestRouted($this->router, $matcher));
 
-            $actionReturnValue = $this->dispatch($matcher->getHandler(), $matcher->getParams());
+            $context = $this->getContext();
 
-            $this->handleInternal($actionReturnValue);
+            $this->request->setHandler($matcher->getHandler());
+            $globals = $this->request->getContext();
+            foreach ($matcher->getParams() as $k => $v) {
+                if (is_string($k)) {
+                    $globals->_REQUEST[$k] = $v;
+                }
+            }
+            list($controller, $action) = explode('::', $matcher->getHandler());
+
+            if (!class_exists($controller)) {
+                throw new NotFoundControllerException(['`{1}` class cannot be loaded', $controller]);
+            }
+
+            if (!method_exists($controller, $action)) {
+                throw new NotFoundActionException(['`{1}::{2}` method does not exist', $controller, $action]);
+            }
+
+            $method = new ReflectionMethod($controller, $action);
+
+            $this->eventDispatcher->dispatch(new RequestAuthorizing($method));
+            $this->eventDispatcher->dispatch(new RequestAuthorized($method));
+
+            $this->eventDispatcher->dispatch(new RequestValidating($method));
+            $this->eventDispatcher->dispatch(new RequestValidated($method));
+
+            $this->eventDispatcher->dispatch(new RequestReady($method));
+
+            $interceptors = $this->getInterceptors($method);
+
+            foreach ($interceptors as $interceptor) {
+                if (!$interceptor->preHandle($method)) {
+                    throw new AbortException();
+                }
+            }
+
+            $this->eventDispatcher->dispatch(new RequestInvoking($method));
+
+            try {
+                $context->isInvoking = true;
+                $return = $this->invoke($method);
+            } finally {
+                $context->isInvoking = false;
+            }
+
+            $this->eventDispatcher->dispatch(new RequestInvoked($method, $return));
+
+            foreach ($interceptors as $interceptor) {
+                $interceptor->postHandle($method, $return);
+            }
+
+            $this->handleInternal($return);
         } catch (AbortException) {
             SuppressWarnings::noop();
         } catch (Throwable $exception) {
@@ -217,65 +266,6 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
         }
 
         return $interceptors;
-    }
-
-    public function dispatch(string $handler, array $params): mixed
-    {
-        $context = $this->getContext();
-
-        $this->request->setHandler($handler);
-
-        $globals = $this->request->getContext();
-
-        foreach ($params as $k => $v) {
-            if (is_string($k)) {
-                $globals->_REQUEST[$k] = $v;
-            }
-        }
-        list($controller, $action) = explode('::', $handler);
-
-        if (!class_exists($controller)) {
-            throw new NotFoundControllerException(['`{1}` class cannot be loaded', $controller]);
-        }
-
-        if (!method_exists($controller, $action)) {
-            throw new NotFoundActionException(['`{1}::{2}` method does not exist', $controller, $action]);
-        }
-
-        $method = new ReflectionMethod($controller, $action);
-
-        $this->eventDispatcher->dispatch(new RequestAuthorizing($method));
-        $this->eventDispatcher->dispatch(new RequestAuthorized($method));
-
-        $this->eventDispatcher->dispatch(new RequestValidating($method));
-        $this->eventDispatcher->dispatch(new RequestValidated($method));
-
-        $this->eventDispatcher->dispatch(new RequestReady($method));
-
-        $interceptors = $this->getInterceptors($method);
-
-        foreach ($interceptors as $interceptor) {
-            if (!$interceptor->preHandle($method)) {
-                return $this->response;
-            }
-        }
-
-        $this->eventDispatcher->dispatch(new RequestInvoking($method));
-
-        try {
-            $context->isInvoking = true;
-            $return = $this->invoke($method);
-        } finally {
-            $context->isInvoking = false;
-        }
-
-        $this->eventDispatcher->dispatch(new RequestInvoked($method, $return));
-
-        foreach ($interceptors as $interceptor) {
-            $interceptor->postHandle($method, $return);
-        }
-
-        return $return;
     }
 
     public function isInvoking(): bool
