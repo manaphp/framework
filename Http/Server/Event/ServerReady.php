@@ -6,13 +6,16 @@ namespace ManaPHP\Http\Server\Event;
 
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use Psr\Log\LogLevel;
-use Swoole\Http\Server;
 
 #[TraceLevel(LogLevel::NOTICE)]
 class ServerReady
 {
-    public function __construct(public ?Server $server = null)
-    {
+    public function __construct(
+        public mixed $server,
+        public string $host,
+        public int $port,
+        public array $settings = []
+    ) {
 
     }
 }

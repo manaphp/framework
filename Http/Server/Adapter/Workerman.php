@@ -15,7 +15,6 @@ use Throwable;
 use Workerman\Connection\ConnectionInterface;
 use Workerman\Protocols\Http;
 use Workerman\Worker;
-
 use function dirname;
 use function strlen;
 
@@ -94,7 +93,7 @@ class Workerman extends AbstractServer implements ContextAware
             shell_exec("explorer.exe http://127.0.0.1:$this->port/" . $this->router->getPrefix());
         }
 
-        $this->eventDispatcher->dispatch(new ServerReady());
+        $this->eventDispatcher->dispatch(new ServerReady(null, $this->host, $this->port));
 
         Worker::runAll();
 

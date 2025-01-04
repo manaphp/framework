@@ -7,8 +7,11 @@ namespace ManaPHP\Http;
 use ManaPHP\BootstrapperInterface;
 use ManaPHP\Debugging\DebuggerInterface;
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Http\Metrics\ExporterInterface;
 use ManaPHP\Http\Router\MappingScannerInterface;
+use ManaPHP\Http\Server\Listeners\LogServerStatusListener;
+use ManaPHP\Http\Server\Listeners\RenameProcessTitleListener;
 use ManaPHP\Swoole\ProcessesInterface;
 use ManaPHP\Swoole\WorkersInterface;
 use Psr\Container\ContainerInterface;
@@ -18,6 +21,7 @@ abstract class AbstractServer implements ServerInterface
 {
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
+    #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected RouterInterface $router;
@@ -25,7 +29,11 @@ abstract class AbstractServer implements ServerInterface
 
     #[Autowired] protected string $host = '0.0.0.0';
     #[Autowired] protected int $port = 9501;
-
+    #[Autowired] protected array $listeners
+        = [
+            LogServerStatusListener::class,
+            RenameProcessTitleListener::class
+        ];
     #[Autowired] protected array $bootstrappers
         = [
             DebuggerInterface::class,
@@ -43,6 +51,10 @@ abstract class AbstractServer implements ServerInterface
                 $bootstrapper = $this->container->get($name);
                 $bootstrapper->bootstrap();
             }
+        }
+
+        foreach ($this->listeners as $listener) {
+            $this->listenerProvider->add($listener);
         }
     }
 }

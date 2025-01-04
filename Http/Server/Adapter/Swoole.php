@@ -9,11 +9,9 @@ use ManaPHP\Coroutine\ContextAware;
 use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
-use ManaPHP\Di\ConfigInterface;
 use ManaPHP\Di\Lazy;
 use ManaPHP\Helper\Ip;
 use ManaPHP\Http\AbstractServer;
-use ManaPHP\Http\RouterInterface;
 use ManaPHP\Http\Server\Event\ServerBeforeShutdown;
 use ManaPHP\Http\Server\Event\ServerClose;
 use ManaPHP\Http\Server\Event\ServerConnect;
@@ -52,7 +50,6 @@ class Swoole extends AbstractServer implements ContextAware
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected StaticHandlerInterface|Lazy $staticHandler;
-    #[Autowired] protected ConfigInterface $config;
     #[Autowired] protected LoggerInterface $logger;
 
     #[Autowired] protected array $settings = [];
@@ -131,8 +128,6 @@ class Swoole extends AbstractServer implements ContextAware
     #[ServerCallback]
     public function onStart(Server $server): void
     {
-        @cli_set_process_title(sprintf('%s.swoole-master', $this->app_id));
-
         $this->dispatchEvent(new ServerStart($server));
     }
 
@@ -151,8 +146,6 @@ class Swoole extends AbstractServer implements ContextAware
     #[ServerCallback]
     public function onManagerStart(Server $server): void
     {
-        @cli_set_process_title(sprintf('%s.swoole-manager', $this->app_id));
-
         $this->dispatchEvent(new ServerManagerStart($server));
     }
 
@@ -160,11 +153,8 @@ class Swoole extends AbstractServer implements ContextAware
     public function onWorkerStart(Server $server, int $worker_id): void
     {
         $worker_num = $server->setting['worker_num'];
-        if ($worker_id < $worker_num) {
-            @cli_set_process_title(sprintf('%s.swoole-worker.%d', $this->app_id, $worker_id));
-        } else {
+        if ($worker_id >= $worker_num) {
             $tasker_id = $worker_id - $worker_num;
-            @cli_set_process_title(sprintf('%s.swoole-worker.%d.%d', $this->app_id, $worker_id, $tasker_id));
             $this->dispatchEvent(new ServerTaskerStart($server, $worker_id, $tasker_id));
         }
 
@@ -259,18 +249,8 @@ class Swoole extends AbstractServer implements ContextAware
         $server->set($this->settings);
         $this->registerServerCallbacks($server);
 
-        echo PHP_EOL, str_repeat('+', 80), PHP_EOL;
-
-        $settings = json_stringify($this->settings);
-        console_log('info', ['listen on: %s:%d with setting: %s', $this->host, $this->port, $settings]);
-        $this->dispatchEvent(new ServerReady($server));
-        $host = $this->host === '0.0.0.0' ? '127.0.0.1' : $this->host;
-        $prefix = $this->config->get(RouterInterface::class)['prefix'] ?? '';
-        $prefix = ltrim($prefix, '?');
-        /** @noinspection HttpUrlsUsage */
-        console_log('info', sprintf('http://%s:%s%s', $host, $this->port, $prefix));
+        $this->dispatchEvent(new ServerReady($server, $this->host, $this->port, $this->settings));
         $server->start();
-        console_log('info', 'shutdown');
     }
 
     #[ServerCallback]

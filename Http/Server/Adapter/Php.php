@@ -77,7 +77,7 @@ class Php extends AbstractServer
                 header('HTTP/1.1 404 Not Found');
             }
         } else {
-            $this->eventDispatcher->dispatch(new ServerReady());
+            $this->eventDispatcher->dispatch(new ServerReady(null, $this->host, $this->port));
 
             $this->requestHandler->handle();
         }
