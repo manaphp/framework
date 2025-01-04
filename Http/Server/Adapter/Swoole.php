@@ -59,7 +59,6 @@ class Swoole extends AbstractServer implements ContextAware
 
     #[Config] protected string $app_id;
 
-    protected Server $swoole;
     protected array $_SERVER;
 
     public function __construct()
@@ -89,10 +88,6 @@ class Swoole extends AbstractServer implements ContextAware
         if (!empty($this->settings['enable_static_handler'])) {
             $this->settings['document_root'] = $document_root;
         }
-
-        $this->swoole = new Server($this->host, $this->port);
-        $this->swoole->set($this->settings);
-        $this->registerServerCallbacks($this->swoole);
     }
 
     public function getContext(): SwooleContext
@@ -260,17 +255,21 @@ class Swoole extends AbstractServer implements ContextAware
 
         $this->bootstrap();
 
+        $server = new Server($this->host, $this->port);
+        $server->set($this->settings);
+        $this->registerServerCallbacks($server);
+
         echo PHP_EOL, str_repeat('+', 80), PHP_EOL;
 
         $settings = json_stringify($this->settings);
         console_log('info', ['listen on: %s:%d with setting: %s', $this->host, $this->port, $settings]);
-        $this->dispatchEvent(new ServerReady($this->swoole));
+        $this->dispatchEvent(new ServerReady($server));
         $host = $this->host === '0.0.0.0' ? '127.0.0.1' : $this->host;
         $prefix = $this->config->get(RouterInterface::class)['prefix'] ?? '';
         $prefix = ltrim($prefix, '?');
         /** @noinspection HttpUrlsUsage */
         console_log('info', sprintf('http://%s:%s%s', $host, $this->port, $prefix));
-        $this->swoole->start();
+        $server->start();
         console_log('info', 'shutdown');
     }
 
