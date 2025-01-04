@@ -23,9 +23,9 @@ class RequestRouted implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'uri'     => $this->router->getRewriteUri(),
-            'handler' => $this->matcher?->getHandler(),
-            'params'  => $this->matcher?->getParams(),
+            'uri'       => $this->router->getRewriteUri(),
+            'handler'   => $this->matcher?->getHandler(),
+            'variables' => $this->matcher?->getVariables(),
         ];
     }
 }

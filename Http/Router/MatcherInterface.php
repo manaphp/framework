@@ -8,5 +8,5 @@ interface MatcherInterface
 {
     public function getHandler(): string;
 
-    public function getParams(): array;
+    public function getVariables(): array;
 }

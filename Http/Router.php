@@ -186,28 +186,28 @@ class Router implements RouterInterface
         if (is_string($args)) {
             if (($pos = strpos($args, '?')) !== false) {
                 $path = substr($args, 0, $pos);
-                parse_str(substr($args, $pos + 1), $params);
+                parse_str(substr($args, $pos + 1), $variables);
             } else {
                 $path = $args;
-                $params = [];
+                $variables = [];
             }
         } else {
             $path = $args[0];
             unset($args[0]);
-            $params = $args;
+            $variables = $args;
         }
 
         $url = $this->getPrefix() . $path;
 
-        if ($params !== []) {
+        if ($variables !== []) {
             $fragment = null;
-            if (isset($params['#'])) {
-                $fragment = $params['#'];
-                unset($params['#']);
+            if (isset($variables['#'])) {
+                $fragment = $variables['#'];
+                unset($variables['#']);
             }
 
-            if ($params !== []) {
-                $url .= '?' . http_build_query($params);
+            if ($variables !== []) {
+                $url .= '?' . http_build_query($variables);
             }
             if ($fragment !== null) {
                 $url .= '#' . $fragment;

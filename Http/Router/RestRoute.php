@@ -23,10 +23,10 @@ class RestRoute implements RouteInterface
     public function match(string $uri, string $method = 'GET'): ?MatcherInterface
     {
         if ((preg_match($this->compiled, $uri, $matches)) === 1) {
-            $params = [];
+            $variables = [];
             foreach ($matches as $k => $v) {
                 if (is_string($k)) {
-                    $params[$k] = $v;
+                    $variables[$k] = $v;
                 }
             }
 
@@ -37,8 +37,8 @@ class RestRoute implements RouteInterface
             }
 
             if (isset($m2a[$method])) {
-                $params['action'] = $m2a[$method];
-                return new Matcher($this->handler, $params);
+                $variables['action'] = $m2a[$method];
+                return new Matcher($this->handler, $variables);
             } else {
                 return null;
             }

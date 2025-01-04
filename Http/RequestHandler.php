@@ -110,12 +110,8 @@ class RequestHandler implements RequestHandlerInterface
             $this->eventDispatcher->dispatch(new RequestRouted($this->router, $matcher));
 
             $this->request->setHandler($matcher->getHandler());
-            $globals = $this->request->getContext();
-            foreach ($matcher->getParams() as $k => $v) {
-                if (is_string($k)) {
-                    $globals->_REQUEST[$k] = $v;
-                }
-            }
+            $this->request->setVariables($matcher->getVariables());
+
             list($controller, $action) = explode('::', $matcher->getHandler());
 
             if (!class_exists($controller)) {

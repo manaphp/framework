@@ -18,6 +18,7 @@ use function count;
 use function in_array;
 use function is_array;
 use function is_int;
+use function is_string;
 use function str_starts_with;
 use function strtolower;
 
@@ -332,5 +333,17 @@ class Request implements RequestInterface, JsonSerializable, ContextAware
     public function handler(): ?string
     {
         return $this->getContext()->handler;
+    }
+
+    public function setVariables(array $variables): void
+    {
+        $context = $this->getContext();
+        $context->variables = $variables;
+
+        foreach ($variables as $k => $v) {
+            if (is_string($k)) {
+                $context->_REQUEST[$k] = $v;
+            }
+        }
     }
 }

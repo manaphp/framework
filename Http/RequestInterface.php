@@ -75,4 +75,6 @@ interface RequestInterface
     public function setHandler(string $handler): void;
 
     public function handler(): ?string;
+
+    public function setVariables(array $variables): void;
 }

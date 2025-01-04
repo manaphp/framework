@@ -31,13 +31,13 @@ class RegexRoute implements RouteInterface, JsonSerializable
         }
 
         if (preg_match($this->compiled, $uri, $matches) === 1) {
-            $params = [];
+            $variables = [];
             foreach ($matches as $k => $v) {
                 if (is_string($k)) {
-                    $params[$k] = $v;
+                    $variables[$k] = $v;
                 }
             }
-            return new Matcher($this->handler, $params);
+            return new Matcher($this->handler, $variables);
         } else {
             return null;
         }

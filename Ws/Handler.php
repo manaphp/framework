@@ -56,10 +56,7 @@ class Handler implements HandlerInterface
                 throw new NotFoundRouteException(['router does not have matched route']);
             }
 
-            $returnValue = $this->dispatch(
-                $matcher->getHandler(),
-                $matcher->getParams()
-            );
+            $returnValue = $this->dispatch($matcher->getHandler(), $matcher->getVariables());
 
             if ($returnValue === null || $returnValue instanceof Response) {
                 SuppressWarnings::noop();
