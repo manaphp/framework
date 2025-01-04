@@ -26,6 +26,8 @@ use ManaPHP\Http\Event\RequestInvoking;
 use ManaPHP\Http\Event\RequestReady;
 use ManaPHP\Http\Event\RequestResponded;
 use ManaPHP\Http\Event\RequestResponding;
+use ManaPHP\Http\Event\RequestRouted;
+use ManaPHP\Http\Event\RequestRouting;
 use ManaPHP\Http\Event\RequestValidated;
 use ManaPHP\Http\Event\RequestValidating;
 use ManaPHP\Http\Event\ResponseStringify;
@@ -105,12 +107,14 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
             $this->eventDispatcher->dispatch(new RequestAuthenticating());
             $this->eventDispatcher->dispatch(new RequestAuthenticated());
 
+            $this->eventDispatcher->dispatch(new RequestRouting($this->router));
             if (($matcher = $this->router->match()) === null) {
                 throw new NotFoundRouteException(
                     ['router does not have matched route for `{1} {2}`', $this->request->method(),
                      $this->router->getRewriteUri()]
                 );
             }
+            $this->eventDispatcher->dispatch(new RequestRouted($this->router, $matcher));
 
             $actionReturnValue = $this->dispatch($matcher->getHandler(), $matcher->getParams());
 

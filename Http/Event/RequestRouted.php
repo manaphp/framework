@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ManaPHP\Http\Router\Event;
+namespace ManaPHP\Http\Event;
 
 use JsonSerializable;
 use ManaPHP\Eventing\Attribute\TraceLevel;
@@ -11,7 +11,7 @@ use ManaPHP\Http\RouterInterface;
 use Psr\Log\LogLevel;
 
 #[TraceLevel(LogLevel::NOTICE)]
-class RouterRouted implements JsonSerializable
+class RequestRouted implements JsonSerializable
 {
     public function __construct(
         public RouterInterface $router,

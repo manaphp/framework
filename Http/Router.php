@@ -6,15 +6,12 @@ namespace ManaPHP\Http;
 
 use ManaPHP\AliasInterface;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Http\Router\Event\RouterRouted;
-use ManaPHP\Http\Router\Event\RouterRouting;
 use ManaPHP\Http\Router\Matcher;
 use ManaPHP\Http\Router\MatcherInterface;
 use ManaPHP\Http\Router\PatternCompilerInterface;
 use ManaPHP\Http\Router\RegexRoute;
 use ManaPHP\Http\Router\RestRoute;
 use ManaPHP\Http\Router\RouteInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use function count;
 use function http_build_query;
 use function implode;
@@ -28,7 +25,6 @@ use function substr;
 
 class Router implements RouterInterface
 {
-    #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected PatternCompilerInterface $patternCompiler;
@@ -150,8 +146,6 @@ class Router implements RouterInterface
 
     public function match(?string $uri = null, ?string $method = null): ?MatcherInterface
     {
-        $this->eventDispatcher->dispatch(new RouterRouting($this));
-
         $uri = $uri ?: $this->getRewriteUri();
 
         if ($method === null) {
@@ -183,8 +177,6 @@ class Router implements RouterInterface
                 }
             }
         }
-
-        $this->eventDispatcher->dispatch(new RouterRouted($this, $matcher));
 
         return $matcher;
     }
