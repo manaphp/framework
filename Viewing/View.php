@@ -11,10 +11,7 @@ use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Rendering\RendererInterface;
-use ManaPHP\Viewing\View\Event\ViewRendered;
-use ManaPHP\Viewing\View\Event\ViewRendering;
 use Psr\Container\ContainerInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionClass;
 
 use function basename;
@@ -30,7 +27,6 @@ class View implements ViewInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected ContainerInterface $container;
-    #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RouterInterface $router;
     #[Autowired] protected RendererInterface $renderer;
 
@@ -126,7 +122,6 @@ class View implements ViewInterface, ContextAware
             }
         }
 
-        $this->eventDispatcher->dispatch(new ViewRendering($this));
 
         $this->renderer->lock();
         try {
@@ -140,8 +135,6 @@ class View implements ViewInterface, ContextAware
         } finally {
             $this->renderer->unlock();
         }
-
-        $this->eventDispatcher->dispatch(new ViewRendered($this));
 
         if ($this->autofix_url) {
             $this->fixUrl();

@@ -24,6 +24,8 @@ use ManaPHP\Http\Event\RequestException;
 use ManaPHP\Http\Event\RequestInvoked;
 use ManaPHP\Http\Event\RequestInvoking;
 use ManaPHP\Http\Event\RequestReady;
+use ManaPHP\Http\Event\RequestRendered;
+use ManaPHP\Http\Event\RequestRendering;
 use ManaPHP\Http\Event\RequestResponded;
 use ManaPHP\Http\Event\RequestResponding;
 use ManaPHP\Http\Event\RequestRouted;
@@ -169,7 +171,11 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
                     }
                 }
 
-                return $this->response->setContent($this->view->render($this->request->handler()));
+                $this->eventDispatcher->dispatch(new RequestRendering($this->view));
+                $content = $this->view->render($this->request->handler());
+                $this->eventDispatcher->dispatch(new RequestRendered($this->view));
+
+                return $this->response->setContent($content);
             }
         }
 
