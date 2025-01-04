@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http;
 
-use ManaPHP\Coroutine\ContextAware;
-use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\MakerInterface;
 use ManaPHP\Eventing\EventDispatcherInterface;
@@ -50,9 +48,8 @@ use function is_string;
 use function json_stringify;
 use function method_exists;
 
-class RequestHandler implements RequestHandlerInterface, ContextAware
+class RequestHandler implements RequestHandlerInterface
 {
-    #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected MakerInterface $maker;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
@@ -74,11 +71,6 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
                 $listenerProvider->add($middleware);
             }
         }
-    }
-
-    public function getContext(): RequestHandlerContext
-    {
-        return $this->contextManager->getContext($this);
     }
 
     protected function handleInternal(mixed $actionReturnValue): void
@@ -117,8 +109,6 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
             }
             $this->eventDispatcher->dispatch(new RequestRouted($this->router, $matcher));
 
-            $context = $this->getContext();
-
             $this->request->setHandler($matcher->getHandler());
             $globals = $this->request->getContext();
             foreach ($matcher->getParams() as $k => $v) {
@@ -155,14 +145,7 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
             }
 
             $this->eventDispatcher->dispatch(new RequestInvoking($method));
-
-            try {
-                $context->isInvoking = true;
-                $return = $this->invoke($method);
-            } finally {
-                $context->isInvoking = false;
-            }
-
+            $return = $this->invoke($method);
             $this->eventDispatcher->dispatch(new RequestInvoked($method, $return));
 
             foreach ($interceptors as $interceptor) {
@@ -266,10 +249,5 @@ class RequestHandler implements RequestHandlerInterface, ContextAware
         }
 
         return $interceptors;
-    }
-
-    public function isInvoking(): bool
-    {
-        return $this->getContext()->isInvoking;
     }
 }
