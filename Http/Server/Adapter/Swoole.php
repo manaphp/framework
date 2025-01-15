@@ -291,7 +291,7 @@ class Swoole extends AbstractServer implements ContextAware
         $this->contextManager->resetContexts();
     }
 
-    public function send(): void
+    public function sendHeaders(): void
     {
         $context = $this->getContext();
 
@@ -317,6 +317,13 @@ class Swoole extends AbstractServer implements ContextAware
                 $cookie['httponly']
             );
         }
+    }
+
+    public function sendBody(): void
+    {
+        $context = $this->getContext();
+
+        $response = $context->response;
 
         $content = $this->response->getContent() ?? '';
         if ($this->response->getStatusCode() === 304) {

@@ -172,7 +172,8 @@ class RequestHandler implements RequestHandlerInterface
         }
 
         $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));
-        $this->httpServer->send();
+        $this->httpServer->sendHeaders();
+        $this->httpServer->sendBody();
         $this->eventDispatcher->dispatch(new RequestResponded($this->request, $this->response));
 
         $this->accessLog->log();

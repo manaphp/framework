@@ -83,8 +83,13 @@ class Php extends AbstractServer
         }
     }
 
-    public function send(): void
+    public function sendHeaders(): void
     {
-        $this->sender->send();
+        $this->sender->sendHeaders();
+    }
+
+    public function sendBody(): void
+    {
+        $this->sender->sendBody();
     }
 }

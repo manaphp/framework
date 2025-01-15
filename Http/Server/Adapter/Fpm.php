@@ -30,9 +30,13 @@ class Fpm extends AbstractServer
         $this->requestHandler->handle();
     }
 
-    public function send(): void
+    public function sendHeaders(): void
     {
-        $this->sender->send();
+        $this->sender->sendHeaders();
     }
 
+    public function sendBody(): void
+    {
+        $this->sender->sendBody();
+    }
 }

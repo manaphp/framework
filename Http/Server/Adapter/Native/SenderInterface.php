@@ -6,5 +6,7 @@ namespace ManaPHP\Http\Server\Adapter\Native;
 
 interface SenderInterface
 {
-    public function send(): void;
+    public function sendHeaders(): void;
+
+    public function sendBody(): void;
 }

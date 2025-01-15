@@ -13,6 +13,9 @@ use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\RouterInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function header;
+use function headers_sent;
+use function readfile;
 use function strlen;
 
 class Sender implements SenderInterface
@@ -24,7 +27,7 @@ class Sender implements SenderInterface
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected RouterInterface $router;
 
-    public function send(): void
+    public function sendHeaders(): void
     {
         if (headers_sent($file, $line)) {
             throw new MisuseException("Headers has been sent in $file:$line");
@@ -52,7 +55,10 @@ class Sender implements SenderInterface
                 $cookie['httponly']
             );
         }
+    }
 
+    public function sendBody(): void
+    {
         $content = $this->response->getContent() ?? '';
         if ($this->response->getStatusCode() === 304) {
             SuppressWarnings::noop();

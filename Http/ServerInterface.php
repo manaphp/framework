@@ -8,5 +8,7 @@ interface ServerInterface
 {
     public function start(): void;
 
-    public function send(): void;
+    public function sendHeaders(): void;
+
+    public function sendBody(): void;
 }

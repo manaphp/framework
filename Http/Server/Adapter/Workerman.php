@@ -122,7 +122,7 @@ class Workerman extends AbstractServer implements ContextAware
         }
     }
 
-    public function send(): void
+    public function sendHeaders(): void
     {
         Http::header('HTTP', true, $this->response->getStatusCode());
 
@@ -142,7 +142,10 @@ class Workerman extends AbstractServer implements ContextAware
                 $cookie['httponly']
             );
         }
+    }
 
+    public function sendBody(): void
+    {
         $context = $this->getContext();
         $content = $this->response->getContent() ?? '';
         if ($this->response->getStatusCode() === 304) {
