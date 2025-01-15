@@ -15,9 +15,11 @@ use ManaPHP\Exception\AbortException;
 use ManaPHP\Exception\FileNotFoundException;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\SuppressWarnings;
+use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\Response\Appenders\RequestIdAppender;
 use ManaPHP\Http\Response\Appenders\ResponseTimeAppender;
 use ManaPHP\Http\Response\Appenders\RouteAppender;
+use Psr\Container\ContainerInterface;
 use function basename;
 use function is_array;
 use function is_string;
@@ -25,7 +27,7 @@ use function is_string;
 class Response implements ResponseInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
-
+    #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected RouterInterface $router;
 
@@ -412,8 +414,14 @@ class Response implements ResponseInterface, ContextAware
         return $this->getContext()->headers;
     }
 
-    public function getAppenders(): array
+    public function applyAppenders(): void
     {
-        return $this->appenders;
+        foreach ($this->appenders as $appender) {
+            if ($appender !== '' && $appender !== null) {
+                /** @var string|AppenderInterface $appender */
+                $appender = $this->container->get($appender);
+                $appender->append($this->request, $this);
+            }
+        }
     }
 }

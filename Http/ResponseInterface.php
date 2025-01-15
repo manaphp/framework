@@ -70,5 +70,5 @@ interface ResponseInterface
 
     public function getHeaders(): array;
 
-    public function getAppenders(): array;
+    public function applyAppenders(): void;
 }

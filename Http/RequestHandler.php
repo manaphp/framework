@@ -31,7 +31,6 @@ use ManaPHP\Http\Event\RequestRouting;
 use ManaPHP\Http\Event\RequestValidated;
 use ManaPHP\Http\Event\RequestValidating;
 use ManaPHP\Http\Event\ResponseStringify;
-use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\Router\NotFoundRouteException;
 use ManaPHP\Viewing\View\Attribute\ViewMapping;
 use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
@@ -163,14 +162,7 @@ class RequestHandler implements RequestHandlerInterface
             }
         }
 
-        foreach ($this->response->getAppenders() as $appender) {
-            if ($appender !== '' && $appender !== null) {
-                /** @var string|AppenderInterface $appender */
-                $appender = $this->container->get($appender);
-                $appender->append($this->request, $this->response);
-            }
-        }
-
+        $this->response->applyAppenders();
         $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));
         $this->httpServer->sendHeaders();
         $this->httpServer->sendBody();
