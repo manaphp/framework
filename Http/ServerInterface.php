@@ -11,4 +11,6 @@ interface ServerInterface
     public function sendHeaders(): void;
 
     public function sendBody(): void;
+
+    public function write(?string $chunk): void;
 }

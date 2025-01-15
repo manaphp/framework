@@ -8,6 +8,7 @@ use ManaPHP\BootstrapperInterface;
 use ManaPHP\Debugging\DebuggerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\ListenerProviderInterface;
+use ManaPHP\Exception\NotImplementedException;
 use ManaPHP\Http\Metrics\ExporterInterface;
 use ManaPHP\Http\Router\MappingScannerInterface;
 use ManaPHP\Http\Server\Listeners\LogServerStatusListener;
@@ -56,5 +57,10 @@ abstract class AbstractServer implements ServerInterface
         foreach ($this->listeners as $listener) {
             $this->listenerProvider->add($listener);
         }
+    }
+
+    public function write(?string $chunk): void
+    {
+        throw new NotImplementedException(__METHOD__);
     }
 }
