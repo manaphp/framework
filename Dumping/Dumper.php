@@ -80,9 +80,10 @@ class Dumper implements DumperInterface
                 }
             } elseif (is_object($value)) {
                 if ($value instanceof JsonSerializable) {
-                    $value = $value->jsonSerialize();
+                    $value = $this->normalize($value->jsonSerialize());
                 } else {
-                    $value = class_implements($value) === [] ? $value : ($value::class . '::$object');
+                    $value = class_implements($value) === [] ? $this->normalize((array)$value)
+                        : ($value::class . '::$object');
                 }
             } elseif (is_array($value)) {
                 $value = $this->normalize($value);
