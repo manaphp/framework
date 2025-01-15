@@ -51,6 +51,7 @@ use function ini_get;
 use function is_array;
 use function is_object;
 use function is_string;
+use function spl_object_id;
 use function str_contains;
 
 class Debugger implements DebuggerInterface, ContextAware
@@ -357,22 +358,8 @@ class Debugger implements DebuggerInterface, ContextAware
         ];
     }
 
-    protected function getData(): array
+    protected function getDependencies(): array
     {
-        $context = $this->getContext();
-
-        $data = [];
-        $data['basic'] = $this->getBasic();
-        $levels = Level::map();
-        $data['logger'] = ['log' => $context->log, 'levels' => $levels, 'level' => $levels[LogLevel::DEBUG]];
-        $data['sql'] = [
-            'prepared' => $context->sql_prepared,
-            'executed' => $context->sql_executed,
-            'count'    => $context->sql_count
-        ];
-        $data['mongodb'] = $context->mongodb;
-        $data['root_dir'] = dirname(get_included_files()[0], 2);
-
         $definitions = $this->container->getDefinitions();
         $dependencies = [];
         foreach ($this->container->getInstances() as $id => $instance) {
@@ -397,8 +384,26 @@ class Debugger implements DebuggerInterface, ContextAware
                                   'object_id'  => spl_object_id($instance),
                                   'properties' => $properties];
         }
-        $data['dependencies'] = $dependencies;
 
+        return $dependencies;
+    }
+
+    protected function getData(): array
+    {
+        $context = $this->getContext();
+
+        $data = [];
+        $data['basic'] = $this->getBasic();
+        $levels = Level::map();
+        $data['logger'] = ['log' => $context->log, 'levels' => $levels, 'level' => $levels[LogLevel::DEBUG]];
+        $data['sql'] = [
+            'prepared' => $context->sql_prepared,
+            'executed' => $context->sql_executed,
+            'count'    => $context->sql_count
+        ];
+        $data['mongodb'] = $context->mongodb;
+        $data['root_dir'] = dirname(get_included_files()[0], 2);
+        $data['dependencies'] = $this->getDependencies();
         $data['view'] = $context->view;
         $data['events'] = $context->events;
 
