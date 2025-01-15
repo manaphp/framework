@@ -44,6 +44,7 @@ use ManaPHP\Rendering\Renderer\Event\RendererRendering;
 use ManaPHP\Version;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use function count;
 use function dirname;
 use function get_included_files;
 use function in_array;
@@ -73,6 +74,10 @@ class Debugger implements DebuggerInterface, ContextAware
     #[Autowired] protected bool $tail = true;
 
     #[Autowired] protected ?bool $enabled;
+    #[Autowired] protected int $max_event_count = 1000;
+    #[Autowired] protected int $max_log_count = 1000;
+    #[Autowired] protected int $max_sql_count = 1000;
+    #[Autowired] protected int $max_mongodb_count = 1000;
 
     #[Config] protected string $app_id;
     #[Config] protected string $app_env;
@@ -208,10 +213,14 @@ class Debugger implements DebuggerInterface, ContextAware
             return;
         }
 
+        $context = $this->getContext();
+
+        if (count($context->events) > $this->max_event_count) {
+            return;
+        }
+
         $data['event'] = $event::class;
         $data['source'] = array_keys(get_object_vars($event));
-
-        $context = $this->getContext();
 
         $context->events[] = $data;
     }
@@ -219,6 +228,10 @@ class Debugger implements DebuggerInterface, ContextAware
     public function onLoggerLog(#[Event] LoggerLog $event): void
     {
         $context = $this->getContext();
+
+        if (count($context->log) > $this->max_log_count) {
+            return;
+        }
 
         $log = $event->log;
         $ms = sprintf('.%03d', ($log->timestamp - (int)$log->timestamp) * 1000);
@@ -235,6 +248,10 @@ class Debugger implements DebuggerInterface, ContextAware
     public function onDb(#[Event] object $event): void
     {
         $context = $this->getContext();
+
+        if ($context->sql_count > $this->max_sql_count) {
+            return;
+        }
 
         if ($event instanceof DbQuerying || $event instanceof DbExecuting) {
             $preparedSQL = $event->sql;
@@ -295,6 +312,10 @@ class Debugger implements DebuggerInterface, ContextAware
     public function onMongodb(#[Event] object $event): void
     {
         $context = $this->getContext();
+
+        if (count($context->mongodb) > $this->max_mongodb_count) {
+            return;
+        }
 
         if ($event instanceof MongodbQueried) {
             $item = [];
