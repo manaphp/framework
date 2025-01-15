@@ -389,6 +389,10 @@ class Debugger implements DebuggerInterface, ContextAware
                 $properties = $this->dumper->dump($instance);
             }
 
+            if ($instance instanceof ContextManagerInterface) {
+                unset($properties['contexts']);
+            }
+
             $dependencies[$id] = ['class'      => $instance::class,
                                   'object_id'  => spl_object_id($instance),
                                   'properties' => $properties];
