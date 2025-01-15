@@ -162,11 +162,15 @@ class RequestHandler implements RequestHandlerInterface
             }
         }
 
-        $this->response->applyAppenders();
-        $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));
-        $this->httpServer->sendHeaders();
-        $this->httpServer->sendBody();
-        $this->eventDispatcher->dispatch(new RequestResponded($this->request, $this->response));
+        if ($this->response->isChunked()) {
+            $this->httpServer->write(null);
+        } else {
+            $this->response->applyAppenders();
+            $this->eventDispatcher->dispatch(new RequestResponding($this->request, $this->response));
+            $this->httpServer->sendHeaders();
+            $this->httpServer->sendBody();
+            $this->eventDispatcher->dispatch(new RequestResponded($this->request, $this->response));
+        }
 
         $this->accessLog->log();
 

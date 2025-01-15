@@ -71,4 +71,8 @@ interface ResponseInterface
     public function getHeaders(): array;
 
     public function applyAppenders(): void;
+
+    public function isChunked(): bool;
+
+    public function write(?string $chunk): void;
 }

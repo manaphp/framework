@@ -12,4 +12,5 @@ class ResponseContext
     public array $cookies = [];
     public mixed $content = null;
     public ?string $file = null;
+    public bool $chunked = false;
 }

@@ -30,6 +30,7 @@ class Response implements ResponseInterface, ContextAware
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected RouterInterface $router;
+    #[Autowired] protected ServerInterface $server;
 
     #[Autowired] protected array $appenders
         = [
@@ -423,5 +424,26 @@ class Response implements ResponseInterface, ContextAware
                 $appender->append($this->request, $this);
             }
         }
+    }
+
+    public function isChunked(): bool
+    {
+        return $this->getContext()->chunked;
+    }
+
+    public function write(?string $chunk): void
+    {
+        $context = $this->getContext();
+
+        if (!$context->chunked) {
+            $context->chunked = true;
+
+            $this->applyAppenders();
+            $this->setHeader('Connection', 'keep-alive');
+            $this->setHeader('Transfer-Encoding', 'chunked');
+            $this->server->sendHeaders();
+        }
+
+        $this->server->write($chunk);
     }
 }
