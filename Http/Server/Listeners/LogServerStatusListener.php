@@ -16,7 +16,6 @@ use function console_log;
 use function json_stringify;
 use function ltrim;
 use function sprintf;
-use function str_repeat;
 
 class LogServerStatusListener
 {
@@ -29,8 +28,6 @@ class LogServerStatusListener
         $host = $event->host;
         $port = $event->port;
         $settings = $event->settings;
-
-        echo PHP_EOL, str_repeat('+', 80), PHP_EOL;
 
         $settings = json_stringify($settings);
 

@@ -168,10 +168,13 @@ if (!function_exists('base_url')) {
 if (!function_exists('console_log')) {
     function console_log(string $level, mixed $message): void
     {
-        if (is_array($message)) {
-            $message = sprintf(...$message);
+        if (defined('STDERR')) {
+            if (is_array($message)) {
+                $message = sprintf(...$message);
+            }
+            fprintf(STDERR, '[%s][%s]: %s', date('c'), $level, $message);
+            fprintf(STDERR, PHP_EOL);
         }
-        echo sprintf('[%s][%s]: ', date('c'), $level), $message, PHP_EOL;
     }
 }
 
