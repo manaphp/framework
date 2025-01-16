@@ -22,7 +22,7 @@ class CorsMiddleware
     #[Autowired] protected ?string $origin;
     #[Autowired] protected bool $credentials = true;
 
-    #[Config] protected string $env_app;
+    #[Config] protected string $app_env;
 
     public function onBegin(#[Event] RequestBegin $event): void
     {
@@ -34,7 +34,7 @@ class CorsMiddleware
         if ($origin !== '' && $origin !== $host) {
             if ($this->origin) {
                 $allow_origin = $this->origin;
-            } elseif ($this->env_app === 'prod') {
+            } elseif ($this->app_env === 'prod') {
                 $origin_pos = strpos($origin, '.');
                 $host_pos = strpos($host, '.');
 
