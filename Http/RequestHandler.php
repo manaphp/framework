@@ -31,6 +31,7 @@ use ManaPHP\Http\Event\RequestRouting;
 use ManaPHP\Http\Event\RequestValidated;
 use ManaPHP\Http\Event\RequestValidating;
 use ManaPHP\Http\Event\ResponseStringify;
+use ManaPHP\Http\Router\Attribute\SseGetMapping;
 use ManaPHP\Http\Router\NotFoundRouteException;
 use ManaPHP\Viewing\View\Attribute\ViewMapping;
 use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
@@ -182,25 +183,33 @@ class RequestHandler implements RequestHandlerInterface
         $controller = $this->container->get($rMethod->class);
         $method = $rMethod->name;
 
-        if ($this->request->method() === 'GET' && !$this->request->isAjax()) {
-            $attributes = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF);
-            if ($attributes !== []) {
-                /** @var ViewMappingInterface $viewMapping */
-                $viewMapping = $attributes[0]->newInstance();
-                if ($viewMapping instanceof ViewMapping) {
-                    $arguments = $this->argumentsResolver->resolve($rMethod);
+        if ($this->request->method() === 'GET') {
+            if ($rMethod->getAttributes(SseGetMapping::class, ReflectionAttribute::IS_INSTANCEOF) !== []) {
+                $this->response->setHeader('Content-Type', 'text/event-stream');
+                $this->response->write('');
 
-                    $vars = $controller->$method(...$arguments);
-                    if (is_array($vars)) {
-                        $this->view->setVars($vars);
+                $arguments = $this->argumentsResolver->resolve($rMethod);
+                return $controller->$method(...$arguments);
+            } elseif (!$this->request->isAjax()) {
+                $attributes = $rMethod->getAttributes(ViewMappingInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+                if ($attributes !== []) {
+                    /** @var ViewMappingInterface $viewMapping */
+                    $viewMapping = $attributes[0]->newInstance();
+                    if ($viewMapping instanceof ViewMapping) {
+                        $arguments = $this->argumentsResolver->resolve($rMethod);
+
+                        $vars = $controller->$method(...$arguments);
+                        if (is_array($vars)) {
+                            $this->view->setVars($vars);
+                        }
                     }
+
+                    $this->eventDispatcher->dispatch(new RequestRendering($this->view));
+                    $content = $this->view->render($this->request->handler());
+                    $this->eventDispatcher->dispatch(new RequestRendered($this->view));
+
+                    return $this->response->setContent($content);
                 }
-
-                $this->eventDispatcher->dispatch(new RequestRendering($this->view));
-                $content = $this->view->render($this->request->handler());
-                $this->eventDispatcher->dispatch(new RequestRendered($this->view));
-
-                return $this->response->setContent($content);
             }
         }
 

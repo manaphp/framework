@@ -75,4 +75,6 @@ interface ResponseInterface
     public function isChunked(): bool;
 
     public function write(?string $chunk): void;
+
+    public function writeSse(array $fields): void;
 }

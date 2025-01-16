@@ -23,6 +23,7 @@ use Psr\Container\ContainerInterface;
 use function basename;
 use function is_array;
 use function is_string;
+use function sprintf;
 
 class Response implements ResponseInterface, ContextAware
 {
@@ -445,6 +446,19 @@ class Response implements ResponseInterface, ContextAware
             $this->server->sendHeaders();
         }
 
-        $this->server->write($chunk);
+        if ($chunk !== '') {
+            $this->server->write($chunk);
+        }
+    }
+
+    public function writeSse(array $fields): void
+    {
+        $event = '';
+        foreach ($fields as $key => $value) {
+            $event .= sprintf('%s: %s', $key, $value) . "\r\n";
+        }
+        $event .= "\r\n";
+
+        $this->write($event);
     }
 }
