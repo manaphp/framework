@@ -8,7 +8,6 @@ use ManaPHP\BootstrapperInterface;
 use ManaPHP\Debugging\DebuggerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\ListenerProviderInterface;
-use ManaPHP\Exception\NotImplementedException;
 use ManaPHP\Http\Metrics\ExporterInterface;
 use ManaPHP\Http\Router\MappingScannerInterface;
 use ManaPHP\Http\Server\Listeners\LogServerStatusListener;
@@ -17,6 +16,8 @@ use ManaPHP\Swoole\ProcessesInterface;
 use ManaPHP\Swoole\WorkersInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function ob_flush;
+use function sprintf;
 
 abstract class AbstractServer implements ServerInterface
 {
@@ -61,6 +62,12 @@ abstract class AbstractServer implements ServerInterface
 
     public function write(?string $chunk): void
     {
-        throw new NotImplementedException(__METHOD__);
+        if ($chunk !== null) {
+            echo sprintf('%X', strlen($chunk)) . "\r\n" . $chunk . "\r\n";
+        } else {
+            echo "0\r\n\r\n";
+        }
+
+        ob_flush();
     }
 }
