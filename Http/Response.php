@@ -11,6 +11,7 @@ use ManaPHP\Coroutine\ContextAware;
 use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
+use ManaPHP\Di\Lazy;
 use ManaPHP\Exception\AbortException;
 use ManaPHP\Exception\FileNotFoundException;
 use ManaPHP\Helper\LocalFS;
@@ -31,7 +32,7 @@ class Response implements ResponseInterface, ContextAware
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected RouterInterface $router;
-    #[Autowired] protected ServerInterface $server;
+    #[Autowired] protected ServerInterface|Lazy $server;
 
     #[Autowired] protected array $appenders
         = [
