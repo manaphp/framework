@@ -57,7 +57,7 @@ class Kernel
         return PHP_SAPI === 'cli' && extension_loaded('swoole');
     }
 
-    protected function loadConfig(): ConfigInterface
+    protected function loadConfig(string $server): ConfigInterface
     {
         $configs = [];
         foreach (glob("$this->root/config/*.php") as $item) {
@@ -69,6 +69,7 @@ class Kernel
         }
 
         $config = $this->container->get(ConfigInterface::class);
+        $config->set('server', $server);
         foreach ($configs as $id => $definition) {
             $config->set($id, $definition);
         }
@@ -93,7 +94,7 @@ class Kernel
     {
         $this->container->get(EnvInterface::class)->load();
 
-        $config = $this->loadConfig();
+        $config = $this->loadConfig($server);
 
         if (($timezone = $config->get('timezone')) !== null) {
             date_default_timezone_set($timezone);
