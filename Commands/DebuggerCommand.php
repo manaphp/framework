@@ -8,6 +8,11 @@ use ManaPHP\Cli\Command;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Redis\RedisCacheInterface;
+use function explode;
+use function sprintf;
+use function str_contains;
+use function str_ends_with;
+use function str_starts_with;
 
 class DebuggerCommand extends Command
 {

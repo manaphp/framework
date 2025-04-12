@@ -6,8 +6,10 @@ namespace ManaPHP\Eventing;
 
 use JsonSerializable;
 use Stringable;
-
+use function get_object_vars;
 use function is_object;
+use function json_stringify;
+use function preg_split;
 
 class EventWrapper implements JsonSerializable, Stringable
 {

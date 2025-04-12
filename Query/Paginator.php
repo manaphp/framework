@@ -11,6 +11,12 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Exception\PreconditionException;
 use ManaPHP\Http\RequestInterface;
+use function ceil;
+use function max;
+use function min;
+use function preg_replace;
+use function str_contains;
+use function str_replace;
 
 class Paginator implements PaginatorInterface, JsonSerializable
 {

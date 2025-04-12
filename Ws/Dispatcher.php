@@ -7,6 +7,8 @@ namespace ManaPHP\Ws;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Ws\Server\Event\ServerStop;
+use function method_exists;
+use function spl_object_id;
 
 class Dispatcher implements DispatcherInterface
 {

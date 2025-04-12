@@ -9,6 +9,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\CreateDirectoryFailedException;
 use ManaPHP\Http\AbstractSession;
 use function dirname;
+use function sprintf;
 
 class File extends AbstractSession
 {

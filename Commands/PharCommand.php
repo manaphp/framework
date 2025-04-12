@@ -10,6 +10,8 @@ use ManaPHP\Cli\Command;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
 use Phar;
+use function basename;
+use function sprintf;
 
 class PharCommand extends Command
 {

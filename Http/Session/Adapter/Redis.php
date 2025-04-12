@@ -9,6 +9,7 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Http\AbstractSession;
 use ManaPHP\Redis\RedisCacheInterface;
 use function is_string;
+use function sprintf;
 
 class Redis extends AbstractSession
 {

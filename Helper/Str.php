@@ -6,16 +6,23 @@ namespace ManaPHP\Helper;
 
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Exception\NotSupportedException;
-
+use function base64_encode;
+use function bin2hex;
+use function ceil;
 use function chr;
 use function lcfirst;
 use function ord;
+use function preg_match;
 use function preg_replace;
 use function preg_replace_callback;
+use function random_bytes;
+use function sprintf;
 use function strlen;
 use function strtolower;
+use function strtr;
 use function substr;
 use function ucfirst;
+use function unpack;
 
 class Str
 {

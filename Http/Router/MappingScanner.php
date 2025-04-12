@@ -14,7 +14,6 @@ use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
-
 use function basename;
 use function is_array;
 use function str_contains;

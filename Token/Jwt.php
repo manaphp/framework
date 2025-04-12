@@ -6,9 +6,19 @@ namespace ManaPHP\Token;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Security\CryptInterface;
-
+use function base64_decode;
+use function base64_encode;
 use function count;
+use function explode;
+use function hash_hmac;
 use function is_array;
+use function json_decode;
+use function json_stringify;
+use function rtrim;
+use function strrpos;
+use function strtr;
+use function substr;
+use function time;
 
 class Jwt implements JwtInterface
 {

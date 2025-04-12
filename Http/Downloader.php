@@ -9,10 +9,28 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\SuppressWarnings;
 use function count;
+use function curl_close;
+use function curl_copy_handle;
+use function curl_init;
+use function curl_multi_add_handle;
+use function curl_multi_close;
+use function curl_multi_exec;
+use function curl_multi_info_read;
+use function curl_multi_init;
+use function curl_multi_remove_handle;
+use function curl_setopt;
+use function curl_strerror;
 use function dirname;
+use function fclose;
+use function fopen;
+use function is_file;
 use function is_float;
 use function is_int;
 use function is_string;
+use function preg_match;
+use function rename;
+use function unlink;
+use function usleep;
 
 class Downloader implements DownloaderInterface
 {

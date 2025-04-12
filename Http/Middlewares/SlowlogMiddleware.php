@@ -12,6 +12,7 @@ use ManaPHP\Http\Event\RequestEnd;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use function is_string;
+use function sprintf;
 
 class SlowlogMiddleware
 {

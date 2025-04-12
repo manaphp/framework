@@ -7,7 +7,6 @@ namespace ManaPHP\Persistence\Hierarchy\Adapter;
 use ManaPHP\Helper\Str;
 use ManaPHP\Persistence\Hierarchy\Exception as HierarchyException;
 use ManaPHP\Query\QueryInterface;
-
 use function count;
 use function strlen;
 

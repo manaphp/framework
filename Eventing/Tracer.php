@@ -21,8 +21,14 @@ use ReflectionUnionType;
 use Stringable;
 use function count;
 use function is_string;
+use function json_stringify;
+use function key;
+use function str_contains;
 use function str_replace;
+use function str_starts_with;
+use function stripos;
 use function strlen;
+use function substr;
 
 class Tracer implements TracerInterface
 {

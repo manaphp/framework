@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Amqp;
 
 use JsonSerializable;
+use function get_object_vars;
 
 class Queue implements JsonSerializable
 {

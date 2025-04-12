@@ -18,6 +18,7 @@ use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use function ob_flush;
 use function sprintf;
+use function strlen;
 
 abstract class AbstractServer implements ServerInterface
 {

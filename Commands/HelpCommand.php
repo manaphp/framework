@@ -15,10 +15,28 @@ use ManaPHP\Version;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionMethod;
-
+use function array_filter;
+use function array_flip;
+use function array_keys;
+use function array_map;
+use function basename;
 use function count;
+use function get_class_methods;
 use function is_string;
+use function json_stringify;
+use function ksort;
+use function max;
+use function method_exists;
+use function preg_match;
+use function preg_split;
+use function sprintf;
+use function str_contains;
+use function str_pad;
+use function str_starts_with;
 use function strlen;
+use function substr;
+use function trim;
+use function ucfirst;
 
 class HelpCommand extends Command
 {

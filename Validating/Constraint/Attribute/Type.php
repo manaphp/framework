@@ -9,13 +9,13 @@ use ManaPHP\Exception\MisuseException;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
-
 use function in_array;
 use function is_array;
 use function is_bool;
 use function is_float;
 use function is_int;
 use function is_iterable;
+use function is_object;
 use function is_string;
 use function method_exists;
 use function sprintf;

@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace ManaPHP\Cli;
 
 use ManaPHP\Helper\LocalFS;
+use function basename;
+use function ksort;
+use function lcfirst;
 
 class Commands implements CommandsInterface
 {

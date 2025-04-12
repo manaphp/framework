@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Metrics;
 
+use function count;
+use function is_float;
 use function is_int;
 use function is_string;
 

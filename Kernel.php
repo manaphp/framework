@@ -9,7 +9,6 @@ use ManaPHP\Di\ConfigInterface;
 use ManaPHP\Di\Container;
 use ManaPHP\Eventing\ListenersInterface;
 use ManaPHP\Eventing\TracerInterface;
-
 use function define;
 use function defined;
 use function extension_loaded;

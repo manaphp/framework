@@ -18,12 +18,17 @@ use PDO;
 use PDOException;
 use PDOStatement;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function array_shift;
 use function count;
+use function explode;
 use function gettype;
+use function implode;
 use function is_array;
 use function is_bool;
 use function is_int;
 use function is_scalar;
+use function json_stringify;
+use function microtime;
 
 abstract class AbstractConnection implements ConnectionInterface
 {

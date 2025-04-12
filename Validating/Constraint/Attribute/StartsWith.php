@@ -7,7 +7,6 @@ namespace ManaPHP\Validating\Constraint\Attribute;
 use Attribute;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
-
 use function is_string;
 use function str_starts_with;
 

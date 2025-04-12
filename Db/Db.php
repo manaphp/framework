@@ -32,10 +32,30 @@ use ManaPHP\Pooling\PoolsInterface;
 use PDO;
 use PDOException;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function array_keys;
+use function array_merge;
+use function array_shift;
 use function count;
+use function explode;
+use function implode;
 use function is_int;
 use function is_string;
+use function json_stringify;
+use function key;
+use function microtime;
+use function parse_url;
+use function preg_match;
+use function random_int;
+use function round;
+use function shuffle;
+use function str_contains;
+use function str_replace;
+use function str_starts_with;
+use function stripos;
 use function strlen;
+use function strpos;
+use function substr;
+use function trim;
 
 class Db implements DbInterface, ContextAware
 {

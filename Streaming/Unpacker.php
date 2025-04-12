@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Streaming;
 
+use function unpack;
+
 class Unpacker
 {
     protected ?string $format = null;

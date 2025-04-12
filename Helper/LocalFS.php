@@ -8,8 +8,31 @@ use ManaPHP\AliasInterface;
 use ManaPHP\Exception\CreateDirectoryFailedException;
 use ManaPHP\Exception\FileNotFoundException;
 use ManaPHP\Exception\RuntimeException;
-
+use function basename;
+use function chmod;
+use function copy;
 use function dirname;
+use function error_get_last;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function filemtime;
+use function filesize;
+use function fnmatch;
+use function glob;
+use function is_dir;
+use function is_file;
+use function mkdir;
+use function opendir;
+use function readdir;
+use function rename;
+use function rmdir;
+use function rtrim;
+use function scandir;
+use function str_contains;
+use function str_starts_with;
+use function strtr;
+use function unlink;
 
 class LocalFS
 {

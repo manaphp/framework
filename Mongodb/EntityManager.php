@@ -19,7 +19,6 @@ use ManaPHP\Persistence\Event\EntityRestoring;
 use ManaPHP\Persistence\Event\EntityUpdated;
 use ManaPHP\Persistence\Event\EntityUpdating;
 use MongoDB\BSON\ObjectId;
-
 use function gettype;
 use function is_bool;
 use function is_float;

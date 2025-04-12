@@ -12,7 +12,9 @@ use Psr\Log\LogLevel;
 use ReflectionClass;
 use Stringable;
 use Throwable;
+use function fgets;
 use function getenv;
+use function implode;
 use function is_array;
 use function is_float;
 use function is_int;
@@ -20,7 +22,19 @@ use function is_object;
 use function is_scalar;
 use function is_string;
 use function json_stringify;
+use function max;
+use function preg_match_all;
+use function random_int;
+use function sleep;
+use function sprintf;
+use function str_contains;
+use function str_ends_with;
+use function str_pad;
+use function str_repeat;
+use function str_starts_with;
 use function strlen;
+use function strtr;
+use function trim;
 
 class Console implements ConsoleInterface
 {

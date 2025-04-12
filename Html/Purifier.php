@@ -9,9 +9,13 @@ use DOMElement;
 use DOMNode;
 use Exception;
 use ManaPHP\Di\Attribute\Autowired;
-
+use function implode;
 use function in_array;
 use function is_string;
+use function iterator_to_array;
+use function str_contains;
+use function str_starts_with;
+use function substr;
 
 class Purifier implements PurifierInterface
 {

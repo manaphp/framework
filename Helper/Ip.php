@@ -4,8 +4,22 @@ declare(strict_types=1);
 
 namespace ManaPHP\Helper;
 
+use function base_convert;
+use function current;
+use function exec;
+use function explode;
 use function function_exists;
+use function ip2long;
 use function is_string;
+use function preg_match;
+use function preg_split;
+use function str_contains;
+use function str_pad;
+use function str_repeat;
+use function str_starts_with;
+use function strncmp;
+use function strpos;
+use function substr;
 
 class Ip
 {

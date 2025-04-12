@@ -7,6 +7,7 @@ namespace ManaPHP\Di;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
 use function call_user_func_array;
+use function sprintf;
 
 class Proxy implements Lazy
 {

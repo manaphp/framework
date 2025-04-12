@@ -9,9 +9,10 @@ use ManaPHP\Di\Lazy;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\I18n\LocaleInterface;
 use ManaPHP\Validating\Validator\ValidateFailedException;
-
 use function is_array;
+use function pathinfo;
 use function preg_replace_callback;
+use function strtolower;
 
 class Validator implements ValidatorInterface
 {

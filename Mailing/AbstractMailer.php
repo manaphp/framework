@@ -11,6 +11,7 @@ use ManaPHP\Mailing\Mailer\Event\MailerSending;
 use ManaPHP\Mailing\Mailer\Event\MailerSent;
 use ManaPHP\Mailing\Mailer\Message;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function json_stringify;
 
 abstract class AbstractMailer implements MailerInterface
 {

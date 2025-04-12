@@ -9,6 +9,7 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Logging\AppenderInterface;
 use ManaPHP\Logging\Log;
 use ManaPHP\Redis\RedisBrokerInterface;
+use function sprintf;
 
 class RedisAppender implements AppenderInterface
 {

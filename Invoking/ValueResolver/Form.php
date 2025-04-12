@@ -16,7 +16,6 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionProperty;
-
 use function is_subclass_of;
 
 class Form implements ObjectValueResolverInterface

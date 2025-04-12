@@ -28,9 +28,19 @@ use ManaPHP\Mongodb\Exception as MongodbException;
 use ManaPHP\Pooling\PoolsInterface;
 use MongoDB\Driver\Exception\RuntimeException;
 use Psr\EventDispatcher\EventDispatcherInterface;
-
+use function array_merge;
 use function count;
+use function json_stringify;
+use function microtime;
+use function parse_url;
+use function preg_match;
+use function round;
+use function str_contains;
+use function str_replace;
+use function str_starts_with;
 use function strlen;
+use function strpos;
+use function substr;
 
 class Mongodb implements MongodbInterface
 {

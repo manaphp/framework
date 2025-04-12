@@ -10,6 +10,9 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Exception\UnauthorizedException;
 use ManaPHP\Http\Controller\Attribute\Authorize;
+use function preg_split;
+use function strrpos;
+use function substr;
 
 class Identity implements IdentityInterface, ContextAware
 {

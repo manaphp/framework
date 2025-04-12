@@ -8,6 +8,9 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Identifying\IdentityInterface;
 use ReflectionNamedType;
 use ReflectionProperty;
+use function date;
+use function property_exists;
+use function time;
 
 class AutoFiller implements AutoFillerInterface
 {

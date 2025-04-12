@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Http\Controller\Attribute;
 
 use Attribute;
+use function in_array;
 use function is_string;
 
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]

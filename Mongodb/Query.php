@@ -14,17 +14,32 @@ use ManaPHP\Helper\Arr;
 use ManaPHP\Query\AbstractQuery;
 use MongoDB\BSON\ObjectId;
 use MongoDB\BSON\Regex;
-
+use function array_fill_keys;
+use function array_map;
 use function array_slice;
 use function count;
+use function current;
+use function explode;
 use function in_array;
 use function is_array;
 use function is_bool;
 use function is_float;
 use function is_int;
+use function is_numeric;
 use function is_scalar;
 use function is_string;
+use function key;
+use function preg_match;
+use function str_contains;
+use function str_pad;
+use function str_replace;
 use function strlen;
+use function strpos;
+use function strtolower;
+use function strtoupper;
+use function strtr;
+use function substr;
+use function trim;
 
 class Query extends AbstractQuery
 {

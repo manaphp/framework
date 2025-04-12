@@ -21,6 +21,7 @@ use ReflectionMethod;
 use function in_array;
 use function is_array;
 use function is_int;
+use function sprintf;
 
 class PageCacheMiddleware implements ContextAware
 {

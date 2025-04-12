@@ -16,7 +16,6 @@ use ManaPHP\Swoole\Workers\TaskCallMessage;
 use ManaPHP\Swoole\Workers\TaskWaitCallMessage;
 use Psr\Container\ContainerInterface;
 use Swoole\Server;
-
 use function get_class;
 use function get_parent_class;
 use function interface_exists;

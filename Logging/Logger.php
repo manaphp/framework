@@ -17,13 +17,21 @@ use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 use Stringable;
 use Throwable;
-
+use function array_shift;
 use function dirname;
+use function gethostname;
 use function is_array;
 use function is_object;
 use function is_scalar;
 use function is_string;
 use function json_stringify;
+use function preg_match_all;
+use function preg_replace;
+use function realpath;
+use function str_contains;
+use function str_ends_with;
+use function str_replace;
+use function strtr;
 
 class Logger extends AbstractLogger
 {

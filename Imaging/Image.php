@@ -8,7 +8,6 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\MakerInterface;
 use ManaPHP\Imaging\Image\Adapter\Gd;
 use ManaPHP\Imaging\Image\Adapter\Imagick;
-
 use function extension_loaded;
 
 class Image

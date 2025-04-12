@@ -12,7 +12,6 @@ use ManaPHP\Http\Client\EngineInterface;
 use ManaPHP\Http\Client\Request;
 use ManaPHP\Http\Client\Response;
 use ManaPHP\Http\Client\TimeoutException;
-
 use function is_int;
 use function strlen;
 

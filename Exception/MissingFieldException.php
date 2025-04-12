@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Exception;
 
 use Exception;
+use function str_contains;
 
 class MissingFieldException extends RuntimeException
 {

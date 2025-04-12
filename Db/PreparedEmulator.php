@@ -7,7 +7,10 @@ namespace ManaPHP\Db;
 use function is_bool;
 use function is_int;
 use function is_string;
+use function str_replace;
 use function strlen;
+use function strtr;
+use function substr;
 
 class PreparedEmulator implements PreparedEmulatorInterface
 {

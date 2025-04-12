@@ -9,7 +9,6 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\FileNotFoundException;
 use ManaPHP\Exception\InvalidArgumentException;
 use ManaPHP\Exception\InvalidValueException;
-
 use function count;
 use function in_array;
 use function is_array;

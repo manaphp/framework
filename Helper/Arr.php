@@ -5,13 +5,31 @@ declare(strict_types=1);
 namespace ManaPHP\Helper;
 
 use ManaPHP\Exception\MisuseException;
-
+use function array_column;
+use function array_diff_key;
+use function array_fill_keys;
+use function array_intersect_key;
+use function array_keys;
+use function array_merge;
+use function array_sum;
+use function current;
+use function explode;
+use function implode;
 use function in_array;
 use function is_array;
 use function is_int;
 use function is_object;
 use function is_scalar;
 use function is_string;
+use function key;
+use function max;
+use function min;
+use function sort;
+use function strcmp;
+use function strrpos;
+use function substr;
+use function trim;
+use function usort;
 
 class Arr
 {

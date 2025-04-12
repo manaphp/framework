@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Exception;
 
 use ManaPHP\Exception;
+use function implode;
 
 class MethodNotAllowedHttpException extends Exception
 {

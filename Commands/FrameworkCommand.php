@@ -8,6 +8,24 @@ use ManaPHP\AliasInterface;
 use ManaPHP\Cli\Command;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
+use function array_merge;
+use function asort;
+use function closedir;
+use function date;
+use function fnmatch;
+use function is_dir;
+use function opendir;
+use function php_strip_whitespace;
+use function preg_replace;
+use function readdir;
+use function sprintf;
+use function str_contains;
+use function str_ends_with;
+use function str_replace;
+use function strpos;
+use function strtr;
+use function substr;
+use function substr_count;
 
 class FrameworkCommand extends Command
 {

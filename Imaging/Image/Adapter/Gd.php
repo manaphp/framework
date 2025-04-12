@@ -12,7 +12,6 @@ use ManaPHP\Exception\ExtensionNotInstalledException;
 use ManaPHP\Exception\FileNotFoundException;
 use ManaPHP\Exception\PreconditionException;
 use ManaPHP\Imaging\AbstractImage;
-
 use function dirname;
 use function extension_loaded;
 

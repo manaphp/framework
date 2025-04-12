@@ -11,9 +11,18 @@ use ManaPHP\Helper\Str;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionMethod;
+use function array_shift;
 use function basename;
+use function class_exists;
 use function count;
+use function explode;
+use function get_class_methods;
 use function is_int;
+use function lcfirst;
+use function method_exists;
+use function str_contains;
+use function str_ends_with;
+use function str_replace;
 
 class Handler implements HandlerInterface
 {

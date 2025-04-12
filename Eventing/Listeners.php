@@ -7,9 +7,18 @@ namespace ManaPHP\Eventing;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\LocalFS;
-
+use function array_shift;
 use function count;
+use function explode;
 use function is_int;
+use function preg_match;
+use function sprintf;
+use function str_ends_with;
+use function str_replace;
+use function str_starts_with;
+use function strpos;
+use function substr;
+use function substr_count;
 
 class Listeners implements ListenersInterface
 {

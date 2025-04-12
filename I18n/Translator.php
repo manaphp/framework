@@ -8,6 +8,10 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\RuntimeException;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Http\RequestInterface;
+use function pathinfo;
+use function str_contains;
+use function strtolower;
+use function strtr;
 
 class Translator implements TranslatorInterface
 {

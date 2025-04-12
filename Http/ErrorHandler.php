@@ -10,6 +10,7 @@ use ManaPHP\Exception;
 use ManaPHP\Rendering\RendererInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function explode;
 use function str_contains;
 
 class ErrorHandler implements ErrorHandlerInterface

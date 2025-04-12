@@ -6,6 +6,7 @@ namespace ManaPHP\Commands;
 
 use ManaPHP\Cli\Command;
 use ManaPHP\Helper\LocalFS;
+use function preg_replace;
 
 class ExcelCommand extends Command
 {

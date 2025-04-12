@@ -14,13 +14,23 @@ use ManaPHP\Http\Request\File;
 use ManaPHP\Http\Request\FileInterface;
 use ManaPHP\Http\Request\Proxy;
 use ManaPHP\Validating\ValidatorInterface;
+use function array_merge;
 use function count;
+use function current;
 use function in_array;
 use function is_array;
 use function is_int;
 use function is_string;
+use function json_parse;
+use function microtime;
+use function parse_str;
+use function round;
+use function str_contains;
+use function str_replace;
 use function str_starts_with;
+use function strpos;
 use function strtolower;
+use function substr;
 
 class Request implements RequestInterface, JsonSerializable, ContextAware
 {

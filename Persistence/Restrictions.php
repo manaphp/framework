@@ -20,7 +20,6 @@ use ManaPHP\Persistence\Restriction\Nin;
 use ManaPHP\Persistence\Restriction\StartsWith;
 use ManaPHP\Persistence\Restriction\TimeBetween;
 use ManaPHP\Query\QueryInterface;
-
 use function is_string;
 use function preg_match;
 use function strpos;

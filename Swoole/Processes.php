@@ -18,7 +18,6 @@ use ReflectionAttribute;
 use ReflectionClass;
 use Swoole\Http\Server;
 use Swoole\Process;
-
 use function lcfirst;
 use function preg_match;
 use function sprintf;

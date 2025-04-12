@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Persistence;
 
 use function preg_replace;
+use function str_contains;
 use function strrpos;
 use function strtolower;
 use function substr;

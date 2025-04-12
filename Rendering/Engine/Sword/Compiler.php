@@ -12,11 +12,11 @@ use ManaPHP\Exception\InvalidArgumentException;
 use ManaPHP\Exception\RuntimeException;
 use ManaPHP\Helper\Str;
 use ManaPHP\Http\RouterInterface;
-
 use function count;
 use function dirname;
 use function in_array;
 use function is_array;
+use function sprintf;
 use function strlen;
 
 class Compiler

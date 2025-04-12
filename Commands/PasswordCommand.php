@@ -6,6 +6,9 @@ namespace ManaPHP\Commands;
 
 use ManaPHP\Cli\Command;
 use ManaPHP\Helper\Str;
+use function microtime;
+use function password_hash;
+use function sprintf;
 
 class PasswordCommand extends Command
 {

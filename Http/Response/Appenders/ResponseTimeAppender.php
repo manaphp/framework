@@ -7,6 +7,7 @@ namespace ManaPHP\Http\Response\Appenders;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\Response\AppenderInterface;
 use ManaPHP\Http\ResponseInterface;
+use function sprintf;
 
 class ResponseTimeAppender implements AppenderInterface
 {

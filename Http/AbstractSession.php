@@ -23,9 +23,19 @@ use ManaPHP\Http\Session\Event\SessionUpdate;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use function chr;
+use function igbinary_serialize;
+use function igbinary_unserialize;
 use function is_array;
+use function json_parse;
+use function json_stringify;
 use function ord;
+use function serialize;
+use function str_contains;
 use function strlen;
+use function strpos;
+use function substr;
+use function time;
+use function unserialize;
 
 abstract class AbstractSession implements SessionInterface, ContextAware, ArrayAccess, JsonSerializable
 {

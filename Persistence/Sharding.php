@@ -6,8 +6,11 @@ namespace ManaPHP\Persistence;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Sharding\ShardingTooManyException;
-
+use function array_keys;
 use function count;
+use function current;
+use function key;
+use function strcspn;
 use function strlen;
 
 class Sharding implements ShardingInterface

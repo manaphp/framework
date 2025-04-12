@@ -22,10 +22,11 @@ use ManaPHP\Validating\ConstraintInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionProperty;
-
 use function preg_match;
 use function property_exists;
 use function sprintf;
+use function strpos;
+use function substr;
 
 class EntityMetadata implements EntityMetadataInterface
 {

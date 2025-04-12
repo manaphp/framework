@@ -12,7 +12,6 @@ use DOMNode;
 use DOMText;
 use IteratorAggregate;
 use Traversable;
-
 use function array_slice;
 use function count;
 use function in_array;

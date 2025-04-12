@@ -18,12 +18,26 @@ use ManaPHP\Persistence\RelationsInterface;
 use ManaPHP\Persistence\Restrictions;
 use ManaPHP\Persistence\ShardingInterface;
 use ManaPHP\Persistence\ThoseInterface;
+use function array_keys;
+use function array_merge;
 use function count;
+use function current;
+use function date;
 use function in_array;
 use function is_array;
 use function is_int;
+use function is_numeric;
 use function is_string;
+use function key;
+use function max;
+use function preg_match;
+use function preg_split;
+use function str_contains;
 use function strlen;
+use function strpos;
+use function strtotime;
+use function substr;
+use function trim;
 
 abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonSerializable
 {

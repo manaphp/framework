@@ -10,6 +10,9 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Arr;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Http\DownloaderInterface;
+use function json_stringify;
+use function rtrim;
+use function trim;
 
 class BosCommand extends Command
 {

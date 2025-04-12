@@ -5,6 +5,12 @@ declare(strict_types=1);
 namespace ManaPHP\Logging;
 
 use stdClass;
+use function basename;
+use function date;
+use function microtime;
+use function sprintf;
+use function str_contains;
+use function str_replace;
 
 class Log extends stdClass
 {

@@ -9,7 +9,6 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Str;
 use ManaPHP\Invoking\ScalarValueResolverInterface;
 use ReflectionParameter;
-
 use function in_array;
 
 class Options implements ScalarValueResolverInterface

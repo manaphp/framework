@@ -32,11 +32,20 @@ use ManaPHP\Http\Client\TooManyRequestsException;
 use ManaPHP\Http\Client\UnauthorizedException;
 use ManaPHP\Pooling\PoolsInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function bin2hex;
+use function http_build_query;
 use function is_array;
 use function is_float;
 use function is_int;
 use function is_string;
+use function json_parse;
+use function json_stringify;
+use function preg_match;
+use function random_bytes;
+use function str_contains;
 use function strlen;
+use function strpos;
+use function substr;
 
 class Client implements ClientInterface
 {

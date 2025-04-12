@@ -6,8 +6,8 @@ namespace ManaPHP\Redis;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Pooling\PoolsInterface;
-
 use function is_object;
+use function preg_match;
 
 class Redis implements RedisInterface
 {

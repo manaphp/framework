@@ -11,12 +11,22 @@ use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\SuppressWarnings;
 use Throwable;
-
+use function basename;
 use function count;
+use function date;
 use function dirname;
 use function is_array;
 use function is_scalar;
 use function is_string;
+use function json_stringify;
+use function microtime;
+use function preg_replace;
+use function realpath;
+use function rtrim;
+use function sprintf;
+use function str_contains;
+use function strtr;
+use function substr_count;
 
 class DataDump implements DataDumpInterface
 {
@@ -161,8 +171,8 @@ class DataDump implements DataDumpInterface
 
         $replaced = [];
 
-        $replaced[':time'] = date('H:i:s', $timestamp) . sprintf('.%03d', ($timestamp - (int)$timestamp) * 1000);
-        $replaced[':date'] = date('Y-m-d\T', $timestamp) . $replaced[':time'];
+        $replaced[':time'] = date('H:i:s', (int)$timestamp) . sprintf('.%03d', ($timestamp - (int)$timestamp) * 1000);
+        $replaced[':date'] = date('Y-m-d\T', (int)$timestamp) . $replaced[':time'];
         $replaced[':location'] = "$file:$line";
         $replaced[':message'] = $message;
 

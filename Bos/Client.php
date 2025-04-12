@@ -10,6 +10,14 @@ use ManaPHP\Exception\MissingFieldException;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Helper\Arr;
 use ManaPHP\Http\ClientInterface as HttpClientInterface;
+use function basename;
+use function curl_file_create;
+use function jwt_decode;
+use function jwt_encode;
+use function mime_content_type;
+use function preg_replace;
+use function str_contains;
+use function str_replace;
 
 class Client implements ClientInterface
 {

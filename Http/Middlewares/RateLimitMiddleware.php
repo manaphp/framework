@@ -14,6 +14,7 @@ use ManaPHP\Http\RequestInterface;
 use ManaPHP\Identifying\IdentityInterface;
 use ManaPHP\Redis\RedisCacheInterface;
 use ReflectionMethod;
+use function sprintf;
 use function strlen;
 
 class RateLimitMiddleware

@@ -16,7 +16,6 @@ use ManaPHP\Mailing\Mailer\Adapter\Exception\ConnectionException;
 use ManaPHP\Mailing\Mailer\Adapter\Exception\TransmitException;
 use ManaPHP\Mailing\Mailer\Message;
 use Psr\Log\LoggerInterface;
-
 use function count;
 use function dirname;
 use function in_array;

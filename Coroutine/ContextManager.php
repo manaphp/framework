@@ -6,6 +6,7 @@ namespace ManaPHP\Coroutine;
 
 use ReflectionMethod;
 use Swoole\Coroutine;
+use function spl_object_id;
 
 class ContextManager implements ContextManagerInterface
 {

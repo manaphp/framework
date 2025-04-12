@@ -8,6 +8,7 @@ use ManaPHP\Cli\Command;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\ConfigInterface;
 use ManaPHP\Helper\Arr;
+use function json_stringify;
 
 class ConfigCommand extends Command
 {

@@ -6,6 +6,8 @@ namespace ManaPHP\Db;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\MakerInterface;
+use function parse_url;
+use function ucfirst;
 
 class Connection
 {

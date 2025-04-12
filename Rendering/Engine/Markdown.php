@@ -26,7 +26,6 @@ namespace ManaPHP\Rendering\Engine;
 
 use JetBrains\PhpStorm\ArrayShape;
 use ManaPHP\Rendering\EngineInterface;
-
 use function array_slice;
 use function count;
 use function in_array;

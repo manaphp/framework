@@ -6,6 +6,11 @@ namespace ManaPHP\Viewing;
 
 use ManaPHP\AliasInterface;
 use ManaPHP\Di\Attribute\Autowired;
+use function is_file;
+use function md5_file;
+use function rtrim;
+use function str_contains;
+use function substr;
 
 class Asset implements AssetInterface
 {

@@ -10,9 +10,21 @@ use ManaPHP\Cli\Command;
 use ManaPHP\Cli\OptionsInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\ClientInterface;
-
 use function count;
+use function date;
+use function explode;
+use function preg_match;
+use function sprintf;
+use function str_contains;
+use function str_pad;
 use function strlen;
+use function strtotime;
+use function strtr;
+use function substr;
+use function substr_count;
+use function system;
+use function time;
+use function trim;
 
 class DateCommand extends Command
 {

@@ -6,6 +6,7 @@ namespace ManaPHP\Commands;
 
 use ManaPHP\Cli\Command;
 use ManaPHP\Helper\Str;
+use function strtolower;
 
 class KeyCommand extends Command
 {

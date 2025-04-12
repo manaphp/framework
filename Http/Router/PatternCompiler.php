@@ -6,7 +6,6 @@ namespace ManaPHP\Http\Router;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
-
 use function explode;
 use function preg_match;
 use function preg_match_all;

@@ -11,9 +11,10 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionUnionType;
 use SplDoublyLinkedList;
-
 use function count;
 use function is_string;
+use function ksort;
+use function spl_object_id;
 
 class ListenerProvider implements ListenerProviderInterface
 {

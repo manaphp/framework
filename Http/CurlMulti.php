@@ -15,11 +15,36 @@ use ManaPHP\Http\CurlMulti\Request;
 use ManaPHP\Http\CurlMulti\Response;
 use Psr\Log\LoggerInterface;
 use function count;
+use function curl_close;
+use function curl_copy_handle;
+use function curl_error;
+use function curl_getinfo;
+use function curl_init;
+use function curl_multi_add_handle;
+use function curl_multi_exec;
+use function curl_multi_getcontent;
+use function curl_multi_info_read;
+use function curl_multi_init;
+use function curl_multi_remove_handle;
+use function curl_multi_select;
+use function curl_setopt;
 use function dirname;
+use function explode;
+use function fclose;
+use function fopen;
+use function fseek;
+use function http_build_query;
 use function is_array;
 use function is_callable;
 use function is_int;
 use function is_string;
+use function json_stringify;
+use function microtime;
+use function parse_url;
+use function str_contains;
+use function substr;
+use function tempnam;
+use function unlink;
 
 class CurlMulti implements CurlMultiInterface, Countable
 {

@@ -13,12 +13,13 @@ use ManaPHP\Http\RouterInterface;
 use ManaPHP\Rendering\RendererInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
-
+use function array_merge;
 use function basename;
 use function class_exists;
 use function dirname;
 use function explode;
 use function is_string;
+use function preg_replace_callback;
 use function sprintf;
 use function str_contains;
 use function ucfirst;

@@ -7,7 +7,6 @@ namespace ManaPHP\Validating\Constraint\Attribute;
 use Attribute;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
-
 use function explode;
 use function str_contains;
 use function strlen;

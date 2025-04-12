@@ -6,10 +6,19 @@ namespace ManaPHP\Helper;
 
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Helper\Sharding\ShardingTooManyException;
-
+use function array_fill_keys;
+use function array_keys;
 use function count;
+use function current;
 use function is_scalar;
+use function key;
+use function preg_match;
+use function preg_split;
+use function range;
+use function sprintf;
+use function str_contains;
 use function strlen;
+use function substr;
 
 class Sharding
 {

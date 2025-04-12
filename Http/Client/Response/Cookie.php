@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Client\Response;
 
+use function sprintf;
+
 class Cookie
 {
     public string $name;

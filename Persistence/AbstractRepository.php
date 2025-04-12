@@ -7,7 +7,7 @@ namespace ManaPHP\Persistence;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Query\Paginator;
 use ManaPHP\Query\QueryInterface;
-
+use function array_key_first;
 use function array_unshift;
 use function is_array;
 use function is_string;

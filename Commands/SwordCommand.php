@@ -9,6 +9,7 @@ use ManaPHP\Cli\Command;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Rendering\Engine\Sword\Compiler;
+use function str_replace;
 
 class SwordCommand extends Command
 {

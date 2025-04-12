@@ -44,16 +44,35 @@ use ManaPHP\Rendering\Renderer\Event\RendererRendering;
 use ManaPHP\Version;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use function array_keys;
+use function class_exists;
+use function class_implements;
 use function count;
+use function date;
 use function dirname;
+use function explode;
 use function get_included_files;
+use function get_loaded_extensions;
+use function get_object_vars;
+use function gzdecode;
+use function gzencode;
+use function implode;
 use function in_array;
 use function ini_get;
 use function is_array;
 use function is_object;
 use function is_string;
+use function json_parse;
+use function json_stringify;
+use function memory_get_peak_usage;
+use function memory_get_usage;
+use function php_ini_loaded_file;
+use function preg_match;
+use function sort;
 use function spl_object_id;
+use function sprintf;
 use function str_contains;
+use function strtr;
 
 class Debugger implements DebuggerInterface, ContextAware
 {

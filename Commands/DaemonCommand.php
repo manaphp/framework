@@ -7,6 +7,11 @@ namespace ManaPHP\Commands;
 use ManaPHP\Cli\Command;
 use ManaPHP\Di\Attribute\Autowired;
 use Swoole\Process;
+use function exec;
+use function get_included_files;
+use function sleep;
+use function sprintf;
+use function str_replace;
 
 class DaemonCommand extends Command
 {

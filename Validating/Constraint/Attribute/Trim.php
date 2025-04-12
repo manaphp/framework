@@ -7,6 +7,7 @@ namespace ManaPHP\Validating\Constraint\Attribute;
 use Attribute;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
+use function trim;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Trim extends AbstractConstraint
@@ -18,7 +19,7 @@ class Trim extends AbstractConstraint
 
     public function validate(Validation $validation): bool
     {
-        $validation->value = \trim($validation->value, $this->characters);
+        $validation->value = trim($validation->value, $this->characters);
 
         return true;
     }

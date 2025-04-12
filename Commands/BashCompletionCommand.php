@@ -12,10 +12,25 @@ use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
 use ReflectionClass;
 use ReflectionMethod;
-
+use function array_keys;
 use function array_slice;
+use function array_values;
+use function basename;
 use function count;
+use function glob;
+use function implode;
 use function in_array;
+use function is_dir;
+use function method_exists;
+use function preg_match;
+use function str_contains;
+use function str_replace;
+use function str_split;
+use function str_starts_with;
+use function stripos;
+use function strrpos;
+use function strtr;
+use function substr;
 
 class BashCompletionCommand extends Command
 {

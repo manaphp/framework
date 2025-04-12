@@ -7,7 +7,10 @@ namespace ManaPHP\Http;
 use ManaPHP\AliasInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\Captcha\InvalidCaptchaException;
+use function random_int;
 use function strlen;
+use function strtolower;
+use function time;
 
 abstract class AbstractCaptcha implements CaptchaInterface
 {

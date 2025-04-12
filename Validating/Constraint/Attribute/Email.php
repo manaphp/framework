@@ -7,7 +7,6 @@ namespace ManaPHP\Validating\Constraint\Attribute;
 use Attribute;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
-
 use function strtolower;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]

@@ -15,12 +15,31 @@ use ManaPHP\Helper\Str;
 use ManaPHP\Mongodb\MongodbConnectorInterface;
 use ManaPHP\Mongodb\MongodbInterface;
 use Psr\Container\ContainerInterface;
-
+use function array_keys;
 use function count;
 use function dirname;
+use function fclose;
+use function file;
+use function fnmatch;
+use function fopen;
+use function fprintf;
+use function fputcsv;
 use function gettype;
+use function implode;
 use function in_array;
 use function is_object;
+use function json_parse;
+use function json_stringify;
+use function ksort;
+use function microtime;
+use function preg_match;
+use function round;
+use function sprintf;
+use function str_contains;
+use function strrpos;
+use function substr;
+use function trim;
+use function ucfirst;
 
 class MongodbCommand extends Command
 {

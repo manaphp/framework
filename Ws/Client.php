@@ -12,6 +12,9 @@ use ManaPHP\Pooling\PoolsInterface;
 use ManaPHP\Ws\Client\EngineInterface;
 use ManaPHP\Ws\Client\Message;
 use Throwable;
+use function compact;
+use function max;
+use function microtime;
 
 class Client implements ClientInterface
 {

@@ -16,8 +16,20 @@ use ManaPHP\Rendering\Renderer\Event\RendererRendered;
 use ManaPHP\Rendering\Renderer\Event\RendererRendering;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
-
+use function array_keys;
+use function array_pop;
 use function dirname;
+use function end;
+use function implode;
+use function is_file;
+use function ob_get_clean;
+use function ob_implicit_flush;
+use function ob_start;
+use function realpath;
+use function str_contains;
+use function str_replace;
+use function strtr;
+use function trigger_error;
 
 class Renderer implements RendererInterface, ContextAware
 {

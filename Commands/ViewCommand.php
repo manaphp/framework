@@ -9,8 +9,10 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Persistence\EntityMetadataInterface;
 use ReflectionProperty;
-
+use function basename;
 use function in_array;
+use function preg_match;
+use function str_ends_with;
 
 class ViewCommand extends Command
 {

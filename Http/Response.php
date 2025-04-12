@@ -21,10 +21,23 @@ use ManaPHP\Http\Response\Appenders\RequestIdAppender;
 use ManaPHP\Http\Response\Appenders\ResponseTimeAppender;
 use ManaPHP\Http\Response\Appenders\RouteAppender;
 use Psr\Container\ContainerInterface;
+use function array_keys;
 use function basename;
+use function current;
+use function explode;
+use function fclose;
+use function fopen;
+use function fprintf;
+use function fputcsv;
 use function is_array;
 use function is_string;
+use function pathinfo;
+use function rewind;
 use function sprintf;
+use function str_contains;
+use function stream_get_contents;
+use function time;
+use function urlencode;
 
 class Response implements ResponseInterface, ContextAware
 {

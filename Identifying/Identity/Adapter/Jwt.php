@@ -9,8 +9,8 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Identifying\Identity;
 use ManaPHP\Token\ScopedJwtInterface;
-
 use function count;
+use function explode;
 
 class Jwt extends Identity
 {

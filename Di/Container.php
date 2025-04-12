@@ -16,11 +16,19 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionUnionType;
 use function array_key_exists;
+use function class_exists;
+use function compact;
 use function interface_exists;
 use function is_array;
 use function is_object;
 use function is_string;
+use function method_exists;
+use function preg_match;
+use function sprintf;
 use function str_contains;
+use function str_ends_with;
+use function strpos;
+use function strrpos;
 use function substr;
 
 class Container implements ContainerInterface

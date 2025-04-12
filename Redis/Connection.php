@@ -17,9 +17,15 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Redis;
 use RedisCluster;
 use RedisException;
-
+use function explode;
 use function in_array;
+use function md5;
 use function microtime;
+use function parse_str;
+use function parse_url;
+use function preg_match;
+use function sprintf;
+use function str_contains;
 
 class Connection
 {

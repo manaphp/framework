@@ -7,6 +7,7 @@ namespace ManaPHP\Commands;
 use ManaPHP\Cli\Command;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\EnvInterface;
+use function sprintf;
 
 class EnvCommand extends Command
 {

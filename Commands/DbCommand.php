@@ -17,12 +17,31 @@ use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Persistence\Attribute\Connection;
-
+use function array_keys;
+use function basename;
 use function count;
 use function dirname;
+use function fclose;
+use function file;
+use function fnmatch;
+use function fopen;
+use function fprintf;
+use function fputcsv;
+use function fwrite;
+use function implode;
 use function in_array;
+use function json_stringify;
+use function microtime;
+use function preg_match;
+use function preg_split;
+use function sort;
 use function sprintf;
 use function str_contains;
+use function strpos;
+use function strrpos;
+use function substr;
+use function trim;
+use function ucfirst;
 
 class DbCommand extends Command
 {

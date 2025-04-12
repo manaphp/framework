@@ -15,12 +15,34 @@ use ManaPHP\Query\AbstractQuery;
 use PDO;
 use Psr\Log\LoggerInterface;
 use function array_key_exists;
+use function array_keys;
+use function array_map;
+use function array_merge;
 use function array_slice;
 use function count;
+use function current;
+use function explode;
+use function implode;
 use function in_array;
 use function is_array;
 use function is_int;
 use function is_string;
+use function key;
+use function preg_match;
+use function preg_replace;
+use function preg_replace_callback;
+use function preg_split;
+use function rsort;
+use function sort;
+use function str_contains;
+use function str_pad;
+use function str_replace;
+use function stripos;
+use function strpbrk;
+use function strpos;
+use function strtoupper;
+use function strtr;
+use function substr;
 
 class Query extends AbstractQuery
 {

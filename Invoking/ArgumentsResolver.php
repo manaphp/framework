@@ -11,9 +11,10 @@ use ManaPHP\Validating\ValidatorInterface;
 use Psr\Container\ContainerInterface;
 use ReflectionMethod;
 use ReflectionParameter;
-
 use function array_fill;
 use function is_subclass_of;
+use function str_contains;
+use function ucfirst;
 
 class ArgumentsResolver implements ArgumentsResolverInterface
 {
@@ -126,7 +127,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface
                     continue;
                 }
 
-                if ($validation->validate(new Type($type))) {
+                if ($type === null || $validation->validate(new Type($type))) {
                     $args[$i] = $validation->value;
                 }
             }

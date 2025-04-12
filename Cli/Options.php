@@ -6,7 +6,17 @@ namespace ManaPHP\Cli;
 
 use JsonSerializable;
 use Stringable;
+use function array_shift;
+use function explode;
+use function implode;
+use function json_stringify;
+use function ltrim;
+use function str_contains;
+use function str_split;
+use function str_starts_with;
 use function strlen;
+use function strtr;
+use function substr;
 
 class Options implements OptionsInterface, JsonSerializable, Stringable
 {

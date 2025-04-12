@@ -8,7 +8,6 @@ use Attribute;
 use ManaPHP\Helper\Arr;
 use ManaPHP\Persistence\Entity;
 use ManaPHP\Query\QueryInterface;
-
 use function basename;
 use function class_exists;
 use function str_starts_with;

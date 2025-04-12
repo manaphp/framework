@@ -8,7 +8,7 @@ use Attribute;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
 use ReflectionProperty;
-
+use function date;
 use function is_int;
 use function is_object;
 use function is_string;
@@ -31,7 +31,7 @@ class Date extends AbstractConstraint
                     }
                 } else {
                     if (is_int($value)) {
-                        $validation->value = \date('Y-m-d H:i:s');
+                        $validation->value = date('Y-m-d H:i:s');
                     }
                 }
             }

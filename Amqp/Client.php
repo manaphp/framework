@@ -12,6 +12,8 @@ use ManaPHP\Exception\MisuseException;
 use ManaPHP\Pooling\PoolsInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use function is_string;
+use function json_stringify;
+use function preg_match;
 
 class Client implements ClientInterface
 {

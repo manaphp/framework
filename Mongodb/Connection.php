@@ -15,8 +15,9 @@ use MongoDB\Driver\ReadPreference;
 use MongoDB\Driver\WriteConcern;
 use MongoDB\Driver\WriteResult;
 use Psr\EventDispatcher\EventDispatcherInterface;
-
 use function is_bool;
+use function key;
+use function microtime;
 
 class Connection implements ConnectionInterface
 {

@@ -10,10 +10,14 @@ use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Persistence\Attribute\RelationInterface;
 use ManaPHP\Query\QueryInterface;
-
 use function is_array;
 use function is_callable;
 use function is_string;
+use function method_exists;
+use function preg_split;
+use function strpos;
+use function substr;
+use function ucfirst;
 
 class Relations implements RelationsInterface
 {

@@ -9,7 +9,13 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
 use Psr\Log\LoggerInterface;
 use Throwable;
+use function date;
+use function preg_replace_callback;
+use function sprintf;
+use function str_replace;
+use function str_starts_with;
 use function strlen;
+use function strtoupper;
 use function substr;
 
 class AccessLog implements AccessLogInterface

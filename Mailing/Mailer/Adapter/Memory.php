@@ -6,7 +6,6 @@ namespace ManaPHP\Mailing\Mailer\Adapter;
 
 use ManaPHP\Mailing\AbstractMailer;
 use ManaPHP\Mailing\Mailer\Message;
-
 use function count;
 
 class Memory extends AbstractMailer

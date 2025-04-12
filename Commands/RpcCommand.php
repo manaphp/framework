@@ -9,6 +9,12 @@ use ManaPHP\Exception\RuntimeException;
 use ManaPHP\Helper\LocalFS;
 use ReflectionClass;
 use ReflectionMethod;
+use function basename;
+use function file;
+use function get_class_methods;
+use function preg_replace;
+use function rtrim;
+use function str_ends_with;
 
 class RpcCommand extends Command
 {

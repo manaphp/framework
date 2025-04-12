@@ -8,10 +8,11 @@ use ArrayAccess;
 use JsonSerializable;
 use ManaPHP\Persistence\Event\EntityEventInterface;
 use Stringable;
-
+use function current;
 use function get_object_vars;
 use function is_array;
 use function is_object;
+use function json_stringify;
 
 class Entity implements ArrayAccess, JsonSerializable, Stringable
 {

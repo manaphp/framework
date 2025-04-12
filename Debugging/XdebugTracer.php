@@ -11,8 +11,12 @@ use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\Event\RequestBegin;
 use ManaPHP\Http\Event\RequestEnd;
-
 use function dirname;
+use function ini_set;
+use function is_dir;
+use function mkdir;
+use function xdebug_start_trace;
+use function xdebug_stop_trace;
 
 class XdebugTracer implements XdebugTracerInterface
 {

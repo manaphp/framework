@@ -9,11 +9,28 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 use JsonSerializable;
-
+use function array_chunk;
+use function array_diff;
+use function array_diff_key;
+use function array_flip;
+use function array_keys;
+use function array_merge;
+use function array_reduce;
+use function array_reverse;
 use function array_slice;
+use function array_udiff;
+use function array_values;
+use function arsort;
+use function asort;
 use function count;
 use function is_int;
 use function is_string;
+use function rsort;
+use function shuffle;
+use function sort;
+use function strcmp;
+use function uasort;
+use function usort;
 
 class Collection implements JsonSerializable, Countable, IteratorAggregate, ArrayAccess
 {
