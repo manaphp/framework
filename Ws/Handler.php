@@ -111,6 +111,9 @@ class Handler implements HandlerInterface
 
     public function dispatch(string $handler, array $params): mixed
     {
+        SuppressWarnings::unused($handler);
+        SuppressWarnings::unused($params);
+
         return 0;
     }
 }
