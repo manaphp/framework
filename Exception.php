@@ -14,7 +14,7 @@ class Exception extends \Exception
 {
     protected array $json = [];
 
-    public function __construct(string|Stringable|array $message = '', int $code = 0, \Exception $previous = null)
+    public function __construct(string|Stringable|array $message = '', int $code = 0, ?\Exception $previous = null)
     {
         if (is_array($message)) {
             $replaces = [];

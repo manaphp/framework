@@ -8,7 +8,7 @@ use ManaPHP\Query\QueryInterface;
 
 interface EntityManagerInterface
 {
-    public function query(string $entityClass, string $alias = null): QueryInterface;
+    public function query(string $entityClass, ?string $alias = null): QueryInterface;
 
     public function create(Entity $entity): Entity;
 

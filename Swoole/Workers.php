@@ -83,7 +83,7 @@ class Workers implements WorkersInterface
         return $class;
     }
 
-    public function task(array|callable $task, array $arguments, int $task_worker_id, float $timeout = null): mixed
+    public function task(array|callable $task, array $arguments, int $task_worker_id, ?float $timeout = null): mixed
     {
         $id = $this->getIdInContainer(is_string($task[0]) ? $task[0] : get_class($task[0]));
 

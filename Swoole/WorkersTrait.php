@@ -17,7 +17,7 @@ trait WorkersTrait
         return new SendMessage($this->workers, static::class, $task_worker_id);
     }
 
-    public function task(int $task_worker_id, float $timeout = null): static|Task
+    public function task(int $task_worker_id, ?float $timeout = null): static|Task
     {
         return new Task($this->workers, static::class, $task_worker_id, $timeout);
     }

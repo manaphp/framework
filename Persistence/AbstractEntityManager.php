@@ -67,7 +67,7 @@ abstract class AbstractEntityManager implements EntityManagerInterface
      *
      * @return QueryInterface <static>
      */
-    public function query(string $entityClass, string $alias = null): QueryInterface
+    public function query(string $entityClass, ?string $alias = null): QueryInterface
     {
         return $this->newQuery()->from($entityClass, $alias);
     }

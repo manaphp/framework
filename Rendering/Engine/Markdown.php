@@ -499,7 +499,7 @@ class Markdown implements EngineInterface
         ];
     }
 
-    protected function blockList($Line, array $CurrentBlock = null)
+    protected function blockList($Line, ?array $CurrentBlock = null)
     {
         list($name, $pattern) = ($Line['text'][0] <= '-') ? ['ul', '[*+-]'] : ['ol', '[0-9]{1,9}+[.\)]'];
 
@@ -713,7 +713,7 @@ class Markdown implements EngineInterface
         }
     }
 
-    protected function blockSetextHeader($Line, array $Block = null)
+    protected function blockSetextHeader($Line, ?array $Block = null)
     {
         if (!isset($Block) || $Block['type'] !== 'Paragraph' || isset($Block['interrupted'])) {
             return;
@@ -833,7 +833,7 @@ class Markdown implements EngineInterface
         }
     }
 
-    protected function blockTable($Line, array $Block = null)
+    protected function blockTable($Line, ?array $Block = null)
     {
         if (!isset($Block) || $Block['type'] !== 'Paragraph' || isset($Block['interrupted'])) {
             return;

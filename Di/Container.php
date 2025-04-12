@@ -179,7 +179,7 @@ class Container implements ContainerInterface
         }
     }
 
-    protected function makeInternal(string $name, array $parameters = [], string $id = null): object
+    protected function makeInternal(string $name, array $parameters = [], ?string $id = null): object
     {
         $rClass = new ReflectionClass($name);
         if (method_exists($name, '__construct')) {
@@ -205,7 +205,7 @@ class Container implements ContainerInterface
         return $instance;
     }
 
-    public function make(string $name, array $parameters = [], string $id = null): mixed
+    public function make(string $name, array $parameters = [], ?string $id = null): mixed
     {
         while (is_string($definition = $this->definitions[$name] ?? null) && !str_contains($definition, '#')) {
             /** @noinspection CallableParameterUseCaseInTypeContextInspection */

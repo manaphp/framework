@@ -19,7 +19,7 @@ class Request
         string|array $url,
         ?callable $callbacks = null,
         string $method = 'GET',
-        string|array $body = null
+        string|array|null $body = null
     ) {
         $this->url = $url;
         $this->callbacks = $callbacks;

@@ -16,7 +16,7 @@ interface ContainerInterface extends PSrContainerInterface, MakerInterface, Invo
 
     public function getInstances(): array;
 
-    public function make(string $name, array $parameters = [], string $id = null): mixed;
+    public function make(string $name, array $parameters = [], ?string $id = null): mixed;
 
     public function call(callable $callable, array $parameters = []): mixed;
 }
