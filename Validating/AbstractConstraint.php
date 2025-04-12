@@ -13,6 +13,7 @@ abstract class AbstractConstraint implements ConstraintInterface
 
     public function getMessage(): string
     {
+        /** @noinspection ProperNullCoalescingOperatorUsageInspection */
         return $this->message ?? static::class;
     }
 }
