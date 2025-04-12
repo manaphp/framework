@@ -11,6 +11,7 @@ use ManaPHP\Helper\Str;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionMethod;
+use function basename;
 use function count;
 use function is_int;
 
@@ -44,7 +45,7 @@ class Handler implements HandlerInterface
             } elseif (str_contains($cmd, '/')) {
                 list($command, $action) = explode('/', $cmd, 2);
             } else {
-                $command = $cmd;
+                $command = basename($cmd, 'Command');
                 $action = null;
             }
 
