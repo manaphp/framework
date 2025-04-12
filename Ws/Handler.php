@@ -109,6 +109,7 @@ class Handler implements HandlerInterface
         $this->request->delete('data');
     }
 
+    /** @noinspection PhpMixedReturnTypeCanBeReducedInspection */
     public function dispatch(string $handler, array $params): mixed
     {
         SuppressWarnings::unused($handler);
