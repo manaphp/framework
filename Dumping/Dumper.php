@@ -11,7 +11,6 @@ use ManaPHP\Di\Attribute\Autowired;
 use ReflectionClass;
 use ReflectionNamedType;
 use WeakMap;
-
 use function class_implements;
 use function is_array;
 use function is_object;
@@ -39,6 +38,11 @@ class Dumper implements DumperInterface
                         continue;
                     }
                 }
+            }
+
+            if (PHP_VERSION_ID < 80100) {
+                /** @noinspection PhpExpressionResultUnusedInspection */
+                $property->setAccessible(true);
             }
 
             if ($property->isInitialized($object)) {
