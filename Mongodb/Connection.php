@@ -198,9 +198,9 @@ class Connection implements ConnectionInterface
     ): array {
         if (is_bool($secondaryPreferred)) {
             if ($secondaryPreferred) {
-                $readPreference = new ReadPreference(ReadPreference::RP_SECONDARY_PREFERRED);
+                $readPreference = new ReadPreference(ReadPreference::SECONDARY_PREFERRED);
             } else {
-                $readPreference = new ReadPreference(ReadPreference::RP_PRIMARY);
+                $readPreference = new ReadPreference(ReadPreference::PRIMARY_PREFERRED);
             }
         } else {
             $readPreference = new ReadPreference($secondaryPreferred);

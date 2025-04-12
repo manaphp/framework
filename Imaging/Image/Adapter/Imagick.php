@@ -149,7 +149,6 @@ class Imagick extends AbstractImage
         }
 
         $watermark->clear();
-        $watermark->destroy();
 
         return $this;
     }
@@ -182,6 +181,5 @@ class Imagick extends AbstractImage
     public function __destruct()
     {
         $this->image->clear();
-        $this->image->destroy();
     }
 }

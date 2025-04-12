@@ -54,7 +54,7 @@ class Imagick extends AbstractCaptcha
 
         $image->setImageFormat('jpeg');
         $content = (string)$image;
-        $image->destroy();
+        $image->clear();
         $fgPixel->destroy();
         $draw->destroy();
 
