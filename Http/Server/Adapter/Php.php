@@ -11,6 +11,10 @@ use ManaPHP\Http\AbstractServer;
 use ManaPHP\Http\Server\Adapter\Native\SenderInterface;
 use ManaPHP\Http\Server\Event\ServerReady;
 use ManaPHP\Http\Server\StaticHandlerInterface;
+use function console_log;
+use function get_included_files;
+use function putenv;
+use function shell_exec;
 
 class Php extends AbstractServer
 {
@@ -20,7 +24,6 @@ class Php extends AbstractServer
 
     #[Autowired] protected array $settings = [];
 
-    /** @noinspection PhpTypedPropertyMightBeUninitializedInspection */
     public function __construct()
     {
         $argv = $GLOBALS['argv'] ?? [];
@@ -33,27 +36,9 @@ class Php extends AbstractServer
             }
         }
 
-        $public_dir = $this->alias->resolve('@public');
-        $local_ip = $this->host === '0.0.0.0' ? Ip::local() : $this->host;
-
         $_SERVER['REQUEST_SCHEME'] = 'http';
-
-        if (PHP_SAPI === 'cli') {
-            if (($worker_num = $this->settings['worker_num'] ?? 4) > 1) {
-                putenv("PHP_CLI_SERVER_WORKERS=$worker_num");
-            }
-
-            $index = @get_included_files()[0];
-            $cmd = PHP_BINARY . " -S $this->host:$this->port -t $public_dir  $index";
-            console_log('info', $cmd);
-            $prefix = $this->router->getPrefix();
-            console_log('info', "http://127.0.0.1:$this->port" . ($prefix ?: '/'));
-            shell_exec($cmd);
-            exit(0);
-        } else {
-            $_SERVER['SERVER_ADDR'] = $local_ip;
-            $_SERVER['SERVER_PORT'] = $this->port;
-        }
+        $_SERVER['SERVER_ADDR'] = $this->host === '0.0.0.0' ? Ip::local() : $this->host;
+        $_SERVER['SERVER_PORT'] = $this->port;
     }
 
     protected function prepareGlobals(): void
@@ -64,6 +49,22 @@ class Php extends AbstractServer
 
     public function start(): void
     {
+        if (PHP_SAPI === 'cli') {
+            if (($worker_num = $this->settings['worker_num'] ?? 4) > 1) {
+                putenv("PHP_CLI_SERVER_WORKERS=$worker_num");
+            }
+
+            $public_dir = $this->alias->resolve('@public');
+
+            $index = @get_included_files()[0];
+            $cmd = PHP_BINARY . " -S $this->host:$this->port -t $public_dir  $index";
+            console_log('info', $cmd);
+            $prefix = $this->router->getPrefix();
+            console_log('info', "http://127.0.0.1:$this->port" . ($prefix ?: '/'));
+            shell_exec($cmd);
+            exit(0);
+        }
+
         $this->prepareGlobals();
 
         $this->bootstrap();
