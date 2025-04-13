@@ -6,13 +6,13 @@ namespace ManaPHP\Security;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Security\Crypt\Exception as CryptException;
-use function strlen;
 use function md5;
 use function openssl_cipher_iv_length;
 use function openssl_decrypt;
 use function openssl_encrypt;
 use function openssl_random_pseudo_bytes;
 use function pack;
+use function strlen;
 use function substr;
 use function unpack;
 
