@@ -11,7 +11,9 @@ use ManaPHP\Eventing\ListenersInterface;
 use ManaPHP\Eventing\TracerInterface;
 use function define;
 use function defined;
+use function dirname;
 use function extension_loaded;
+use function get_included_files;
 
 class Kernel
 {
@@ -24,8 +26,12 @@ class Kernel
             TracerInterface::class,
         ];
 
-    public function __construct(string $root)
+    public function __construct(?string $root = null)
     {
+        if ($root === null) {
+            $root = dirname(get_included_files()[1], 2);
+        }
+
         $this->root = $root;
 
         if (!defined('MANAPHP_COROUTINE_ENABLED')) {
