@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Captcha\Adapter;
 
+use Imagick as PhpImagick;
 use ImagickDraw;
 use ImagickPixel;
 use ManaPHP\Http\AbstractCaptcha;
@@ -14,11 +15,11 @@ class Imagick extends AbstractCaptcha
 {
     public function draw(string $code, int $width, int $height): string
     {
-        $image = new \Imagick();
+        $image = new PhpImagick();
         $draw = new ImagickDraw();
         $image->newImage($width, $height, new ImagickPixel('rgb(' . $this->bg_rgb . ')'));
         $draw->setFont($this->alias->resolve($this->fonts[random_int(0, count($this->fonts) - 1)]));
-        $draw->setGravity(\Imagick::GRAVITY_NORTHWEST);
+        $draw->setGravity(PhpImagick::GRAVITY_NORTHWEST);
 
         $referenceFontSize = min($height, $width / $this->length);
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ManaPHP\Imaging\Image\Adapter;
 
+use Imagick as PhpImagick;
 use ImagickDraw;
 use ImagickPixel;
 use ManaPHP\AliasInterface;
@@ -24,7 +25,7 @@ class Imagick extends AbstractImage
     #[Autowired] protected AliasInterface $alias;
 
     protected string $file;
-    protected \Imagick $image;
+    protected PhpImagick $image;
     protected int $width;
     protected int $height;
 
@@ -40,7 +41,7 @@ class Imagick extends AbstractImage
             throw new InvalidValueException(['`{file}` file is not exists', 'file' => $file]);
         }
 
-        $this->image = new \Imagick();
+        $this->image = new PhpImagick();
         if (!$this->image->readImage($this->file)) {
             throw new InvalidFormatException(['Imagick::readImage `{file}` failed', 'file' => $file]);
         }
@@ -50,7 +51,7 @@ class Imagick extends AbstractImage
         }
 
         if (!$this->image->getImageAlphaChannel()) {
-            $this->image->setImageAlphaChannel(\Imagick::ALPHACHANNEL_SET);
+            $this->image->setImageAlphaChannel(PhpImagick::ALPHACHANNEL_SET);
         }
 
         $this->width = $this->image->getImageWidth();
@@ -67,7 +68,7 @@ class Imagick extends AbstractImage
         return $this->height;
     }
 
-    public function getInternalHandle(): \Imagick
+    public function getInternalHandle(): PhpImagick
     {
         return $this->image;
     }
@@ -125,7 +126,7 @@ class Imagick extends AbstractImage
         }
         $draw->setFontSize($size);
         $draw->setFillOpacity($opacity);
-        $draw->setGravity(\Imagick::GRAVITY_NORTHWEST);
+        $draw->setGravity(PhpImagick::GRAVITY_NORTHWEST);
         $this->image->annotateImage($draw, $offsetX, $offsetY, 0, $text);
         $draw->destroy();
 
@@ -134,9 +135,9 @@ class Imagick extends AbstractImage
 
     public function do_watermark(string $file, int $offsetX = 0, int $offsetY = 0, float $opacity = 1.0): static
     {
-        $watermark = new \Imagick($this->alias->resolve($file));
+        $watermark = new PhpImagick($this->alias->resolve($file));
 
-        if ($watermark->getImageAlphaChannel() === \Imagick::ALPHACHANNEL_UNDEFINED) {
+        if ($watermark->getImageAlphaChannel() === PhpImagick::ALPHACHANNEL_UNDEFINED) {
             $watermark->setImageOpacity($opacity);
         }
 
@@ -144,7 +145,7 @@ class Imagick extends AbstractImage
             throw new PreconditionException(['not support multiple iterations: `{file}`', 'file' => $file]);
         }
 
-        if (!$this->image->compositeImage($watermark, \Imagick::COMPOSITE_OVER, $offsetX, $offsetY)) {
+        if (!$this->image->compositeImage($watermark, PhpImagick::COMPOSITE_OVER, $offsetX, $offsetY)) {
             throw new RuntimeException('Imagick::compositeImage Failed');
         }
 
@@ -164,7 +165,7 @@ class Imagick extends AbstractImage
         if ($ext === 'gif') {
             $this->image->optimizeImageLayers();
         } elseif ($ext === 'jpg' || $ext === 'jpeg') {
-            $this->image->setImageCompression(\Imagick::COMPRESSION_JPEG);
+            $this->image->setImageCompression(PhpImagick::COMPRESSION_JPEG);
             $this->image->setImageCompressionQuality($quality);
         }
 
