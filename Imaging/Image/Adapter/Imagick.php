@@ -137,6 +137,7 @@ class Imagick extends AbstractImage
     {
         $watermark = new PhpImagick($this->alias->resolve($file));
 
+        /** @noinspection PhpStrictComparisonWithOperandsOfDifferentTypesInspection */
         if ($watermark->getImageAlphaChannel() === PhpImagick::ALPHACHANNEL_UNDEFINED) {
             $watermark->setImageOpacity($opacity);
         }
