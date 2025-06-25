@@ -37,6 +37,7 @@ use function preg_split;
 use function sort;
 use function sprintf;
 use function str_contains;
+use function str_replace;
 use function strpos;
 use function strrpos;
 use function substr;
@@ -255,6 +256,38 @@ class DbCommand extends Command
     }
 
     /**
+     * @param string $entity
+     * @param string $repository
+     *
+     * @return string
+     */
+    protected function renderRepository(string $entity, string $repository): string
+    {
+        $pos = strrpos($entity, '\\');
+        $plainEntity = substr($entity, $pos + 1);
+
+        $pos = strrpos($repository, '\\');
+        $plainRepository = substr($repository, $pos + 1);
+        $namespace = substr($repository, 0, $pos);
+
+        $str = '<?php' . PHP_EOL . PHP_EOL;
+        $str .= 'declare(strict_types=1);' . PHP_EOL . PHP_EOL;
+        $str .= "namespace $namespace;" . PHP_EOL;
+        $str .= PHP_EOL;
+
+        $str .= "use $entity;" . PHP_EOL;
+        $str .= "use ManaPHP\\Db\\Repository;" . PHP_EOL . PHP_EOL;
+        $str .= '/**' . PHP_EOL;
+        $str .= " * @extends Repository<$plainEntity>" . PHP_EOL;
+        $str .= ' */' . PHP_EOL;
+        $str .= "class $plainRepository extends Repository" . PHP_EOL;
+        $str .= '{' . PHP_EOL;
+        $str .= '}';
+
+        return $str;
+    }
+
+    /**
      * @param string $connection
      * @param string $table
      * @param string $rootNamespace
@@ -395,21 +428,26 @@ class DbCommand extends Command
         foreach ($connections ?: $this->getConnections() as $connection) {
             foreach ($this->getTables($connection, $table_pattern) as $table) {
                 $plainClass = Str::pascalize($table);
-                $class = "App\Entities\\$plainClass";
-                $fileName = "@runtime/db_entities/$plainClass.php";
+                $entity = "App\Entities\\$plainClass";
                 if (($pos = strpos($table, '_')) !== false) {
                     $area = Str::pascalize(substr($table, 0, $pos));
                     if (in_array($area, $areas, true)) {
-                        $plainClass = Str::pascalize(substr($table, $pos + 1));
-                        $class = 'App\\Areas\\Entities\\' . Str::pascalize(substr($table, $pos));
-                        $fileName = "@runtime/db_entities/Areas/$area/$plainClass.php";
+                        $entity = sprintf(
+                            "App\\Areas\\%s\\Entities\\%s", Str::pascalize($area),
+                            Str::pascalize(substr($table, $pos))
+                        );
                     }
                 }
 
-                $entity_str = $this->renderEntity($connection, $class, $table, $camelized);
-                LocalFS::filePut($fileName, $entity_str);
+                $entityFile = '@runtime/db_entities/' . str_replace('\\', '/', $entity) . '.php';
+                $entityContent = $this->renderEntity($connection, $entity, $table, $camelized);
+                LocalFS::filePut($entityFile, $entityContent);
 
-                $this->console->writeLn(" `$table` table saved to `$fileName`");
+                $repository = str_replace("\\Entities\\", "\\Repositories\\", $entity) . "Repository";
+                $repositoryFile = '@runtime/db_entities/' . str_replace('\\', '/', $repository) . '.php';
+                $repositoryContent = $this->renderRepository($entity, $repository);
+                LocalFS::filePut($repositoryFile, $repositoryContent);
+                $this->console->writeLn(" `$table` table saved to `$entityFile`");
             }
         }
     }
