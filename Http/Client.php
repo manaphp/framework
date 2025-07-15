@@ -73,9 +73,9 @@ class Client implements ClientInterface
         array $headers = [],
         mixed $options = []
     ): Response {
-        $headers['User-Agent'] ??= $this->user_agent;
+        $headers[self::HEADER_USER_AGENT] ??= $this->user_agent;
 
-        if (isset($headers['X-Request-Id'])) {
+        if (isset($headers[self::HEADER_X_REQUEST_ID])) {
             SuppressWarnings::noop();
         }
 
@@ -116,16 +116,16 @@ class Client implements ClientInterface
 
                 if ($request->hasFile()) {
                     $boundary = '------------------------' . bin2hex(random_bytes(8));
-                    $request->headers['Content-Type'] = "multipart/form-data; boundary=$boundary";
+                    $request->headers[self::HEADER_CONTENT_TYPE] = "multipart/form-data; boundary=$boundary";
                     $body = $request->buildMultipart($boundary);
                 } else {
                     $body = $request->body;
                 }
 
                 if (is_array($body)) {
-                    if (isset($request->headers['Content-Type'])
+                    if (isset($request->headers[self::HEADER_CONTENT_TYPE])
                         && str_contains(
-                            $request->headers['Content-Type'],
+                            $request->headers[self::HEADER_CONTENT_TYPE],
                             'json'
                         )
                     ) {
@@ -136,7 +136,7 @@ class Client implements ClientInterface
                 }
 
                 if (is_string($body)) {
-                    $request->headers['Content-Length'] = strlen($body);
+                    $request->headers[self::HEADER_CONTENT_LENGTH] = strlen($body);
                 }
 
                 $response = $engine->request($request, $body);
@@ -148,7 +148,8 @@ class Client implements ClientInterface
 
             $response_text = $response->body;
 
-            if ((isset($request->headers['Accept']) && str_contains($request->headers['Accept'], '/json'))
+            if ((isset($request->headers[self::HEADER_ACCEPT])
+                    && str_contains($request->headers[self::HEADER_ACCEPT], '/json'))
                 || str_contains($response->content_type, '/json')
             ) {
                 $response->body = $response->body === '' ? [] : json_parse($response->body);
@@ -211,27 +212,31 @@ class Client implements ClientInterface
         mixed $options = []
     ): Response {
         if (is_string($body)) {
-            if (!isset($headers['Content-Type'])) {
+            if (!isset($headers[self::HEADER_CONTENT_TYPE])) {
                 if (preg_match('#^\[|{#', $body)) {
-                    $headers['Content-Type'] = 'application/json';
+                    $headers[self::HEADER_CONTENT_TYPE] = 'application/json';
                 } else {
-                    $headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                    $headers[self::HEADER_CONTENT_TYPE] = 'application/x-www-form-urlencoded';
                 }
             }
         } else {
-            if (($headers['Content-Type'] ?? null) === 'application/x-www-form-urlencoded') {
+            if (($headers[self::HEADER_CONTENT_TYPE] ?? null) === 'application/x-www-form-urlencoded') {
                 $body = http_build_query($body);
             } else {
-                $headers['Content-Type'] ??= 'application/json';
+                $headers[self::HEADER_CONTENT_TYPE] ??= 'application/json';
                 $body = json_stringify($body);
             }
         }
 
-        $headers['X-Requested-With'] ??= 'XMLHttpRequest';
-        $headers['Accept'] ??= 'application/json';
-        $headers['Accept-Encoding'] ??= 'gzip, deflate';
+        $headers[self::HEADER_X_REQUESTED_WITH] ??= 'XMLHttpRequest';
+        $headers[self::HEADER_ACCEPT] ??= 'application/json';
+        $headers[self::HEADER_ACCEPT_ENCODING] ??= 'gzip, deflate';
 
-        if (isset($headers['Accept-Charset'], $headers['Authorization'], $headers['Cache-Control'], $headers['Host'], $headers['Cookie'])) {
+        if (isset(
+            $headers[self::HEADER_ACCEPT_CHARSET], $headers[self::HEADER_AUTHORIZATION],
+            $headers[self::HEADER_CACHE_CONTROL], $headers[self::HEADER_HOST], $headers[self::HEADER_COOKIE]
+        )
+        ) {
             SuppressWarnings::noop();
         }
 

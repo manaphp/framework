@@ -8,6 +8,21 @@ use ManaPHP\Http\Client\Response;
 
 interface ClientInterface
 {
+    const HEADER_USER_AGENT = 'User-Agent';
+    const HEADER_CONTENT_TYPE = 'Content-Type';
+    const HEADER_CONTENT_LENGTH = 'Content-Length';
+    const HEADER_ACCEPT = 'Accept';
+    const HEADER_ACCEPT_ENCODING = 'Accept-Encoding';
+    const HEADER_ACCEPT_CHARSET = 'Accept-Charset';
+    const HEADER_X_REQUESTED_WITH = 'X-Requested-With';
+    const HEADER_X_REQUEST_ID = 'X-Request-Id';
+    const HEADER_AUTHORIZATION = 'Authorization';
+    const HEADER_COOKIE = 'Cookie';
+    const HEADER_HOST = 'Host';
+    const HEADER_REFERER = 'Referer';
+    const HEADER_ORIGIN = 'Origin';
+    const HEADER_CACHE_CONTROL = 'Cache-Control';
+
     public function rest(
         string $method,
         string|array $url,
