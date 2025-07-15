@@ -51,6 +51,13 @@ interface RepositoryInterface
      */
     public function firstOrFail(array|Restrictions $restrictions, array $fields = []): Entity;
 
+    /**
+     * @param array|Restrictions $restrictions
+     *
+     * @return T
+     */
+    public function firstOrNew(array|Restrictions $restrictions): Entity;
+
     public function value(array|Restrictions $restrictions, string $field): mixed;
 
     public function valueOrFail(array|Restrictions $restrictions, string $field): mixed;
@@ -71,6 +78,13 @@ interface RepositoryInterface
      * @return T
      */
     public function fill(array $data): Entity;
+
+    /**
+     * @param T|array $entity
+     *
+     * @return T
+     */
+    public function save(Entity|array $entity): Entity;
 
     /**
      * @param T|array $entity

@@ -109,6 +109,19 @@ abstract class AbstractRepository implements RepositoryInterface
         return $entity;
     }
 
+    public function firstOrNew(array|Restrictions $restrictions): Entity
+    {
+        $entity = $this->first($restrictions);
+        if ($entity === null) {
+            $entity = new $this->entityClass;
+            foreach ($restrictions as $k => $v) {
+                $entity->$k = $v;
+            }
+        }
+
+        return $entity;
+    }
+
     public function value(array|Restrictions $restrictions, string $field): mixed
     {
         $rs = $this->select([$field])->where($restrictions)->limit(1)->execute();
@@ -191,6 +204,16 @@ abstract class AbstractRepository implements RepositoryInterface
         }
 
         return $this->getEntityManager()->create($entity);
+    }
+
+    public function save(Entity|array $entity): Entity
+    {
+        $primaryKey = $this->entityMetadata->getPrimaryKey($this->entityClass);
+        if (is_array($entity) ? isset($entity[$primaryKey]) : isset($entity->$primaryKey)) {
+            return $this->update($entity);
+        } else {
+            return $this->create($entity);
+        }
     }
 
     /**
