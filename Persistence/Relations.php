@@ -47,7 +47,12 @@ class Relations implements RelationsInterface
         if ($data === null) {
             SuppressWarnings::noop();
         } elseif (is_string($data)) {
-            $query->select(preg_split('#[,\s]+#', $data, -1, PREG_SPLIT_NO_EMPTY));
+            if ($data === '*') {
+                $fields = $this->entityMetadata->getFields($relation->getThatEntityClass());
+            } else {
+                $fields = preg_split('#[,\s]+#', $data, -1, PREG_SPLIT_NO_EMPTY);
+            }
+            $query->select($fields);
         } elseif (is_array($data)) {
             $query->select($data);
         } elseif (is_callable($data)) {
