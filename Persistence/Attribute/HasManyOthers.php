@@ -18,7 +18,7 @@ class HasManyOthers extends AbstractRelation
 
     public function __construct(string $thatEntity, string $selfField, ?string $selfValue = null, array $orderBy = [])
     {
-        $this->thatEntity = $thatEntity;
+        $this->thatEntityClass = $thatEntity;
         $this->selfField = $selfField;
         $this->selfValue = $selfValue ?? $this->entityMetadata->getReferencedKey($thatEntity);
         $this->orderBy = $orderBy;
@@ -32,10 +32,10 @@ class HasManyOthers extends AbstractRelation
     public function earlyLoad(array $r, QueryInterface $thatQuery, string $name): array
     {
         $selfField = $this->selfField;
-        $thatField = $this->entityMetadata->getPrimaryKey($this->thatEntity);
+        $thatField = $this->entityMetadata->getPrimaryKey($this->thatEntityClass);
 
         $ids = Arr::unique_column($r, $selfField);
-        $repository = $this->entityMetadata->getRepository($this->selfEntity);
+        $repository = $this->entityMetadata->getRepository($this->selfEntityClass);
         $pivotQuery = $repository->select([$selfField, $this->selfValue])->whereIn($selfField, $ids);
         $pivot_data = $pivotQuery->execute();
         $ids = Arr::unique_column($pivot_data, $this->selfValue);
@@ -61,11 +61,11 @@ class HasManyOthers extends AbstractRelation
     public function lazyLoad(Entity $entity): QueryInterface
     {
         $selfField = $this->selfField;
-        $selfRepository = $this->entityMetadata->getRepository($this->selfEntity);
+        $selfRepository = $this->entityMetadata->getRepository($this->selfEntityClass);
         $ids = $selfRepository->values($this->selfValue, [$selfField => $entity->$selfField]);
 
         return $this->getThatQuery()
-            ->whereIn($this->entityMetadata->getPrimaryKey($this->thatEntity), $ids)
+            ->whereIn($this->entityMetadata->getPrimaryKey($this->thatEntityClass), $ids)
             ->setFetchType(true);
     }
 }

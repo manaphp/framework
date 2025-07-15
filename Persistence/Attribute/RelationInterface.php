@@ -12,4 +12,8 @@ interface RelationInterface extends Transiently
     public function earlyLoad(array $r, QueryInterface $thatQuery, string $name): array;
 
     public function lazyLoad(Entity $entity): QueryInterface;
+
+    public function getSelfEntityClass(): string;
+
+    public function getThatEntityClass(): string;
 }

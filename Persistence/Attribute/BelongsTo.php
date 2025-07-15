@@ -16,13 +16,13 @@ class BelongsTo extends AbstractRelation
 
     public function __construct(?string $selfField = null)
     {
-        $this->selfField = $selfField ?? $this->entityMetadata->getReferencedKey($this->thatEntity);
+        $this->selfField = $selfField ?? $this->entityMetadata->getReferencedKey($this->thatEntityClass);
     }
 
     public function earlyLoad(array $r, QueryInterface $thatQuery, string $name): array
     {
         $selfField = $this->selfField;
-        $thatField = $this->entityMetadata->getPrimaryKey($this->thatEntity);
+        $thatField = $this->entityMetadata->getPrimaryKey($this->thatEntityClass);
 
         $ids = Arr::unique_column($r, $selfField);
         $data = $thatQuery->whereIn($thatField, $ids)->indexBy($thatField)->fetch();
@@ -38,7 +38,7 @@ class BelongsTo extends AbstractRelation
     public function lazyLoad(Entity $entity): QueryInterface
     {
         $selfField = $this->selfField;
-        $thatField = $this->entityMetadata->getPrimaryKey($this->thatEntity);
+        $thatField = $this->entityMetadata->getPrimaryKey($this->thatEntityClass);
         return $this->getThatQuery()->where([$thatField => $entity->$selfField])->setFetchType(false);
     }
 }

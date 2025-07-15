@@ -12,11 +12,21 @@ abstract class AbstractRelation implements RelationInterface
 {
     #[Autowired] protected ?EntityMetadataInterface $entityMetadata = null;
 
-    #[Autowired] protected string $selfEntity = '';
-    #[Autowired] protected string $thatEntity = '';
+    #[Autowired] protected string $selfEntityClass = '';
+    #[Autowired] protected string $thatEntityClass = '';
 
     public function getThatQuery(): QueryInterface
     {
-        return $this->entityMetadata->getRepository($this->thatEntity)->select();
+        return $this->entityMetadata->getRepository($this->thatEntityClass)->select();
+    }
+
+    public function getSelfEntityClass(): string
+    {
+        return $this->selfEntityClass;
+    }
+
+    public function getThatEntityClass(): string
+    {
+        return $this->thatEntityClass;
     }
 }

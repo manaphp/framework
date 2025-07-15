@@ -17,8 +17,8 @@ class HasMany extends AbstractRelation
 
     public function __construct(string $thatEntity, ?string $thatField = null, array $orderBy = [])
     {
-        $this->thatEntity = $thatEntity;
-        $this->thatField = $thatField ?? $this->entityMetadata->getReferencedKey($this->selfEntity);
+        $this->thatEntityClass = $thatEntity;
+        $this->thatField = $thatField ?? $this->entityMetadata->getReferencedKey($this->selfEntityClass);
         $this->orderBy = $orderBy;
     }
 
@@ -29,7 +29,7 @@ class HasMany extends AbstractRelation
 
     public function earlyLoad(array $r, QueryInterface $thatQuery, string $name): array
     {
-        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntity);
+        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntityClass);
         $thatField = $this->thatField;
 
         $r_index = [];
@@ -58,7 +58,7 @@ class HasMany extends AbstractRelation
 
     public function lazyLoad(Entity $entity): QueryInterface
     {
-        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntity);
+        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntityClass);
         return $this->getThatQuery()->where([$this->thatField => $entity->$selfField])->setFetchType(true);
     }
 }

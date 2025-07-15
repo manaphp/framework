@@ -16,12 +16,12 @@ class HasOne extends AbstractRelation
 
     public function __construct(?string $thatField = null)
     {
-        $this->thatField = $thatField ?? $this->entityMetadata->getReferencedKey($this->selfEntity);
+        $this->thatField = $thatField ?? $this->entityMetadata->getReferencedKey($this->selfEntityClass);
     }
 
     public function earlyLoad(array $r, QueryInterface $thatQuery, string $name): array
     {
-        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntity);
+        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntityClass);
         $thatField = $this->thatField;
 
         $ids = Arr::unique_column($r, $selfField);
@@ -37,7 +37,7 @@ class HasOne extends AbstractRelation
 
     public function lazyLoad(Entity $entity): QueryInterface
     {
-        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntity);
+        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntityClass);
         $thatField = $this->thatField;
         return $this->getThatQuery()->where([$thatField => $entity->$selfField])->setFetchType(false);
     }

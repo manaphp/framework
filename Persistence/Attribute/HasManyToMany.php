@@ -32,9 +32,9 @@ class HasManyToMany extends AbstractRelation
         array $orderBy = []
     ) {
         $this->pivotEntity = $pivotEntity;
-        $this->thatEntity = $thatEntity ?? $this->inferThatEntity($pivotEntity, $this->selfEntity);
-        $this->pivotSelfField = $pivotSelfField ?? $this->entityMetadata->getReferencedKey($this->selfEntity);
-        $this->pivotThatField = $pivotThatField ?? $this->entityMetadata->getReferencedKey($this->thatEntity);
+        $this->thatEntityClass = $thatEntity ?? $this->inferThatEntity($pivotEntity, $this->selfEntityClass);
+        $this->pivotSelfField = $pivotSelfField ?? $this->entityMetadata->getReferencedKey($this->selfEntityClass);
+        $this->pivotThatField = $pivotThatField ?? $this->entityMetadata->getReferencedKey($this->thatEntityClass);
         $this->orderBy = $orderBy;
     }
 
@@ -76,13 +76,13 @@ class HasManyToMany extends AbstractRelation
         $pivotSelfField = $this->pivotSelfField;
         $pivotThatField = $this->pivotThatField;
 
-        $ids = Arr::unique_column($r, $this->entityMetadata->getPrimaryKey($this->selfEntity));
+        $ids = Arr::unique_column($r, $this->entityMetadata->getPrimaryKey($this->selfEntityClass));
         $repository = $this->entityMetadata->getRepository($this->pivotEntity);
         $pivotQuery = $repository->select([$pivotSelfField, $pivotThatField])->whereIn($pivotSelfField, $ids);
         $pivot_data = $pivotQuery->execute();
         $ids = Arr::unique_column($pivot_data, $pivotThatField);
 
-        $thatField = $this->entityMetadata->getPrimaryKey($this->thatEntity);
+        $thatField = $this->entityMetadata->getPrimaryKey($this->thatEntityClass);
         $data = $thatQuery->whereIn($thatField, $ids)->indexBy($thatField)->fetch();
 
         $rd = [];
@@ -104,7 +104,7 @@ class HasManyToMany extends AbstractRelation
 
     public function lazyLoad(Entity $entity): QueryInterface
     {
-        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntity);
+        $selfField = $this->entityMetadata->getPrimaryKey($this->selfEntityClass);
         $pivotRepository = $this->entityMetadata->getRepository($this->pivotEntity);
         $ids = $pivotRepository->values(
             $this->pivotThatField,
@@ -112,7 +112,7 @@ class HasManyToMany extends AbstractRelation
         );
 
         return $this->getThatQuery()
-            ->whereIn($this->entityMetadata->getPrimaryKey($this->thatEntity), $ids)
+            ->whereIn($this->entityMetadata->getPrimaryKey($this->thatEntityClass), $ids)
             ->setFetchType(true);
     }
 }
