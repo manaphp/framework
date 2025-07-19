@@ -58,7 +58,6 @@ class Client implements ClientInterface
     #[Autowired] protected ?string $cafile;
     #[Autowired] protected int $timeout = 10;
     #[Autowired] protected bool $verify_peer = true;
-    #[Autowired] protected string $user_agent = 'Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko';
     #[Autowired] protected int $pool_size = 4;
 
     public function __clone()
@@ -73,8 +72,6 @@ class Client implements ClientInterface
         array $headers = [],
         mixed $options = []
     ): Response {
-        $headers[self::HEADER_USER_AGENT] ??= $this->user_agent;
-
         if (isset($headers[self::HEADER_X_REQUEST_ID])) {
             SuppressWarnings::noop();
         }
