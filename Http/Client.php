@@ -33,6 +33,7 @@ use ManaPHP\Http\Client\UnauthorizedException;
 use ManaPHP\Pooling\PoolsInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use function bin2hex;
+use function explode;
 use function http_build_query;
 use function is_array;
 use function is_float;
@@ -46,6 +47,7 @@ use function str_contains;
 use function strlen;
 use function strpos;
 use function substr;
+use function trim;
 
 class Client implements ClientInterface
 {
@@ -77,7 +79,9 @@ class Client implements ClientInterface
         }
 
         foreach ($headers as $name => $value) {
-            if (is_string($name) && $value === '') {
+            if (is_int($name)) {
+                list($p1, $p2) = explode(':', $value, 2);
+                $headers[trim($p1)] = trim($p2);
                 unset($headers[$name]);
             }
         }
