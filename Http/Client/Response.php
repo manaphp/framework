@@ -133,6 +133,10 @@ class Response implements JsonSerializable, Stringable
 
     public function getJsonBody(): array
     {
+        if (is_array($this->body)) {
+            return $this->body;
+        }
+
         $data = json_parse($this->body);
         if (!is_array($data)) {
             $cut_body = substr($this->body, 0, 128);
@@ -162,6 +166,6 @@ class Response implements JsonSerializable, Stringable
 
     public function __toString(): string
     {
-        return json_stringify($this->jsonSerialize());
+        return $this->getUtf8Body();
     }
 }
