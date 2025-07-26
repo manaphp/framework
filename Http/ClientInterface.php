@@ -24,7 +24,8 @@ interface ClientInterface
     const HEADER_CACHE_CONTROL = 'Cache-Control';
     const USER_AGENT_CHROME = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36';
     const USER_AGENT_FIREFOX = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0';
-
+    const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded; charset=UTF-8';
+    
     public function rest(
         string $method,
         string|array $url,
