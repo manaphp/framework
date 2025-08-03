@@ -9,8 +9,9 @@ use ManaPHP\Exception;
 
 class TooManyRequestsException extends Exception
 {
-    public function __construct(string $message = 'Too Many Request', int $code = 0, ?\Exception $previous = null)
-    {
+    public function __construct($message = 'You have exceeded the allowed number of requests. Please try again later.',
+        $code = 0, $previous = null
+    ) {
         parent::__construct($message, $code, $previous);
     }
 
