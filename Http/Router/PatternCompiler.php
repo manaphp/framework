@@ -53,7 +53,7 @@ class PatternCompiler implements PatternCompilerInterface
 
         if (preg_match('#{\d#', $pattern) === 1) {
             $need_restore_token = true;
-            $pattern = (string)preg_replace('#{([\d,]+)}#', '@\1@', $pattern);
+            $pattern = preg_replace('#{([\d,]+)}#', '@\1@', $pattern);
         }
 
         $matches = [];
@@ -66,7 +66,7 @@ class PatternCompiler implements PatternCompilerInterface
         }
 
         if ($need_restore_token) {
-            $pattern = (string)preg_replace('#@([\d,]+)@#', '{\1}', $pattern);
+            $pattern = preg_replace('#@([\d,]+)@#', '{\1}', $pattern);
         }
 
         $compiled = '#^' . $pattern . '$#' . ($this->case_sensitive ? '' : 'i');

@@ -89,7 +89,7 @@ class Query extends AbstractQuery
     public function join(string $table, ?string $condition = null, ?string $alias = null, ?string $type = null): static
     {
         if (strpbrk($condition, '[(') === false) {
-            $condition = (string)preg_replace('#\w+#', '[\\0]', $condition);
+            $condition = preg_replace('#\w+#', '[\\0]', $condition);
         }
 
         $this->joins[] = [$table, $condition, $alias, $type];

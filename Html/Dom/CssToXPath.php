@@ -36,7 +36,7 @@ class CssToXPath
                 $path
             );
 
-            $path = (string)preg_replace(['#:contains\((["\'])([^\'"]+)\\1\)#'], ["[contains(.,'\\2')]"], $path);
+            $path = preg_replace(['#:contains\((["\'])([^\'"]+)\\1\)#'], ["[contains(.,'\\2')]"], $path);
             $path = strtr(
                 $path,
                 [
