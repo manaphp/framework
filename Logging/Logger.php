@@ -4,39 +4,26 @@ declare(strict_types=1);
 
 namespace ManaPHP\Logging;
 
-use JsonSerializable;
-use ManaPHP\AliasInterface;
 use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\Container;
-use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Logging\Appender\FileAppender;
 use ManaPHP\Logging\Event\LoggerLog;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
-use Stringable;
 use Throwable;
 use function array_shift;
-use function dirname;
 use function gethostname;
-use function is_array;
-use function is_object;
-use function is_scalar;
 use function is_string;
-use function json_stringify;
-use function preg_match_all;
-use function preg_replace;
-use function realpath;
 use function str_contains;
 use function str_ends_with;
 use function str_replace;
-use function strtr;
 
 class Logger extends AbstractLogger
 {
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
-    #[Autowired] protected AliasInterface $alias;
+    #[Autowired] protected MessageFormatterInterface $messageFormatter;
 
     #[Autowired] protected string $level = LogLevel::DEBUG;
     #[Autowired] protected ?string $hostname;
@@ -54,86 +41,6 @@ class Logger extends AbstractLogger
             } else {
                 $this->appenders[$index] = Container::make($appender['class'], $appender);
             }
-        }
-    }
-
-    public function exceptionToString(Throwable $exception): string
-    {
-        $str = $exception::class . ': ' . $exception->getMessage() . PHP_EOL;
-        $str .= '    at ' . $exception->getFile() . ':' . $exception->getLine() . PHP_EOL;
-        $traces = $exception->getTraceAsString();
-        $str .= preg_replace('/#\d+\s/', '    at ', $traces);
-
-        $prev = $traces;
-        $caused = $exception;
-        while ($caused = $caused->getPrevious()) {
-            $str .= PHP_EOL . '  Caused by ' . $caused::class . ': ' . $caused->getMessage() . PHP_EOL;
-            $str .= '    at ' . $caused->getFile() . ':' . $caused->getLine() . PHP_EOL;
-            $traces = $exception->getTraceAsString();
-            if ($traces !== $prev) {
-                $str .= preg_replace('/#\d+\s/', '    at ', $traces);
-            } else {
-                $str .= '    at ...';
-            }
-
-            $prev = $traces;
-        }
-
-        $replaces = [];
-        if ($this->alias->has('@root')) {
-            $replaces[dirname(realpath($this->alias->get('@root'))) . DIRECTORY_SEPARATOR] = '';
-        }
-
-        return strtr($str, $replaces);
-    }
-
-    protected function interpolateMessage(string $message, array $context): string
-    {
-        $replaces = [];
-        preg_match_all('#{([\w.]+)}#', $message, $matches);
-        foreach ($matches[1] as $key) {
-            if (($val = $context[$key] ?? null) === null) {
-                continue;
-            }
-
-            if (is_string($val)) {
-                SuppressWarnings::noop();
-            } elseif ($val instanceof JsonSerializable) {
-                $val = json_stringify($val);
-            } elseif ($val instanceof Stringable) {
-                $val = (string)$val;
-            } elseif (is_scalar($val)) {
-                $val = json_stringify($val);
-            } elseif (is_array($val)) {
-                $val = json_stringify($val);
-            } elseif (is_object($val)) {
-                $val = json_stringify((array)$val);
-            } else {
-                continue;
-            }
-
-            $replaces['{' . $key . '}'] = $val;
-        }
-        return strtr($message, $replaces);
-    }
-
-    protected function formatMessage(mixed $message, array $context): string
-    {
-        if (is_string($message)) {
-            if ($context !== [] && str_contains($message, '{')) {
-                $message = $this->interpolateMessage($message, $context);
-            }
-
-            if (($exception = $context['exception'] ?? null) !== null && $exception instanceof Throwable) {
-                $message .= ': ' . $this->exceptionToString($exception);
-            }
-            return $message;
-        } elseif ($message instanceof Throwable) {
-            return $this->exceptionToString($message);
-        } elseif ($message instanceof Stringable) {
-            return (string)$message;
-        } else {
-            return json_stringify($message, JSON_PARTIAL_OUTPUT_ON_ERROR);
         }
     }
 
@@ -179,7 +86,7 @@ class Logger extends AbstractLogger
 
         $log->setLocation($traces[0]);
 
-        $log->message = $this->formatMessage($message, $context);
+        $log->message = $this->messageFormatter->format($message, $context);
 
         $this->eventDispatcher->dispatch(new LoggerLog($this, $level, $message, $context, $log));
 

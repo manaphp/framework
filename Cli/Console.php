@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Cli;
 
-use JsonSerializable;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Helper\SuppressWarnings;
+use ManaPHP\Logging\MessageFormatterInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionClass;
@@ -15,15 +14,10 @@ use Throwable;
 use function fgets;
 use function getenv;
 use function implode;
-use function is_array;
 use function is_float;
 use function is_int;
-use function is_object;
-use function is_scalar;
 use function is_string;
-use function json_stringify;
 use function max;
-use function preg_match_all;
 use function random_int;
 use function sleep;
 use function sprintf;
@@ -33,12 +27,12 @@ use function str_pad;
 use function str_repeat;
 use function str_starts_with;
 use function strlen;
-use function strtr;
 use function trim;
 
 class Console implements ConsoleInterface
 {
     #[Autowired] protected LoggerInterface $logger;
+    #[Autowired] protected MessageFormatterInterface $messageFormatter;
 
     #[Autowired] protected int $width = 80;
 
@@ -117,41 +111,11 @@ class Console implements ConsoleInterface
         return $c . $text . "\033[0m" . str_repeat(' ', max($width - strlen($text), 0));
     }
 
-    protected function interpolateMessage(string $message, array $context): string
-    {
-        $replaces = [];
-        preg_match_all('#{([\w.]+)}#', $message, $matches);
-        foreach ($matches[1] as $key) {
-            if (($val = $context[$key] ?? null) === null) {
-                continue;
-            }
-
-            if (is_string($val)) {
-                SuppressWarnings::noop();
-            } elseif ($val instanceof JsonSerializable) {
-                $val = json_stringify($val);
-            } elseif ($val instanceof Stringable) {
-                $val = (string)$val;
-            } elseif (is_scalar($val)) {
-                $val = json_stringify($val);
-            } elseif (is_array($val)) {
-                $val = json_stringify($val);
-            } elseif (is_object($val)) {
-                $val = json_stringify((array)$val);
-            } else {
-                continue;
-            }
-
-            $replaces['{' . $key . '}'] = $val;
-        }
-        return strtr($message, $replaces);
-    }
-
     public function write(string|Stringable $message, array $context = [], int $options = 0): void
     {
         if (is_string($message)) {
             if ($context !== [] && str_contains($message, '{')) {
-                $message = $this->interpolateMessage($message, $context);
+                $message = $this->messageFormatter->interpolate($message, $context);
             }
         }
 

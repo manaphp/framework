@@ -6,22 +6,19 @@ namespace ManaPHP\Debugging;
 
 use ArrayObject;
 use JsonSerializable;
-use ManaPHP\AliasInterface;
 use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\SuppressWarnings;
+use ManaPHP\Logging\MessageFormatterInterface;
 use Throwable;
 use function basename;
 use function count;
 use function date;
-use function dirname;
 use function is_array;
 use function is_scalar;
 use function is_string;
 use function json_stringify;
 use function microtime;
-use function preg_replace;
-use function realpath;
 use function rtrim;
 use function sprintf;
 use function str_contains;
@@ -30,7 +27,7 @@ use function substr_count;
 
 class DataDump implements DataDumpInterface
 {
-    #[Autowired] protected AliasInterface $alias;
+    #[Autowired] protected MessageFormatterInterface $messageFormatter;
 
     #[Autowired] protected string $format = '[:time][:location] :message';
 
@@ -47,40 +44,10 @@ class DataDump implements DataDumpInterface
         return [];
     }
 
-    public function exceptionToString(Throwable $exception): string
-    {
-        $str = $exception::class . ': ' . $exception->getMessage() . PHP_EOL;
-        $str .= '    at ' . $exception->getFile() . ':' . $exception->getLine() . PHP_EOL;
-        $traces = $exception->getTraceAsString();
-        $str .= preg_replace('/#\d+\s/', '    at ', $traces);
-
-        $prev = $traces;
-        $caused = $exception;
-        while ($caused = $caused->getPrevious()) {
-            $str .= PHP_EOL . '  Caused by ' . $caused::class . ': ' . $caused->getMessage() . PHP_EOL;
-            $str .= '    at ' . $caused->getFile() . ':' . $caused->getLine() . PHP_EOL;
-            $traces = $exception->getTraceAsString();
-            if ($traces !== $prev) {
-                $str .= preg_replace('/#\d+\s/', '    at ', $traces);
-            } else {
-                $str .= '    at ...';
-            }
-
-            $prev = $traces;
-        }
-
-        $replaces = [];
-        if ($this->alias->has('@root')) {
-            $replaces[dirname(realpath($this->alias->get('@root'))) . DIRECTORY_SEPARATOR] = '';
-        }
-
-        return strtr($str, $replaces);
-    }
-
     public function formatMessage(mixed $message): string
     {
         if ($message instanceof Throwable) {
-            return $this->exceptionToString($message);
+            return $this->messageFormatter->exceptionToString($message);
         } elseif ($message instanceof JsonSerializable || $message instanceof ArrayObject) {
             return json_stringify($message, JSON_PARTIAL_OUTPUT_ON_ERROR);
         } elseif (!is_array($message)) {
@@ -98,7 +65,7 @@ class DataDump implements DataDumpInterface
                 }
 
                 if ($v instanceof Throwable) {
-                    $message[$k] = $this->exceptionToString($v);
+                    $message[$k] = $this->messageFormatter->exceptionToString($v);
                 } elseif (is_array($v)) {
                     $message[$k] = json_stringify($v, JSON_PARTIAL_OUTPUT_ON_ERROR);
                 } elseif ($v instanceof JsonSerializable || $v instanceof ArrayObject) {
@@ -126,7 +93,7 @@ class DataDump implements DataDumpInterface
             }
 
             if ($v instanceof Throwable) {
-                $v = $this->exceptionToString($v);
+                $v = $this->messageFormatter->exceptionToString($v);
             } elseif (is_array($v)) {
                 $v = json_stringify($v, JSON_PARTIAL_OUTPUT_ON_ERROR);
             } elseif ($v instanceof JsonSerializable || $v instanceof ArrayObject) {
