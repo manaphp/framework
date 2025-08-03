@@ -443,7 +443,7 @@ class DbCommand extends Command
                 $entityContent = $this->renderEntity($connection, $entity, $table, $camelized);
                 LocalFS::filePut($entityFile, $entityContent);
 
-                $repository = str_replace("\\Entities\\", "\\Repositories\\", $entity) . "Repository";
+                $repository = str_replace("\\Entities\\", "\\Repositories\\", $entity) . 'Repository';
                 $repositoryFile = '@runtime/db_entities/' . str_replace('\\', '/', $repository) . '.php';
                 $repositoryContent = $this->renderRepository($entity, $repository);
                 LocalFS::filePut($repositoryFile, $repositoryContent);
