@@ -15,6 +15,7 @@ use function is_callable;
 use function is_string;
 use function method_exists;
 use function preg_split;
+use function sprintf;
 use function strpos;
 use function substr;
 use function ucfirst;
@@ -41,7 +42,10 @@ class Relations implements RelationsInterface
     public function getThatQuery(string $entityClass, string $name, mixed $data): QueryInterface
     {
         $relation = $this->get($entityClass, $name);
-        /** @noinspection NullPointerExceptionInspection */
+        if ($relation === null) {
+            throw new RelationNotFoundException(sprintf('`%s` relation not found', $name));
+        }
+
         $query = $relation->getThatQuery();
 
         if ($data === null) {
