@@ -189,11 +189,10 @@ class Engine implements EngineInterface
         $buf = '';
         $end_time = microtime(true) + ($timeout ?: $this->timeout);
 
-        $write = null;
-        $except = null;
-
         while (($left = 2 - strlen($buf)) > 0) {
             $read = [$socket];
+            $write = null;
+            $except = null;
             if (stream_select($read, $write, $except, 0, 10000) <= 0) {
                 if (microtime(true) > $end_time) {
                     throw new TimeoutException('receive timeout');
@@ -232,6 +231,8 @@ class Engine implements EngineInterface
         $start_time = microtime(true);
         while (($left = $header_len - strlen($buf)) > 0) {
             $read = [$socket];
+            $write = null;
+            $except = null;
             if (stream_select($read, $write, $except, 0, 10000) <= 0) {
                 if (microtime(true) > $end_time) {
                     throw new TimeoutException('receive timeout');
