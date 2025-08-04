@@ -281,10 +281,7 @@ class Swoole extends AbstractServer implements ContextAware
             try {
                 $this->requestHandler->handle();
             } catch (Throwable $throwable) {
-                $str = date('c') . ' ' . $throwable::class . ': ' . $throwable->getMessage() . PHP_EOL;
-                $str .= '    at ' . $throwable->getFile() . ':' . $throwable->getLine() . PHP_EOL;
-                $str .= preg_replace('/#\d+\s/', '    at ', $throwable->getTraceAsString());
-                echo $str . PHP_EOL;
+                echo $this->formatException($throwable);
             }
         }
 

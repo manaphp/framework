@@ -16,7 +16,10 @@ use ManaPHP\Swoole\ProcessesInterface;
 use ManaPHP\Swoole\WorkersInterface;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Throwable;
+use function date;
 use function ob_flush;
+use function preg_replace;
 use function sprintf;
 use function strlen;
 
@@ -70,5 +73,14 @@ abstract class AbstractServer implements ServerInterface
         }
 
         ob_flush();
+    }
+
+    protected function formatException(Throwable $throwable): string
+    {
+        $str = date('c') . ' ' . $throwable::class . ': ' . $throwable->getMessage() . PHP_EOL;
+        $str .= '    at ' . $throwable->getFile() . ':' . $throwable->getLine() . PHP_EOL;
+        $str .= preg_replace('/#\d+\s/', '    at ', $throwable->getTraceAsString());
+
+        return $str . PHP_EOL;
     }
 }

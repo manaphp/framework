@@ -109,10 +109,7 @@ class Workerman extends AbstractServer implements ContextAware
             $context->connection = $connection;
             $this->requestHandler->handle();
         } catch (Throwable $throwable) {
-            $str = date('c') . ' ' . $throwable::class . ': ' . $throwable->getMessage() . PHP_EOL;
-            $str .= '    at ' . $throwable->getFile() . ':' . $throwable->getLine() . PHP_EOL;
-            $str .= preg_replace('/#\d+\s/', '    at ', $throwable->getTraceAsString());
-            echo $str . PHP_EOL;
+            echo $this->formatException($throwable);
         }
 
         $this->contextManager->resetContexts();
