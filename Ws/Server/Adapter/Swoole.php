@@ -5,16 +5,26 @@ declare(strict_types=1);
 namespace ManaPHP\Ws\Server\Adapter;
 
 use ArrayObject;
+use ManaPHP\BootstrapperInterface;
 use ManaPHP\Coroutine\Context\Stickyable;
+use ManaPHP\Debugging\DebuggerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
+use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Exception\NotSupportedException;
 use ManaPHP\Helper\SuppressWarnings;
+use ManaPHP\Http\Metrics\ExporterInterface;
 use ManaPHP\Http\RequestInterface;
+use ManaPHP\Http\Router\MappingScannerInterface;
+use ManaPHP\Http\Server\Listeners\LogServerStatusListener;
+use ManaPHP\Http\Server\Listeners\RenameProcessTitleListener;
+use ManaPHP\Swoole\ProcessesInterface;
+use ManaPHP\Swoole\WorkersInterface;
 use ManaPHP\Ws\HandlerInterface;
 use ManaPHP\Ws\Server\Event\ServerStart;
 use ManaPHP\Ws\Server\Event\ServerStop;
 use ManaPHP\Ws\ServerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
@@ -25,12 +35,13 @@ use Swoole\WebSocket\Server;
 use Throwable;
 use function dirname;
 use function in_array;
-use function is_string;
 use function sprintf;
 
 class Swoole implements ServerInterface
 {
+    #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
+    #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected LoggerInterface $logger;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected HandlerInterface $wsHandler;
@@ -38,6 +49,21 @@ class Swoole implements ServerInterface
     #[Autowired] protected string $host = '0.0.0.0';
     #[Autowired] protected int $port = 9501;
     #[Autowired] protected array $settings = [];
+
+    #[Autowired] protected array $listeners
+        = [
+            LogServerStatusListener::class,
+            RenameProcessTitleListener::class
+        ];
+
+    #[Autowired] protected array $bootstrappers
+        = [
+            DebuggerInterface::class,
+            WorkersInterface::class,
+            ExporterInterface::class,
+            ProcessesInterface::class,
+            MappingScannerInterface::class,
+        ];
 
     #[Config] protected string $app_id;
 
@@ -90,6 +116,21 @@ class Swoole implements ServerInterface
         $this->swoole->on('open', [$this, 'onOpen']);
         $this->swoole->on('close', [$this, 'onClose']);
         $this->swoole->on('message', [$this, 'onMessage']);
+    }
+
+    protected function bootstrap(): void
+    {
+        foreach ($this->bootstrappers as $name) {
+            if ($name !== '' && $name !== null) {
+                /** @var BootstrapperInterface $bootstrapper */
+                $bootstrapper = $this->container->get($name);
+                $bootstrapper->bootstrap();
+            }
+        }
+
+        foreach ($this->listeners as $listener) {
+            $this->listenerProvider->add($listener);
+        }
     }
 
     protected function prepareGlobals(Request $request): void
@@ -240,6 +281,8 @@ class Swoole implements ServerInterface
         if (MANAPHP_COROUTINE_ENABLED) {
             Runtime::enableCoroutine();
         }
+
+        $this->bootstrap();
 
         echo PHP_EOL, str_repeat('+', 80), PHP_EOL;
 
