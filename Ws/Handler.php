@@ -25,6 +25,7 @@ use Throwable;
 use function is_array;
 use function is_int;
 use function is_string;
+use function json_stringify;
 
 class Handler implements HandlerInterface
 {
@@ -82,6 +83,10 @@ class Handler implements HandlerInterface
         }
 
         if ($content = $this->response->getContent()) {
+            if (!is_string($content)) {
+                $content = json_stringify($content);
+                $this->response->setContent($content);
+            }
             $this->wsServer->push($fd, $content);
         }
 

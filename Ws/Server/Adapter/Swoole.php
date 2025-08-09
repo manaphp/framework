@@ -255,9 +255,9 @@ class Swoole implements ServerInterface
      *
      * @return bool
      */
-    public function push(int $fd, mixed $data): bool
+    public function push(int $fd, string $data): bool
     {
-        return @$this->swoole->push($fd, is_string($data) ? $data : json_stringify($data));
+        return @$this->swoole->push($fd, $data);
     }
 
     /**

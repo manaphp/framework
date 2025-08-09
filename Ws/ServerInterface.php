@@ -8,7 +8,7 @@ interface ServerInterface
 {
     public function start(): void;
 
-    public function push(int $fd, mixed $data): bool;
+    public function push(int $fd, string $data): bool;
 
     public function broadcast(string $data): void;
 
