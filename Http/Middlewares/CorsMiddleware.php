@@ -60,7 +60,7 @@ class CorsMiddleware
         }
 
         if ($this->request->method() === 'OPTIONS') {
-            throw new AbortException();
+            throw new AbortException('The process was terminated by CorsMiddleware prematurely.');
         }
     }
 }

@@ -133,7 +133,7 @@ class PageCacheMiddleware implements ContextAware
 
         if ($etag === $context->if_none_match) {
             $this->response->setNotModified();
-            throw new AbortException();
+            throw new AbortException('The process was terminated by PageCacheMiddleware prematurely.');
         }
 
         if (!$cache = $this->redisCache->hGetAll($context->key)) {
@@ -155,7 +155,7 @@ class PageCacheMiddleware implements ContextAware
         }
         $context->cache_used = true;
 
-        throw new AbortException();
+        throw new AbortException('The process was terminated by PageCacheMiddleware prematurely.');
     }
 
     public function onResponding(#[Event] RequestResponding $event): void

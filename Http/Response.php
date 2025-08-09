@@ -302,7 +302,7 @@ class Response implements ResponseInterface, ContextAware
 
         $this->setHeader('Location', $this->router->createUrl($location));
 
-        throw new AbortException();
+        throw new AbortException('The process was terminated by Response prematurely.');
 
         /** @noinspection PhpUnreachableStatementInspection */
         return $this;

@@ -188,7 +188,7 @@ class Debugger implements DebuggerInterface, ContextAware
                 $this->response->setContent('NOT FOUND')->setStatus(404);
             }
 
-            throw new AbortException();
+            throw new AbortException('The process was terminated by Debugger prematurely.');
         } elseif (str_contains($this->request->header('user-agent'), 'ApacheBench')) {
             $context->enabled = false;
         } else {

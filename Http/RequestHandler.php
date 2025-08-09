@@ -136,7 +136,7 @@ class RequestHandler implements RequestHandlerInterface
 
             foreach ($interceptors as $interceptor) {
                 if (!$interceptor->preHandle($method)) {
-                    throw new AbortException();
+                    throw new AbortException('The process was terminated by RequestHandler prematurely.');
                 }
             }
 
