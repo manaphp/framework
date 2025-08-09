@@ -7,7 +7,7 @@ namespace ManaPHP\Ws;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\AbortException;
 use ManaPHP\Helper\SuppressWarnings;
-use ManaPHP\Http\ErrorHandler;
+use ManaPHP\Http\ErrorHandlerInterface;
 use ManaPHP\Http\Event\RequestAuthenticated;
 use ManaPHP\Http\Event\RequestAuthenticating;
 use ManaPHP\Http\Event\RequestBegin;
@@ -35,7 +35,7 @@ class Handler implements HandlerInterface
     #[Autowired] protected RouterInterface $router;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
-    #[Autowired] protected ErrorHandler $errorHandler;
+    #[Autowired] protected ErrorHandlerInterface $errorHandler;
 
     /**
      * @noinspection PhpRedundantCatchClauseInspection
