@@ -418,7 +418,7 @@ class Markdown implements EngineInterface
              * of space-separated tokens representing the various classes
              * that the element belongs to.
              * [...]
-             * The space characters, for the purposes of this specification,
+             * The space characters, for this specification,
              * are U+0020 SPACE, U+0009 CHARACTER TABULATION (tab),
              * U+000A LINE FEED (LF), U+000C FORM FEED (FF), and
              * U+000D CARRIAGE RETURN (CR).

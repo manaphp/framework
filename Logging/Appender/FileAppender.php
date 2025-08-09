@@ -57,7 +57,7 @@ class FileAppender implements AppenderInterface
             }
         }
 
-        //LOCK_EX flag fight with SWOOLE COROUTINE
+        //The flag of LOCK_EX fights with SWOOLE COROUTINE
         if (file_put_contents($file, $str, FILE_APPEND) === false) {
             trigger_error('Write log to file failed: ' . $file, E_USER_WARNING);
         }

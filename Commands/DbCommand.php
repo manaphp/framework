@@ -453,7 +453,7 @@ class DbCommand extends Command
     }
 
     /**
-     * generate tables file in online
+     * generate table files in online
      *
      * @param array  $connections   connections name list
      * @param string $table_pattern match table against a pattern

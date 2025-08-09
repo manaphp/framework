@@ -13,7 +13,7 @@ class KeyCommand extends Command
     /**
      * generate random key
      *
-     * @param int $length length of key(default is 32 characters)
+     * @param int $length length of a key (default is 32 characters)
      * @param int $lowercase
      *
      * @return void

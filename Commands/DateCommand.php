@@ -63,7 +63,7 @@ class DateCommand extends Command
     }
 
     /**
-     * sync system time with http server time clock
+     * sync system time with a remote server time clock
      *
      * @param string $url the time original
      *

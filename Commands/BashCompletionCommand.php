@@ -248,7 +248,7 @@ class BashCompletionCommand extends Command
     }
 
     /**
-     * install bash completion script
+     * install a bash completion script
      *
      * @return int
      */

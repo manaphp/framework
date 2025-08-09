@@ -232,7 +232,7 @@ interface QueryInterface
     public function whereNotNull(string $field): static;
 
     /**
-     * Sets a ORDER BY condition clause
+     * Sets an ORDER BY condition clause
      *
      * @param array $orderBy =entity_var(new Model) ?: entity_field(new Model) ?: [$k=>SORT_ASC, $k=>SORT_DESC]
      *

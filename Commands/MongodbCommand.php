@@ -67,9 +67,9 @@ class MongodbCommand extends Command
     }
 
     /**
-     * generate entity file from base64 encoded string
+     * generate an entity file from base64 encoded string
      *
-     * @param string $input the base64 encoded json string
+     * @param string $input the base64 encoded JSON string
      * @param string $entityClass
      *
      * @return void
@@ -256,7 +256,7 @@ class MongodbCommand extends Command
     /**
      * export mongodb data to csv files
      *
-     * @param string $collection_pattern match collection against a pattern
+     * @param string $collection_pattern match collections against a pattern
      * @param bool   $bom                contains BOM or not
      *
      * @return void
@@ -336,7 +336,7 @@ class MongodbCommand extends Command
     /**
      * list databases and collections
      *
-     * @param string $collection_pattern match collection against a pattern
+     * @param string $collection_pattern match collections against a pattern
      * @param string $field              collection must contain one this field
      * @param array  $db
      *

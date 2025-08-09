@@ -17,7 +17,7 @@ use function strlen;
 //$ActionFileDefaultTemplate myformat
 //
 //$template myTemplate,"/var/log/test/%PROGRAMNAME%.log"
-//user.*  ?myTemplate
+//user.* ?myTemplate
 
 class SyslogAppender implements AppenderInterface
 {

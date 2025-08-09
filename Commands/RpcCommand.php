@@ -19,7 +19,7 @@ use function str_ends_with;
 class RpcCommand extends Command
 {
     /**
-     * generate services stub for client
+     * generate service stubs for a client
      *
      * @param string $output
      *

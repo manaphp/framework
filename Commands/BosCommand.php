@@ -119,7 +119,7 @@ class BosCommand extends Command
     }
 
     /**
-     * export object to local directory
+     * export an object to local directory
      *
      * @param string $bucket
      * @param string $dir
