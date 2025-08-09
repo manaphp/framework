@@ -85,10 +85,8 @@ class Connection
             if (!@$redis->pconnect($host, (int)$port, $timeout, $persistent_id)) {
                 throw new ConnectionException(['connect to `{uri}` failed', 'uri' => $uri]);
             }
-        } else {
-            if (!@$redis->connect($host, (int)$port, $timeout)) {
-                throw new ConnectionException(['connect to `{uri}` failed', 'uri' => $uri]);
-            }
+        } elseif (!@$redis->connect($host, (int)$port, $timeout)) {
+            throw new ConnectionException(['connect to `{uri}` failed', 'uri' => $uri]);
         }
 
         if (($auth = $query['auth'] ?? '') !== '' && !$redis->auth($auth)) {

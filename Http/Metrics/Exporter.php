@@ -99,10 +99,8 @@ class Exporter implements ExporterInterface
         $data = [];
         foreach ($this->collectors as $name) {
             $collector = $this->container->get($name);
-            if ($collector instanceof WorkerCollectorInterface) {
-                if (($r = $collector->updating($handler)) !== null) {
-                    $data[$name] = $r;
-                }
+            if (($collector instanceof WorkerCollectorInterface) && ($r = $collector->updating($handler)) !== null) {
+                $data[$name] = $r;
             }
         }
 

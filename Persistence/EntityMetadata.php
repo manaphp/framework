@@ -285,14 +285,12 @@ class EntityMetadata implements EntityMetadataInterface
         if (($repository = $this->repository[$entityClass] ?? null) === null) {
             if (($attribute = $this->getClassAttribute($entityClass, Repository::class)) !== null) {
                 $repository = $attribute->name;
+            } elseif (preg_match('#^(.*)\\\\Entities\\\\(\\w+)$#', $entityClass, $match) === 1) {
+                $repository = $match[1] . '\\Repositories\\' . $match[2] . 'Repository';
+            } elseif (preg_match('#^(.*)\\\\Entity\\\\(\\w+)$#', $entityClass, $match) === 1) {
+                $repository = $match[1] . '\\Repository\\' . $match[2] . 'Repository';
             } else {
-                if (preg_match('#^(.*)\\\\Entities\\\\(\\w+)$#', $entityClass, $match) === 1) {
-                    $repository = $match[1] . '\\Repositories\\' . $match[2] . 'Repository';
-                } elseif (preg_match('#^(.*)\\\\Entity\\\\(\\w+)$#', $entityClass, $match) === 1) {
-                    $repository = $match[1] . '\\Repository\\' . $match[2] . 'Repository';
-                } else {
-                    throw new MisuseException(sprintf('repository of `%s` not found', $entityClass));
-                }
+                throw new MisuseException(sprintf('repository of `%s` not found', $entityClass));
             }
             $this->repository[$entityClass] = $repository;
         }

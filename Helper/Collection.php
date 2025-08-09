@@ -202,14 +202,12 @@ class Collection implements JsonSerializable, Countable, IteratorAggregate, Arra
         foreach ($sorts as $key => $value) {
             if (is_int($key)) {
                 $normalized_sorts[$value] = SORT_ASC;
+            } elseif ($value === SORT_ASC || $value === SORT_DESC) {
+                $normalized_sorts[$key] = $value;
+            } elseif ($value === 'ASC' || $value === 'asc') {
+                $normalized_sorts[$key] = SORT_ASC;
             } else {
-                if ($value === SORT_ASC || $value === SORT_DESC) {
-                    $normalized_sorts[$key] = $value;
-                } elseif ($value === 'ASC' || $value === 'asc') {
-                    $normalized_sorts[$key] = SORT_ASC;
-                } else {
-                    $normalized_sorts[$key] = SORT_DESC;
-                }
+                $normalized_sorts[$key] = SORT_DESC;
             }
         }
 

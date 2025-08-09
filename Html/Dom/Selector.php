@@ -184,14 +184,12 @@ class Selector
             } elseif (($pos = strpos($rule, '@')) === false) {
                 $nodes = $this->document->getQuery()->css($rule, $node);
                 $data[$name] = $nodes->length ? $nodes->item(0)->textContent : null;
+            } elseif ($nodes = $this->document->getQuery()->css(substr($rule, 0, $pos), $node)) {
+                /** @var DOMElement $node_temp */
+                $node_temp = $nodes->item(0);
+                $data[$name] = $node_temp->getAttribute(substr($rule, $pos + 1));
             } else {
-                if ($nodes = $this->document->getQuery()->css(substr($rule, 0, $pos), $node)) {
-                    /** @var DOMElement $node_temp */
-                    $node_temp = $nodes->item(0);
-                    $data[$name] = $node_temp->getAttribute(substr($rule, $pos + 1));
-                } else {
-                    $data[$name] = null;
-                }
+                $data[$name] = null;
             }
         }
 

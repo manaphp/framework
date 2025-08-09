@@ -147,10 +147,8 @@ abstract class AbstractSession implements SessionInterface, ContextAware, ArrayA
             if (isset($context->_SESSION['__T']) && time() - $context->_SESSION['__T'] < $this->lazy) {
                 return;
             }
-        } else {
-            if ($this->do_touch($context->session_id, $context->ttl ?? $this->ttl)) {
-                return;
-            }
+        } elseif ($this->do_touch($context->session_id, $context->ttl ?? $this->ttl)) {
+            return;
         }
 
         $this->eventDispatcher->dispatch(new SessionUpdate($this, $context, $session_id));

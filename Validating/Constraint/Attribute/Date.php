@@ -22,18 +22,16 @@ class Date extends AbstractConstraint
         $ts = is_numeric($value) ? (int)$value : strtotime($value);
         if ($ts === false) {
             return false;
-        } else {
-            if (is_object($validation->source)) {
-                $rProperty = new ReflectionProperty($validation->source, $validation->field);
-                if ($rProperty->getType()?->getName() === 'int') {
-                    if (is_string($value)) {
-                        $validation->value = $ts;
-                    }
-                } else {
-                    if (is_int($value)) {
-                        $validation->value = date('Y-m-d H:i:s');
-                    }
+        }
+
+        if (is_object($validation->source)) {
+            $rProperty = new ReflectionProperty($validation->source, $validation->field);
+            if ($rProperty->getType()?->getName() === 'int') {
+                if (is_string($value)) {
+                    $validation->value = $ts;
                 }
+            } elseif (is_int($value)) {
+                $validation->value = date('Y-m-d H:i:s');
             }
         }
 

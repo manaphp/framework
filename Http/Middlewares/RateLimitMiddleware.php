@@ -78,33 +78,25 @@ class RateLimitMiddleware
                     $this->redisCache->setex($key, $period, '1');
                 } elseif ($used >= $limit) {
                     throw new TooManyRequestsException();
+                } elseif (($left = $this->redisCache->pttl($key)) <= 0) {
+                    $this->redisCache->setex($key, $period, '1');
                 } else {
-                    if (($left = $this->redisCache->pttl($key)) <= 0) {
-                        $this->redisCache->setex($key, $period, '1');
-                    } else {
-                        $ideal = (int)(($period - $left / 1000) * $limit / $period) + 1;
-                        if ($used < $ideal) {
-                            $diff = $ideal - $used;
-                            if ($this->redisCache->incrBy($key, $diff) === $diff) {
-                                $this->redisCache->setex($key, $period, '1');
-                            }
-                        } elseif ($used > $ideal + $rateLimit->burst) {
-                            throw new TooManyRequestsException();
-                        } else {
-                            if ($this->redisCache->incr($key) === 1) {
-                                $this->redisCache->expire($key, $period);
-                            }
+                    $ideal = (int)(($period - $left / 1000) * $limit / $period) + 1;
+                    if ($used < $ideal) {
+                        $diff = $ideal - $used;
+                        if ($this->redisCache->incrBy($key, $diff) === $diff) {
+                            $this->redisCache->setex($key, $period, '1');
                         }
-                    }
-                }
-            } else {
-                if (($count = $this->redisCache->incr($key)) === 1) {
-                    $this->redisCache->expire($key, $period);
-                } else {
-                    if ($count > $limit) {
+                    } elseif ($used > $ideal + $rateLimit->burst) {
                         throw new TooManyRequestsException();
+                    } elseif ($this->redisCache->incr($key) === 1) {
+                        $this->redisCache->expire($key, $period);
                     }
                 }
+            } elseif (($count = $this->redisCache->incr($key)) === 1) {
+                $this->redisCache->expire($key, $period);
+            } elseif ($count > $limit) {
+                throw new TooManyRequestsException();
             }
         }
     }

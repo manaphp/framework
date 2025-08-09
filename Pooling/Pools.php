@@ -53,12 +53,10 @@ class Pools implements PoolsInterface
         if (!$queue = $this->pools[$owner][$type] ?? null) {
             $this->pools[$owner] ??= [];
             $this->pools[$owner][$type] = $queue = new Channel($size);
-        } else {
-            if ($queue->length() + $size > $queue->capacity()) {
-                throw new FullException(
-                    ['`{1}` pool of `{2}` capacity({3}) is not big enough', $type, $owner::class, $queue->capacity()]
-                );
-            }
+        } elseif ($queue->length() + $size > $queue->capacity()) {
+            throw new FullException(
+                ['`{1}` pool of `{2}` capacity({3}) is not big enough', $type, $owner::class, $queue->capacity()]
+            );
         }
 
         if (is_array($sample)) {

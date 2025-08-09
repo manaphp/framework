@@ -51,10 +51,8 @@ class Form implements ObjectValueResolverInterface
                 if ($validation->validate($constraint)) {
                     $form->$field = $validation->value;
                 }
-            } else {
-                if (!$rProperty->isInitialized($form)) {
-                    $validation->validate(new Required());
-                }
+            } elseif (!$rProperty->isInitialized($form)) {
+                $validation->validate(new Required());
             }
         }
 

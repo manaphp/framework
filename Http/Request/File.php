@@ -84,11 +84,9 @@ class File implements FileInterface, JsonSerializable
 
         if (PHP_SAPI === 'cli') {
             LocalFS::fileMove($this->file['tmp_name'], $this->alias->resolve($dst));
-        } else {
-            if (!move_uploaded_file($this->file['tmp_name'], $this->alias->resolve($dst))) {
-                $error = error_get_last()['message'] ?? '';
-                throw new FileException(['move_uploaded_file to `{1}` failed: {2}', $dst, $error]);
-            }
+        } elseif (!move_uploaded_file($this->file['tmp_name'], $this->alias->resolve($dst))) {
+            $error = error_get_last()['message'] ?? '';
+            throw new FileException(['move_uploaded_file to `{1}` failed: {2}', $dst, $error]);
         }
 
         if (!chmod($this->alias->resolve($dst), 0644)) {

@@ -60,23 +60,21 @@ class Stream implements EngineInterface
 
             $address = "tcp://$parts[host]:" . ($parts['port'] ?? 80);
             $ctx = stream_context_create();
-        } else {
-            if ($scheme === 'https') {
-                $ssl = [];
-                $ssl['verify_peer'] = $request->options['verify_peer'];
-                $ssl['allow_self_signed'] = $request->options['allow_self_signed'] ??
-                    !$request->options['verify_peer'];
+        } elseif ($scheme === 'https') {
+            $ssl = [];
+            $ssl['verify_peer'] = $request->options['verify_peer'];
+            $ssl['allow_self_signed'] = $request->options['allow_self_signed'] ??
+                !$request->options['verify_peer'];
 
-                if (($cafile = $request->options['cafile']) !== null) {
-                    $ssl['cafile'] = $this->alias->resolve($cafile);
-                }
-
-                $ctx = stream_context_create(['ssl' => $ssl]);
-                $address = "ssl://$host:" . ($port ?? 443);
-            } else {
-                $address = "tcp://$host:" . ($port ?? 80);
-                $ctx = stream_context_create();
+            if (($cafile = $request->options['cafile']) !== null) {
+                $ssl['cafile'] = $this->alias->resolve($cafile);
             }
+
+            $ctx = stream_context_create(['ssl' => $ssl]);
+            $address = "ssl://$host:" . ($port ?? 443);
+        } else {
+            $address = "tcp://$host:" . ($port ?? 80);
+            $ctx = stream_context_create();
         }
 
         $flags = STREAM_CLIENT_CONNECT;

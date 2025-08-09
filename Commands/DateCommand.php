@@ -140,14 +140,12 @@ class DateCommand extends Command
                 $str = trim(strtr($argument, 'Tt', '  '));
                 if (str_contains($str, ' ')) {
                     list($date, $time) = explode(' ', $str);
+                } elseif (str_contains($str, ':')) {
+                    $date = '';
+                    $time = $str;
                 } else {
-                    if (str_contains($str, ':')) {
-                        $date = '';
-                        $time = $str;
-                    } else {
-                        $date = $str;
-                        $time = '';
-                    }
+                    $date = $str;
+                    $time = '';
                 }
             }
         }

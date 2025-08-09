@@ -18,10 +18,8 @@ class RouteAppender implements AppenderInterface
 
     public function append(RequestInterface $request, ResponseInterface $response): void
     {
-        if ($this->enabled ?? $this->app_env === 'dev') {
-            if (($handler = $request->handler()) !== null) {
-                $response->setHeader('X-Router-Route', $handler);
-            }
+        if (($this->enabled ?? $this->app_env === 'dev') && ($handler = $request->handler()) !== null) {
+            $response->setHeader('X-Router-Route', $handler);
         }
     }
 }

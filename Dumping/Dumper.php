@@ -32,12 +32,10 @@ class Dumper implements DumperInterface
             }
 
             $name = $property->getName();
-            if ($property->getAttributes(Autowired::class) !== []) {
-                if (($rType = $property->getType()) !== null) {
-                    $type = $rType instanceof ReflectionNamedType ? $rType : $rType->getTypes()[0];
-                    if (!$type->isBuiltin()) {
-                        continue;
-                    }
+            if (($property->getAttributes(Autowired::class) !== []) && ($rType = $property->getType()) !== null) {
+                $type = $rType instanceof ReflectionNamedType ? $rType : $rType->getTypes()[0];
+                if (!$type->isBuiltin()) {
+                    continue;
                 }
             }
 

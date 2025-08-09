@@ -218,11 +218,9 @@ class Debugger implements DebuggerInterface, ContextAware
     {
         SuppressWarnings::unused($event);
 
-        if ($this->tail) {
-            if (is_array($content = $this->response->getContent())) {
-                $content['debugger'] = $this->response->getHeader('X-Debugger-Link');
-                $this->response->setContent($content);
-            }
+        if ($this->tail && is_array($content = $this->response->getContent())) {
+            $content['debugger'] = $this->response->getHeader('X-Debugger-Link');
+            $this->response->setContent($content);
         }
     }
 

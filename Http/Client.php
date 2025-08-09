@@ -220,13 +220,11 @@ class Client implements ClientInterface
                     $headers[self::HEADER_CONTENT_TYPE] = 'application/x-www-form-urlencoded';
                 }
             }
+        } elseif (($headers[self::HEADER_CONTENT_TYPE] ?? null) === 'application/x-www-form-urlencoded') {
+            $body = http_build_query($body);
         } else {
-            if (($headers[self::HEADER_CONTENT_TYPE] ?? null) === 'application/x-www-form-urlencoded') {
-                $body = http_build_query($body);
-            } else {
-                $headers[self::HEADER_CONTENT_TYPE] ??= 'application/json';
-                $body = json_stringify($body);
-            }
+            $headers[self::HEADER_CONTENT_TYPE] ??= 'application/json';
+            $body = json_stringify($body);
         }
 
         $headers[self::HEADER_X_REQUESTED_WITH] ??= 'XMLHttpRequest';

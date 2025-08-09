@@ -113,10 +113,8 @@ class Console implements ConsoleInterface
 
     public function write(string|Stringable $message, array $context = [], int $options = 0): void
     {
-        if (is_string($message)) {
-            if ($context !== [] && str_contains($message, '{')) {
-                $message = $this->messageFormatter->interpolate($message, $context);
-            }
+        if (is_string($message) && $context !== [] && str_contains($message, '{')) {
+            $message = $this->messageFormatter->interpolate($message, $context);
         }
 
         if ($options === 0) {
