@@ -15,12 +15,12 @@ use ManaPHP\Exception\NotSupportedException;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\Metrics\ExporterInterface;
 use ManaPHP\Http\RequestInterface;
-use ManaPHP\Http\Router\MappingScannerInterface;
 use ManaPHP\Http\Server\Listeners\LogServerStatusListener;
 use ManaPHP\Http\Server\Listeners\RenameProcessTitleListener;
 use ManaPHP\Swoole\ProcessesInterface;
 use ManaPHP\Swoole\WorkersInterface;
 use ManaPHP\Ws\HandlerInterface;
+use ManaPHP\Ws\Router\MappingScannerInterface;
 use ManaPHP\Ws\Server\Event\ServerStart;
 use ManaPHP\Ws\Server\Event\ServerStop;
 use ManaPHP\Ws\ServerInterface;
@@ -236,7 +236,7 @@ class Swoole implements ServerInterface
         /** @var ArrayObject $current_context */
         $current_context = Coroutine::getContext();
         foreach ($old_context as $k => $v) {
-            $current_context->$k = $v;
+            @$current_context->$k = $v;
         }
 
         try {

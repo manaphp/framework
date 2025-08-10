@@ -11,6 +11,7 @@ use ManaPHP\Http\Router\Attribute\MappingInterface;
 use ManaPHP\Http\Router\Attribute\RequestMapping;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
+use ManaPHP\Ws\Router\Attribute\WebSocketMapping;
 use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
@@ -90,12 +91,18 @@ class MappingScanner implements MappingScannerInterface
             }
 
             $rClass = new ReflectionClass($class);
-            $attributes = $rClass->getAttributes(RequestMapping::class);
-            if ($attributes === []) {
+
+            $requestMappings = $rClass->getAttributes(RequestMapping::class);
+            if ($requestMappings === []) {
+                $webSocketMappings = $rClass->getAttributes(WebSocketMapping::class);
+                if ($webSocketMappings !== []) {
+                    $webSocketMapping = $webSocketMappings[0]->newInstance();
+                    $this->router->addGet($webSocketMapping->getPath(), $class);
+                }
                 continue;
             }
 
-            $this->scanController($rClass, $attributes[0]->newInstance());
+            $this->scanController($rClass, $requestMappings[0]->newInstance());
         }
     }
 

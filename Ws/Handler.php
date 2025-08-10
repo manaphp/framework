@@ -5,27 +5,38 @@ declare(strict_types=1);
 namespace ManaPHP\Ws;
 
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Di\InvokerInterface;
 use ManaPHP\Exception\AbortException;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\ErrorHandlerInterface;
 use ManaPHP\Http\Event\RequestAuthenticated;
 use ManaPHP\Http\Event\RequestAuthenticating;
-use ManaPHP\Http\Event\RequestBegin;
-use ManaPHP\Http\Event\RequestEnd;
+use ManaPHP\Http\Event\ResponseStringify;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\Response;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Http\Router\NotFoundRouteException;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Identifying\IdentityInterface;
+use ManaPHP\Ws\Attribute\CloseMapping;
+use ManaPHP\Ws\Attribute\MappingInterface;
+use ManaPHP\Ws\Attribute\MessageMapping;
+use ManaPHP\Ws\Attribute\OpenMapping;
 use ManaPHP\Ws\Server\Event\Close;
 use ManaPHP\Ws\Server\Event\Open;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use ReflectionAttribute;
+use ReflectionClass;
+use ReflectionMethod;
 use Throwable;
 use function is_array;
 use function is_int;
 use function is_string;
+use function json_parse;
 use function json_stringify;
+use function str_ends_with;
+use function str_starts_with;
 
 class Handler implements HandlerInterface
 {
@@ -36,90 +47,145 @@ class Handler implements HandlerInterface
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected ErrorHandlerInterface $errorHandler;
+    #[Autowired] protected ConnCtxInterface $connCtx;
+    #[Autowired] protected InvokerInterface $invoker;
+    #[Autowired] protected ContainerInterface $container;
 
-    /**
-     * @noinspection PhpRedundantCatchClauseInspection
-     * @noinspection PhpUnusedLocalVariableInspection
-     */
-    public function handle(int $fd, string $event): void
+    public const CONN_CTX_HANDLER = '.handler';
+    public const CONN_CTX_FD = '.fd';
+
+    protected array $mappings = [];
+
+    protected function getMappings(string $handler): array
+    {
+        if (($mappings = $this->mappings[$handler] ?? null) !== null) {
+            return $mappings;
+        }
+
+        $mappings = [];
+        $rc = new ReflectionClass($handler);
+        foreach ($rc->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            $attributes = $method->getAttributes(MappingInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+            if ($attributes !== []) {
+                $mapping = $attributes[0]->newInstance();
+                if ($mapping instanceof MessageMapping) {
+                    $mappings[MessageMapping::class] = $method->getName();
+                } else {
+                    $mappings[$mapping::class] = $method->getName();
+                }
+            }
+        }
+
+        return $this->mappings[$handler] = $mappings;
+    }
+
+    public function onOpen(int $fd): void
     {
         try {
-            $throwable = null;
-
-            $this->eventDispatcher->dispatch(new RequestBegin($this->request));
-
-            if ($event === 'open') {
-                $this->eventDispatcher->dispatch(new RequestAuthenticating());
-                $this->eventDispatcher->dispatch(new RequestAuthenticated());
-            }
+            $this->eventDispatcher->dispatch(new RequestAuthenticating());
+            $this->eventDispatcher->dispatch(new RequestAuthenticated());
 
             if (($matcher = $this->router->match()) === null) {
                 throw new NotFoundRouteException(['router does not have matched route']);
             }
 
-            $returnValue = $this->dispatch($matcher->getHandler(), $matcher->getVariables());
+            $handler = $matcher->getHandler();
 
-            if ($returnValue === null || $returnValue instanceof Response) {
-                SuppressWarnings::noop();
-            } elseif (is_string($returnValue)) {
-                $this->response->json(['code' => $returnValue, 'msg' => '']);
-            } elseif (is_array($returnValue)) {
-                $this->response->json(['code' => 0, 'msg' => '', 'data' => $returnValue]);
-            } elseif (is_int($returnValue)) {
-                $this->response->json(['code' => $returnValue, 'msg' => '']);
-            } else {
-                $this->response->json($returnValue);
-            }
+            $this->connCtx->set(self::CONN_CTX_HANDLER, $handler);
+            $this->connCtx->set(self::CONN_CTX_FD, $fd);
 
-            if ($event === 'open') {
-                $this->eventDispatcher->dispatch(new Open($fd));
-            } elseif ($event === 'close') {
-                $this->eventDispatcher->dispatch(new Close($fd));
+            $method = $this->getMappings($handler)[OpenMapping::class] ?? null;
+            if ($method !== null) {
+                $this->dispatch($handler, $method, ['fd' => $fd]);
             }
+            $this->eventDispatcher->dispatch(new Open($fd));
         } catch (AbortException $exception) {
             SuppressWarnings::noop();
         } catch (Throwable $throwable) {
             $this->errorHandler->handle($throwable);
         }
 
-        if ($content = $this->response->getContent()) {
-            if (!is_string($content)) {
-                $content = json_stringify($content);
-                $this->response->setContent($content);
-            }
-            $this->wsServer->push($fd, $content);
-        }
-
-        $this->eventDispatcher->dispatch(new RequestEnd($this->request, $this->response));
-
-        if ($throwable) {
-            $this->wsServer->disconnect($fd);
-        }
-    }
-
-    public function onOpen(int $fd): void
-    {
-        $this->handle($fd, 'open');
+        $this->sendResponse($fd);
     }
 
     public function onClose(int $fd): void
     {
-        $this->handle($fd, 'close');
+        try {
+            $handler = $this->connCtx->get(self::CONN_CTX_HANDLER);
+            $method = $this->getMappings($handler)[CloseMapping::class] ?? null;
+            if ($method !== null) {
+                $this->dispatch($handler, $method, ['fd' => $fd]);
+            }
+
+            $this->eventDispatcher->dispatch(new Close($fd));
+        } catch (AbortException $exception) {
+            SuppressWarnings::noop();
+        } catch (Throwable $throwable) {
+            $this->errorHandler->handle($throwable);
+        }
+
+        $this->sendResponse($fd);
     }
 
     public function onMessage(int $fd, string $data): void
     {
         $this->request->set('data', $data);
-        $this->handle($fd, 'message');
+
+        try {
+            $handler = $this->connCtx->get(self::CONN_CTX_HANDLER);
+            $method = $this->getMappings($handler)[MessageMapping::class] ?? null;
+            if (str_starts_with($data, '{') && str_ends_with($data, '}')) {
+                $parameters = json_parse($data) ?? [];
+            } else {
+                $parameters = [];
+            }
+            $parameters[Message::class] = new Message($fd, $data);
+
+            $this->dispatch($handler, $method, $parameters);
+        } catch (AbortException $exception) {
+            SuppressWarnings::noop();
+        } catch (Throwable $throwable) {
+            $this->errorHandler->handle($throwable);
+        }
+
+        $this->sendResponse($fd);
+
         $this->request->delete('data');
     }
 
-    /** @noinspection PhpMixedReturnTypeCanBeReducedInspection */
-    public function dispatch(string $handler, array $params): mixed
+    public function dispatch(string $handler, string $method, array $parameters): void
     {
-        SuppressWarnings::unused($handler);
-        SuppressWarnings::unused($params);
+        $instance = $this->container->get($handler);
 
-        return 0;
+        $this->invoker->call([$instance, $method], $parameters);
+        $returnValue = null;
+
+        if ($returnValue === null || $returnValue instanceof Response) {
+            SuppressWarnings::noop();
+        } elseif (is_string($returnValue)) {
+            $this->response->json(['code' => $returnValue, 'msg' => '']);
+        } elseif (is_array($returnValue)) {
+            $this->response->json(['code' => 0, 'msg' => '', 'data' => $returnValue]);
+        } elseif (is_int($returnValue)) {
+            $this->response->json(['code' => $returnValue, 'msg' => '']);
+        } else {
+            $this->response->json($returnValue);
+        }
+    }
+
+    protected function sendResponse(int $fd): void
+    {
+        if (($content = $this->response->getContent()) === null) {
+            return;
+        }
+
+        if (!is_string($content)) {
+            $this->eventDispatcher->dispatch(new ResponseStringify($this->response));
+            if (!is_string($content = $this->response->getContent())) {
+                $this->response->setContent($content = json_stringify($content));
+            }
+        }
+
+        $this->wsServer->push($fd, $content);
     }
 }
