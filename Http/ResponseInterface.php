@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http;
 
+use Stringable;
+
 interface ResponseInterface
 {
     public function setCookie(
@@ -74,7 +76,5 @@ interface ResponseInterface
 
     public function isChunked(): bool;
 
-    public function write(?string $chunk): void;
-
-    public function writeSse(array $fields): void;
+    public function write(string|Stringable $chunk): void;
 }

@@ -21,6 +21,7 @@ use ManaPHP\Http\Response\Appenders\RequestIdAppender;
 use ManaPHP\Http\Response\Appenders\ResponseTimeAppender;
 use ManaPHP\Http\Response\Appenders\RouteAppender;
 use Psr\Container\ContainerInterface;
+use Stringable;
 use function array_keys;
 use function basename;
 use function current;
@@ -33,7 +34,6 @@ use function is_array;
 use function is_string;
 use function pathinfo;
 use function rewind;
-use function sprintf;
 use function str_contains;
 use function stream_get_contents;
 use function time;
@@ -446,7 +446,7 @@ class Response implements ResponseInterface, ContextAware
         return $this->getContext()->chunked;
     }
 
-    public function write(?string $chunk): void
+    public function write(string|Stringable $chunk): void
     {
         $context = $this->getContext();
 
@@ -461,18 +461,7 @@ class Response implements ResponseInterface, ContextAware
         }
 
         if ($chunk !== '') {
-            $this->server->write($chunk);
+            $this->server->write((string)$chunk);
         }
-    }
-
-    public function writeSse(array $fields): void
-    {
-        $event = '';
-        foreach ($fields as $key => $value) {
-            $event .= sprintf('%s: %s', $key, $value) . "\r\n";
-        }
-        $event .= "\r\n";
-
-        $this->write($event);
     }
 }
