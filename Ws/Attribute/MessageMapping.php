@@ -7,7 +7,9 @@ use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD)]
 class MessageMapping implements MappingInterface
-
 {
+    public function __construct(public string $pattern = '')
+    {
 
+    }
 }

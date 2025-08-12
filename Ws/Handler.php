@@ -30,6 +30,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
+use function explode;
 use function is_array;
 use function is_int;
 use function is_string;
@@ -69,7 +70,7 @@ class Handler implements HandlerInterface
             if ($attributes !== []) {
                 $mapping = $attributes[0]->newInstance();
                 if ($mapping instanceof MessageMapping) {
-                    $mappings[MessageMapping::class] = $method->getName();
+                    $mappings[MessageMapping::class][$mapping->pattern] = $method->getName();
                 } else {
                     $mappings[$mapping::class] = $method->getName();
                 }
@@ -133,7 +134,6 @@ class Handler implements HandlerInterface
 
         try {
             $handler = $this->connCtx->get(self::CONN_CTX_HANDLER);
-            $method = $this->getMappings($handler)[MessageMapping::class] ?? null;
             if (str_starts_with($data, '{') && str_ends_with($data, '}')) {
                 $parameters = json_parse($data) ?? [];
             } else {
@@ -141,7 +141,20 @@ class Handler implements HandlerInterface
             }
             $parameters[Message::class] = new Message($fd, $data);
 
-            $this->dispatch($handler, $method, $parameters);
+            $mappings = $this->getMappings($handler)[MessageMapping::class] ?? null;
+            $method = $mappings[''] ?? null;
+            foreach ($mappings ?? [] as $pattern => $m) {
+                if ($pattern !== '') {
+                    list($key, $value) = explode('=', $pattern, 2);
+                    if ((string)($parameters[$key] ?? null) === $value) {
+                        $method = $m;
+                    }
+                }
+            }
+
+            if ($method !== null) {
+                $this->dispatch($handler, $method, $parameters);
+            }
         } catch (AbortException $exception) {
             SuppressWarnings::noop();
         } catch (Throwable $throwable) {
@@ -157,8 +170,7 @@ class Handler implements HandlerInterface
     {
         $instance = $this->container->get($handler);
 
-        $this->invoker->call([$instance, $method], $parameters);
-        $returnValue = null;
+        $returnValue = $this->invoker->call([$instance, $method], $parameters);
 
         if ($returnValue === null || $returnValue instanceof Response) {
             SuppressWarnings::noop();
