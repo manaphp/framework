@@ -64,9 +64,9 @@ abstract class AbstractServer implements ServerInterface
         }
     }
 
-    public function write(?string $chunk): bool
+    public function write(string $chunk): bool
     {
-        if ($chunk !== null) {
+        if ($chunk !== '') {
             echo sprintf('%X', strlen($chunk)) . "\r\n" . $chunk . "\r\n";
         } else {
             echo "0\r\n\r\n";

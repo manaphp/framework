@@ -454,16 +454,10 @@ class Response implements ResponseInterface, ContextAware
             $context->chunked = true;
 
             $this->applyAppenders();
-            $this->setHeader('Cache-Control', 'no-cache');
-            $this->setHeader('Connection', 'keep-alive');
             $this->setHeader('Transfer-Encoding', 'chunked');
             $this->server->sendHeaders();
         }
 
-        if ($chunk !== '') {
-            return $this->server->write((string)$chunk);
-        } else {
-            return true;
-        }
+        return $this->server->write((string)$chunk);
     }
 }
