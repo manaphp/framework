@@ -335,14 +335,14 @@ class Swoole extends AbstractServer implements ContextAware
         }
     }
 
-    public function write(?string $chunk): void
+    public function write(?string $chunk): bool
     {
         $context = $this->getContext();
 
         if ($chunk === null) {
-            $context->response->end();
+            return $context->response->end();
         } else {
-            $context->response->write($chunk);
+            return $context->response->write($chunk);
         }
     }
 }

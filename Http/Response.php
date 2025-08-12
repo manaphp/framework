@@ -446,7 +446,7 @@ class Response implements ResponseInterface, ContextAware
         return $this->getContext()->chunked;
     }
 
-    public function write(string|Stringable $chunk): void
+    public function write(string|Stringable $chunk): bool
     {
         $context = $this->getContext();
 
@@ -461,7 +461,9 @@ class Response implements ResponseInterface, ContextAware
         }
 
         if ($chunk !== '') {
-            $this->server->write((string)$chunk);
+            return $this->server->write((string)$chunk);
+        } else {
+            return true;
         }
     }
 }

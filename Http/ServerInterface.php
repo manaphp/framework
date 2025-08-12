@@ -12,5 +12,5 @@ interface ServerInterface
 
     public function sendBody(): void;
 
-    public function write(?string $chunk): void;
+    public function write(?string $chunk): bool;
 }
