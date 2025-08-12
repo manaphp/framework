@@ -186,6 +186,8 @@ class RequestHandler implements RequestHandlerInterface
         if ($this->request->method() === 'GET') {
             if ($rMethod->getAttributes(SseGetMapping::class, ReflectionAttribute::IS_INSTANCEOF) !== []) {
                 $this->response->setHeader('Content-Type', 'text/event-stream');
+                $this->response->setHeader('Connection', 'keep-alive');
+                $this->response->setHeader('Cache-Control', 'no-cache');
                 $this->response->write('');
 
                 $arguments = $this->argumentsResolver->resolve($rMethod);
