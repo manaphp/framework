@@ -11,8 +11,6 @@ use ManaPHP\Eventing\EventDispatcherInterface;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Exception\AbortException;
 use ManaPHP\Helper\SuppressWarnings;
-use ManaPHP\Http\Dispatcher\NotFoundActionException;
-use ManaPHP\Http\Dispatcher\NotFoundControllerException;
 use ManaPHP\Http\Event\RequestAuthenticated;
 use ManaPHP\Http\Event\RequestAuthenticating;
 use ManaPHP\Http\Event\RequestAuthorized;
@@ -32,6 +30,8 @@ use ManaPHP\Http\Event\RequestRouting;
 use ManaPHP\Http\Event\RequestValidated;
 use ManaPHP\Http\Event\RequestValidating;
 use ManaPHP\Http\Event\ResponseStringify;
+use ManaPHP\Http\RequestHandler\NotFoundActionException;
+use ManaPHP\Http\RequestHandler\NotFoundControllerException;
 use ManaPHP\Http\Router\NotFoundRouteException;
 use ManaPHP\Viewing\View\Attribute\ViewMapping;
 use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
@@ -105,7 +105,7 @@ class RequestHandler implements RequestHandlerInterface
             if (($matcher = $this->router->match()) === null) {
                 throw new NotFoundRouteException(
                     ['router does not have matched route for `{1} {2}`', $this->request->method(),
-                     $this->router->getRewriteUri()]
+                        $this->router->getRewriteUri()]
                 );
             }
             $this->eventDispatcher->dispatch(new RequestRouted($this->router, $matcher));
