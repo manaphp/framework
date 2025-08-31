@@ -6,8 +6,6 @@ namespace ManaPHP\Ws\Pushing;
 
 interface ServerInterface
 {
-    public function start(): void;
-
     public function open(int $fd): void;
 
     public function close(int $fd): void;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ManaPHP\Ws\Pushing;
 
+use ManaPHP\BootstrapperInterface;
 use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\RequestInterface;
@@ -16,7 +17,7 @@ use Psr\Log\LoggerInterface;
 use function count;
 use function strlen;
 
-class Server implements ServerInterface
+class Server implements ServerInterface, BootstrapperInterface
 {
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected LoggerInterface $logger;
@@ -180,7 +181,7 @@ class Server implements ServerInterface
         }
     }
 
-    public function start(): void
+    public function bootstrap(): void
     {
         Coroutine::create(
             function () {
