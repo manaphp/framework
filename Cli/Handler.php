@@ -7,6 +7,7 @@ namespace ManaPHP\Cli;
 use ManaPHP\Cli\Event\CliInvoked;
 use ManaPHP\Cli\Event\CliInvoking;
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Di\InvokerInterface;
 use ManaPHP\Helper\Str;
 use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -31,6 +32,7 @@ class Handler implements HandlerInterface
     #[Autowired] protected ConsoleInterface $console;
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected OptionsInterface $options;
+    #[Autowired] protected InvokerInterface $invoker;
 
     #[Autowired] protected array $commands = ['App\Commands\*Command', 'ManaPHP\Commands\*Command'];
 
@@ -133,7 +135,7 @@ class Handler implements HandlerInterface
 
         $this->eventDispatcher->dispatch(new CliInvoking($this, $instance, $method, $action));
         $arguments = $this->argumentsResolver->resolve(new ReflectionMethod($instance, $method));
-        $return = $instance->$method(...$arguments);
+        $return = $this->invoker->call([$instance, $method], $arguments);
         $this->eventDispatcher->dispatch(new CliInvoked($this, $instance, $method, $action, $return));
         if ($return === null) {
             return 0;
