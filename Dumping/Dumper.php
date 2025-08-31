@@ -15,6 +15,7 @@ use function class_implements;
 use function is_array;
 use function is_object;
 use function is_string;
+use function str_replace;
 use function strlen;
 use function substr;
 
@@ -78,6 +79,8 @@ class Dumper implements DumperInterface
             }
 
             if (is_string($value)) {
+                $value = str_replace('</script>', '[/script]', $value);
+
                 if (strlen($value) > 128) {
                     $value = substr($value, 0, 128) . '...';
                 }
