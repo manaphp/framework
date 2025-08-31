@@ -171,7 +171,7 @@ class View implements ViewInterface, ContextAware
 
         $rClass = new ReflectionClass($widget);
         $widgetFile = $rClass->getFileName();
-        $view = dirname($widgetFile, 2) . '/Widgets/' . basename($rClass->getShortName(), 'Widget');
+        $view = dirname($widgetFile, 2) . '/Views/Widgets/' . basename($rClass->getShortName(), 'Widget');
 
         $widgetInstance = $this->container->get($widget);
         $vars = $widgetInstance->run($options);
