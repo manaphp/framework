@@ -101,7 +101,7 @@ class Handler implements HandlerInterface
             }
             $this->eventDispatcher->dispatch(new Open($fd));
         } catch (AbortException $exception) {
-            SuppressWarnings::noop();
+            SuppressWarnings::unused($exception);
         } catch (Throwable $throwable) {
             $this->errorHandler->handle($throwable);
         }
@@ -120,7 +120,7 @@ class Handler implements HandlerInterface
 
             $this->eventDispatcher->dispatch(new Close($fd));
         } catch (AbortException $exception) {
-            SuppressWarnings::noop();
+            SuppressWarnings::unused($exception);
         } catch (Throwable $throwable) {
             $this->errorHandler->handle($throwable);
         }
@@ -156,7 +156,7 @@ class Handler implements HandlerInterface
                 $this->dispatch($handler, $method, $parameters);
             }
         } catch (AbortException $exception) {
-            SuppressWarnings::noop();
+            SuppressWarnings::unused($exception);
         } catch (Throwable $throwable) {
             $this->errorHandler->handle($throwable);
         }
