@@ -102,6 +102,7 @@ class MappingScanner implements MappingScannerInterface
                 continue;
             }
 
+            /** @noinspection PhpParamsInspection */
             $this->scanController($rClass, $requestMappings[0]->newInstance());
         }
     }

@@ -71,6 +71,7 @@ class Form implements ObjectValueResolverInterface
                     continue;
                 }
 
+                /** @noinspection PhpParamsInspection */
                 if (!$validation->validate($attribute->newInstance())) {
                     break;
                 }
