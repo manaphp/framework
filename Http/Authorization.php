@@ -72,6 +72,7 @@ class Authorization implements AuthorizationInterface, ContextAware
             }
         }
 
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $attribute->newInstance();
     }
 

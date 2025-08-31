@@ -32,11 +32,13 @@ class RateLimitMiddleware
     protected function getRateLimit(ReflectionMethod $rMethod): RateLimitAttribute|false
     {
         if (($attributes = $rMethod->getAttributes(RateLimitAttribute::class)) !== []) {
+            /** @noinspection PhpIncompatibleReturnTypeInspection */
             return $attributes[0]->newInstance();
         }
 
         $rClass = $rMethod->getDeclaringClass();
         if (($attributes = $rClass->getAttributes(RateLimitAttribute::class)) !== []) {
+            /** @noinspection PhpIncompatibleReturnTypeInspection */
             return $attributes[0]->newInstance();
         }
 

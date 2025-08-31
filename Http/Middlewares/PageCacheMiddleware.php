@@ -50,6 +50,7 @@ class PageCacheMiddleware implements ContextAware
     protected function getPageCache(ReflectionMethod $rMethod): PageCacheAttribute|false
     {
         if (($attributes = $rMethod->getAttributes(PageCacheAttribute::class)) !== []) {
+            /** @noinspection PhpIncompatibleReturnTypeInspection */
             return $attributes[0]->newInstance();
         } else {
             return false;
