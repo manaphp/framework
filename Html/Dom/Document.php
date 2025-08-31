@@ -175,9 +175,8 @@ class Document
         }
     }
 
-    public function absolutizeAHref(?string $selector = null, ?DOMDocument $context = null): static
+    public function absolutizeAHref(?string $selector = null, ?DOMElement $context = null): static
     {
-        /** @var DOMElement $item */
         if ($selector) {
             foreach ($this->query->xpath($selector, $context) as $item) {
                 if ($item->nodeName === 'a') {
