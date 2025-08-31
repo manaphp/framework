@@ -6,5 +6,5 @@ namespace ManaPHP\Di;
 
 interface InvokerInterface
 {
-    public function call(callable $callable, array $parameters = []): mixed;
+    public function call(callable $callable, array $parameters = [], $useInterceptor = true): mixed;
 }

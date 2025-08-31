@@ -6,5 +6,5 @@ namespace ManaPHP\Di;
 
 interface MakerInterface
 {
-    public function make(string $name, array $parameters = []): mixed;
+    public function make(string $name, array $parameters = [], ?string $id = null): mixed;
 }

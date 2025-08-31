@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Http;
 
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Di\InvokerInterface;
 use ManaPHP\Di\MakerInterface;
 use ManaPHP\Eventing\EventDispatcherInterface;
 use ManaPHP\Eventing\ListenerProviderInterface;
@@ -60,6 +61,7 @@ class RequestHandler implements RequestHandlerInterface
     #[Autowired] protected ErrorHandlerInterface $errorHandler;
     #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
     #[Autowired] protected ViewInterface $view;
+    #[Autowired] protected InvokerInterface $invoker;
 
     #[Autowired] protected array $middlewares = [];
 
@@ -131,21 +133,9 @@ class RequestHandler implements RequestHandlerInterface
 
             $this->eventDispatcher->dispatch(new RequestReady($method));
 
-            $interceptors = $this->getInterceptors($method);
-
-            foreach ($interceptors as $interceptor) {
-                if (!$interceptor->preHandle($method)) {
-                    throw new AbortException('The process was terminated by RequestHandler prematurely.');
-                }
-            }
-
             $this->eventDispatcher->dispatch(new RequestInvoking($method));
             $return = $this->invoke($method);
             $this->eventDispatcher->dispatch(new RequestInvoked($method, $return));
-
-            foreach ($interceptors as $interceptor) {
-                $interceptor->postHandle($method, $return);
-            }
 
             $this->handleInternal($return);
         } catch (AbortException) {
@@ -190,7 +180,7 @@ class RequestHandler implements RequestHandlerInterface
                 if ($viewMapping instanceof ViewMapping) {
                     $arguments = $this->argumentsResolver->resolve($rMethod);
 
-                    $vars = $controller->$method(...$arguments);
+                    $vars = $this->invoker->call([$controller, $method], $arguments);
                     if (is_array($vars)) {
                         $this->view->setVars($vars);
                     }
@@ -206,41 +196,6 @@ class RequestHandler implements RequestHandlerInterface
 
         $arguments = $this->argumentsResolver->resolve($rMethod);
 
-        return $controller->$method(...$arguments);
-    }
-
-    /**
-     * @param ReflectionMethod $method
-     *
-     * @return InterceptorInterface[]
-     */
-    protected function getInterceptors(ReflectionMethod $method): array
-    {
-        $attributes = [];
-        $controller = $method->getDeclaringClass();
-        foreach (
-            $controller->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute
-        ) {
-            $attributes[$attribute->getName()] = $attribute;
-        }
-
-        foreach ($method->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF) as $attribute)
-        {
-            $attributes[$attribute->getName()] = $attribute;
-        }
-
-        $interceptors = [];
-        foreach ($attributes as $attribute) {
-            $arguments = $attribute->getArguments();
-            $name = $attribute->getName();
-
-            if ($arguments === []) {
-                $interceptors[] = $this->container->get($name);
-            } else {
-                $interceptors[] = $this->maker->make($name, $arguments);
-            }
-        }
-
-        return $interceptors;
+        return $this->invoker->call([$controller, $method], $arguments);
     }
 }

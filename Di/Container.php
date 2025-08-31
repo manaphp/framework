@@ -6,9 +6,11 @@ namespace ManaPHP\Di;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config as ConfigAttribute;
+use ManaPHP\Di\Attribute\InterceptorInterface;
 use ManaPHP\Di\Event\SingletonCreated;
 use ManaPHP\Exception\MisuseException;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use ReflectionAttribute;
 use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;
@@ -215,7 +217,7 @@ class Container implements ContainerInterface
 
             $this->injectProperties($instance, $rClass, $parameters);
 
-            $this->call([$instance, '__construct'], $parameters);
+            $this->call([$instance, '__construct'], $parameters, false);
         } else {
             $instance = new $name();
 
@@ -260,7 +262,7 @@ class Container implements ContainerInterface
             if (($object = $this->instances[$name] ?? null) === null) {
                 $object = $this->makeInternal($name, [], $name);
             }
-            $instance = $this->call([$object, '__invoke'], compact('parameters', 'id'));
+            $instance = $this->call([$object, '__invoke'], compact('parameters', 'id'), false);
         } else {
             $instance = $this->makeInternal($name, $parameters, $id);
         }
@@ -338,7 +340,7 @@ class Container implements ContainerInterface
         }
     }
 
-    public function call(callable $callable, array $parameters = []): mixed
+    public function call(callable $callable, array $parameters = [], $useInterceptor = true): mixed
     {
         if (is_array($callable)) {
             $rFunction = new ReflectionMethod($callable[0], $callable[1]);
@@ -375,6 +377,32 @@ class Container implements ContainerInterface
             $args[] = $value;
         }
 
-        return $callable(...$args);
+        if ($useInterceptor && $rFunction instanceof ReflectionMethod) {
+            $interceptors = $this->getInterceptors($rFunction);
+
+            /** @var InterceptorInterface $interceptor */
+            foreach ($interceptors as $interceptor) {
+                $interceptor->preHandle($rFunction);
+            }
+            $return = $callable(...$args);
+            foreach ($interceptors as $interceptor) {
+                $interceptor->postHandle($rFunction, $return);
+            }
+            return $return;
+        } else {
+            return $callable(...$args);
+        }
+    }
+
+    protected function getInterceptors(ReflectionMethod $rMethod): array
+    {
+        $interceptors = [];
+
+        $attributes = $rMethod->getAttributes(InterceptorInterface::class, ReflectionAttribute::IS_INSTANCEOF);
+        foreach ($attributes as $attribute) {
+            $interceptors[] = $this->make($attribute->getName(), $attribute->getArguments());
+        }
+
+        return $interceptors;
     }
 }

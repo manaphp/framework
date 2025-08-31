@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Http;
 
 use ManaPHP\Di\Attribute\Autowired;
+use ManaPHP\Di\Attribute\InterceptorInterface;
 use ReflectionMethod;
 
 class Interceptor implements InterceptorInterface
