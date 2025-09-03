@@ -395,7 +395,9 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
 
         $items = $this->fetch();
 
-        if (count($items) === $size) {
+        if (count($items) === 0) {
+            $count = $this->offset === 0 ? 0 : $this->count();
+        } elseif (count($items) === $size) {
             $count = $this->count();
         } else {
             $count = $this->offset + count($items);
