@@ -330,6 +330,8 @@ class Container implements ContainerInterface
     {
         if (isset($this->instances[$id])) {
             return true;
+        } elseif (str_contains($id, '#')) {
+            return isset($this->definitions[$id]);
         } elseif (isset($this->definitions[$id])) {
             return true;
         } elseif (str_contains($id, '.')) {
