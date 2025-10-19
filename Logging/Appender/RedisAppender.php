@@ -8,12 +8,12 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Logging\AppenderInterface;
 use ManaPHP\Logging\Log;
-use ManaPHP\Redis\RedisBrokerInterface;
+use ManaPHP\Redis\RedisInterface;
 use function sprintf;
 
 class RedisAppender implements AppenderInterface
 {
-    #[Autowired] protected RedisBrokerInterface $redisBroker;
+    #[Autowired] protected RedisInterface $redisBroker;
 
     #[Autowired] protected ?string $key;
 

@@ -16,7 +16,7 @@ use ManaPHP\Http\Event\RequestReady;
 use ManaPHP\Http\Event\RequestResponding;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
-use ManaPHP\Redis\RedisCacheInterface;
+use ManaPHP\Redis\RedisInterface;
 use ReflectionMethod;
 use function in_array;
 use function is_array;
@@ -28,7 +28,7 @@ class PageCacheMiddleware implements ContextAware
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
-    #[Autowired] protected RedisCacheInterface $redisCache;
+    #[Autowired] protected RedisInterface $redisCache;
 
     #[Config] protected string $app_id;
 

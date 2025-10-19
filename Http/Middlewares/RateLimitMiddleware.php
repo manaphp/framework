@@ -12,7 +12,7 @@ use ManaPHP\Http\Controller\Attribute\RateLimit as RateLimitAttribute;
 use ManaPHP\Http\Event\RequestValidating;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Identifying\IdentityInterface;
-use ManaPHP\Redis\RedisCacheInterface;
+use ManaPHP\Redis\RedisInterface;
 use ReflectionMethod;
 use function sprintf;
 use function strlen;
@@ -21,7 +21,7 @@ class RateLimitMiddleware
 {
     #[Autowired] protected IdentityInterface $identity;
     #[Autowired] protected RequestInterface $request;
-    #[Autowired] protected RedisCacheInterface $redisCache;
+    #[Autowired] protected RedisInterface $redisCache;
 
     #[Autowired] protected ?string $prefix;
 

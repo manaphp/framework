@@ -7,13 +7,13 @@ namespace ManaPHP\Http\Session\Adapter;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Http\AbstractSession;
-use ManaPHP\Redis\RedisCacheInterface;
+use ManaPHP\Redis\RedisInterface;
 use function is_string;
 use function sprintf;
 
 class Redis extends AbstractSession
 {
-    #[Autowired] protected RedisCacheInterface $redisCache;
+    #[Autowired] protected RedisInterface $redisCache;
 
     #[Autowired] protected ?string $prefix;
 

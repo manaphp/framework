@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace ManaPHP\Messaging;
 
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Redis\RedisBrokerInterface;
+use ManaPHP\Redis\RedisInterface;
 
 class PubSub implements PubSubInterface
 {
-    #[Autowired] protected RedisBrokerInterface $redisBroker;
+    #[Autowired] protected RedisInterface $redisBroker;
 
     public function subscribe(array $channels, callable $callback): void
     {

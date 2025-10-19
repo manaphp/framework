@@ -6,7 +6,7 @@ namespace ManaPHP\Caching;
 
 use DateInterval;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Redis\RedisCacheInterface;
+use ManaPHP\Redis\RedisInterface;
 use Psr\SimpleCache\CacheInterface;
 use function count;
 use function json_parse;
@@ -14,7 +14,7 @@ use function json_stringify;
 
 class SimpleCache implements CacheInterface
 {
-    #[Autowired] protected RedisCacheInterface $redisCache;
+    #[Autowired] protected RedisInterface $redisCache;
 
     #[Autowired] protected string $prefix = 'cache:';
 

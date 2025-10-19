@@ -7,7 +7,7 @@ namespace ManaPHP\Commands;
 use ManaPHP\Cli\Command;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
-use ManaPHP\Redis\RedisCacheInterface;
+use ManaPHP\Redis\RedisInterface;
 use function explode;
 use function sprintf;
 use function str_contains;
@@ -16,7 +16,7 @@ use function str_starts_with;
 
 class DebuggerCommand extends Command
 {
-    #[Autowired] protected RedisCacheInterface $redisCache;
+    #[Autowired] protected RedisInterface $redisCache;
 
     #[Config] protected string $app_id;
 

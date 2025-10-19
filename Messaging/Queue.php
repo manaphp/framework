@@ -6,12 +6,12 @@ namespace ManaPHP\Messaging;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\MisuseException;
-use ManaPHP\Redis\RedisBrokerInterface;
+use ManaPHP\Redis\RedisInterface;
 use function in_array;
 
 class Queue extends AbstractQueue
 {
-    #[Autowired] protected RedisBrokerInterface $redisBroker;
+    #[Autowired] protected RedisInterface $redisBroker;
 
     #[Autowired] protected string $prefix = 'cache:msgQueue:';
 

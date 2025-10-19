@@ -39,7 +39,7 @@ use ManaPHP\Mongodb\Event\MongodbBulkWritten;
 use ManaPHP\Mongodb\Event\MongodbCommanded;
 use ManaPHP\Mongodb\Event\MongodbQueried;
 use ManaPHP\Persistence\Entity;
-use ManaPHP\Redis\RedisCacheInterface;
+use ManaPHP\Redis\RedisInterface;
 use ManaPHP\Rendering\Renderer\Event\RendererRendering;
 use ManaPHP\Version;
 use Psr\Log\LoggerInterface;
@@ -85,6 +85,7 @@ class Debugger implements DebuggerInterface, ContextAware
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected PreparedEmulatorInterface|Lazy $preparedEmulator;
     #[Autowired] protected DumperInterface|Lazy $dumper;
+    #[Autowired] protected RedisInterface|Lazy $redisCache;
 
     protected int $ttl;
     protected string $prefix;
@@ -127,10 +128,8 @@ class Debugger implements DebuggerInterface, ContextAware
 
     protected function readData(string $key): ?string
     {
-        $redisCache = $this->container->get(RedisCacheInterface::class);
-
         if ($this->ttl) {
-            if (($content = $redisCache->get($this->prefix . $key)) === false) {
+            if (($content = $this->redisCache->get($this->prefix . $key)) === false) {
                 return null;
             }
         } else {
@@ -143,11 +142,10 @@ class Debugger implements DebuggerInterface, ContextAware
 
     protected function writeData(string $key, array $data): void
     {
-        $redisCache = $this->container->get(RedisCacheInterface::class);
 
         $content = gzencode(json_stringify($data, JSON_PARTIAL_OUTPUT_ON_ERROR | JSON_PRETTY_PRINT));
         if ($this->ttl) {
-            $redisCache->set($this->prefix . $key, $content, $this->ttl);
+            $this->redisCache->set($this->prefix . $key, $content, $this->ttl);
 
             if ($this->broadcast) {
                 $key = implode(
@@ -155,7 +153,7 @@ class Debugger implements DebuggerInterface, ContextAware
                     ['__debugger', $this->app_id, $this->request->ip(),
                      $this->request->handler()]
                 );
-                $redisCache->publish($key, $this->response->getHeader('X-Debugger-Link'));
+                $this->redisCache->publish($key, $this->response->getHeader('X-Debugger-Link'));
             }
         } else {
             LocalFS::filePut("@runtime/debugger/$key.zip", $content);

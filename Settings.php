@@ -6,11 +6,11 @@ namespace ManaPHP;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\InvalidArgumentException;
-use ManaPHP\Redis\RedisDbInterface;
+use ManaPHP\Redis\RedisInterface;
 
 class Settings implements SettingsInterface
 {
-    #[Autowired] protected RedisDbInterface $redisDb;
+    #[Autowired] protected RedisInterface $redisDb;
 
     #[Autowired] protected string $key = 'settings';
     #[Autowired] protected int $ttl = 1;
