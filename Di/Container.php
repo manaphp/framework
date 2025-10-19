@@ -109,7 +109,7 @@ class Container implements ContainerInterface
 
             if ($rType instanceof ReflectionUnionType) {
                 $type = $this->getLazyTypeName($rType);
-                $value = new Proxy($this, $property, $object, $type, $value);
+                $value = new LazyPropertyProxy($this, $property, $object, $type, $value);
             } else {
                 $type = $rType->getName();
 

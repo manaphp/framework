@@ -8,7 +8,7 @@ use Psr\Container\ContainerInterface;
 use ReflectionProperty;
 use function call_user_func_array;
 
-class Proxy implements Lazy
+class LazyPropertyProxy implements Lazy
 {
     protected ContainerInterface $container;
     protected ReflectionProperty $property;
