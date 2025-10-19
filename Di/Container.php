@@ -83,6 +83,21 @@ class Container implements ContainerInterface
         return $this;
     }
 
+    protected function getLazyTypeName(ReflectionUnionType $ruType): ?string
+    {
+        $lazy = false;
+        $type = null;
+        foreach ($ruType->getTypes() as $rType) {
+            if ($rType->getName() === Lazy::class) {
+                $lazy = true;
+            } else {
+                $type = $rType->getName();
+            }
+        }
+
+        return $lazy ? $type : null;
+    }
+
     protected function injectObject(ReflectionProperty $property, object $object, array $parameters): void
     {
         $name = $property->getName();
@@ -93,7 +108,8 @@ class Container implements ContainerInterface
             }
 
             if ($rType instanceof ReflectionUnionType) {
-                $value = new Proxy($this, $property, $object, $parameters[$name] ?? null);
+                $type = $this->getLazyTypeName($rType);
+                $value = new Proxy($this, $property, $object, $type, $value);
             } else {
                 $type = $rType->getName();
 
