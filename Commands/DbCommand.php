@@ -12,7 +12,7 @@ use ManaPHP\Db\DbFactoryInterface;
 use ManaPHP\Db\DbInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\ConfigInterface;
-use ManaPHP\Di\Pool;
+use ManaPHP\Di\FactoryInterface;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
 use ManaPHP\Helper\SuppressWarnings;
@@ -57,13 +57,13 @@ class DbCommand extends Command
      */
     protected function getConnections(): array
     {
-        /** @var Pool $db */
-        $db = $this->config->get(DbInterface::class);
-        return array_keys($db->pool ?? []);
+        /** @var FactoryInterface $factory */
+        $factory = $this->config->get(DbInterface::class);
+        return array_keys($factory->getDefinitions() ?? []);
     }
 
     /**
-     * @param string  $connection
+     * @param string $connection
      * @param ?string $pattern
      *
      * @return array

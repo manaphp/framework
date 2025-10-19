@@ -63,12 +63,8 @@ class Container implements ContainerInterface
             throw new MisuseException(['it\'s too late to set(): `{1}` instance has been created', $id]);
         }
 
-        if ($definition instanceof Pool) {
-            $this->set($id, '#default');
-
-            foreach ($definition->pool as $name => $def) {
-                $this->set("$id#$name", $def);
-            }
+        if ($definition instanceof FactoryInterface) {
+            $definition->register($id, $this);
         } else {
             $this->definitions[$id] = $definition;
         }
