@@ -13,7 +13,7 @@ use ManaPHP\Persistence\ThoseInterface;
 class CollectionGateway implements CollectionGatewayInterface
 {
     #[Autowired] protected ThoseInterface $those;
-    #[Autowired] protected MongodbConnectorInterface $connector;
+    #[Autowired] protected MongodbFactoryInterface $mongodbFactory;
     #[Autowired] protected ShardingInterface $sharding;
     #[Autowired] protected EntityMetadataInterface $entityMetadata;
     #[Autowired] protected EntityManagerInterface $entityManager;
@@ -30,7 +30,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         list($connection, $collection) = $this->sharding->getUniqueShard($entityClass, []);
 
-        return $this->connector->get($connection)->bulkInsert($collection, $documents);
+        return $this->mongodbFactory->get($connection)->bulkInsert($collection, $documents);
     }
 
     public function bulkUpdate(string $entityClass, array $documents): int
@@ -51,7 +51,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $collections) {
-            $mongodb = $this->connector->get($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
             foreach ($collections as $collection) {
                 $affected_count += $mongodb->bulkUpdate($collection, $documents, $primaryKey);
             }
@@ -73,7 +73,7 @@ class CollectionGateway implements CollectionGatewayInterface
         list($connection, $collection) = $this->sharding->getUniqueShard($entityClass, []);
 
         $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);
-        return $this->connector->get($connection)->bulkUpsert($collection, $documents, $primaryKey);
+        return $this->mongodbFactory->get($connection)->bulkUpsert($collection, $documents, $primaryKey);
     }
 
     /**
@@ -88,7 +88,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         list($connection, $collection) = $this->sharding->getUniqueShard($entityClass, $record);
 
-        $mongodb = $this->connector->get($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
         $mongodb->insert($collection, $record);
 
         return 1;
@@ -100,7 +100,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->connector->get($connection);
+            $db = $this->mongodbFactory->get($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->delete($table, $conditions);
@@ -116,7 +116,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->connector->get($connection);
+            $db = $this->mongodbFactory->get($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->update($table, $fieldValues, $conditions);

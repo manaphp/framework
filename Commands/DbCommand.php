@@ -8,7 +8,7 @@ use ManaPHP\AliasInterface;
 use ManaPHP\Cli\Command;
 use ManaPHP\Cli\Console;
 use ManaPHP\Db\Db;
-use ManaPHP\Db\DbConnectorInterface;
+use ManaPHP\Db\DbFactoryInterface;
 use ManaPHP\Db\DbInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\ConfigInterface;
@@ -47,7 +47,7 @@ use function ucfirst;
 class DbCommand extends Command
 {
     #[Autowired] protected AliasInterface $alias;
-    #[Autowired] protected DbConnectorInterface $connector;
+    #[Autowired] protected DbFactoryInterface $dbFactory;
     #[Autowired] protected ConfigInterface $config;
 
     protected array $tableConstants = [];
@@ -70,7 +70,7 @@ class DbCommand extends Command
      */
     protected function getTables(string $connection, ?string $pattern = null): array
     {
-        $db = $this->connector->get($connection);
+        $db = $this->dbFactory->get($connection);
         $tables = [];
         foreach ($db->getTables() as $table) {
             if ($pattern && !fnmatch($pattern, $table)) {
@@ -117,7 +117,7 @@ class DbCommand extends Command
     protected function getConstantsByDb(string $connection, string $table): string
     {
         if (!isset($this->tableConstants[$connection])) {
-            $db = $this->connector->get($connection);
+            $db = $this->dbFactory->get($connection);
             $metadata_table = 'metadata_constant';
             if (!in_array($metadata_table, $db->getTables(), true)) {
                 $this->tableConstants[$connection] = [];
@@ -181,7 +181,7 @@ class DbCommand extends Command
      */
     protected function renderEntity(string $connection, string $class, string $table, bool $camelized = false): string
     {
-        $db = $this->connector->get($connection);
+        $db = $this->dbFactory->get($connection);
         $metadata = $db->getMetadata($table);
 
         $fields = (array)$metadata[Db::METADATA_ATTRIBUTES];
@@ -339,7 +339,7 @@ class DbCommand extends Command
     public function listAction(array $connections = [], string $table_pattern = ''): void
     {
         foreach ($connections ?: $this->getConnections() as $connection) {
-            $db = $this->connector->get($connection);
+            $db = $this->dbFactory->get($connection);
 
             $this->console->writeLn("connection: `$connection`");
             foreach ($this->getTables($connection, $table_pattern) as $row => $table) {
@@ -385,13 +385,13 @@ class DbCommand extends Command
     public function entityAction(string $table, string $connection = '', bool $camelized = false): void
     {
         if ($connection) {
-            $db = $this->connector->get($connection);
+            $db = $this->dbFactory->get($connection);
             if (!in_array($table, $db->getTables(), true)) {
                 throw new Exception(['`{table}` is not exists', 'table' => $table]);
             }
         } else {
             foreach ($this->getConnections() as $s) {
-                $db = $this->connector->get($s);
+                $db = $this->dbFactory->get($s);
                 if (in_array($table, $db->getTables(), true)) {
                     $connection = $s;
                     break;
@@ -494,7 +494,7 @@ class DbCommand extends Command
     public function jsonAction(array $connections = [], string $table_pattern = ''): void
     {
         foreach ($connections ?: $this->getConnections() as $connection) {
-            $db = $this->connector->get($connection);
+            $db = $this->dbFactory->get($connection);
             foreach ($this->getTables($connection, $table_pattern) as $table) {
                 $fileName = "@runtime/db_json/$connection/$table.json";
 
@@ -529,7 +529,7 @@ class DbCommand extends Command
     public function csvAction(array $connections = [], string $table_pattern = '', bool $bom = false): void
     {
         foreach ($connections ?: $this->getConnections() as $connection) {
-            $db = $this->connector->get($connection);
+            $db = $this->dbFactory->get($connection);
             foreach ($this->getTables($connection, $table_pattern) as $table) {
 
                 $fileName = "@runtime/db_csv/$connection/$table.csv";

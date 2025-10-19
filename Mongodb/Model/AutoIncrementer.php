@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Mongodb\Model;
 
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Mongodb\MongodbConnectorInterface;
+use ManaPHP\Mongodb\MongodbFactoryInterface;
 use ManaPHP\Mongodb\MongodbInterface;
 use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Persistence\ShardingInterface;
@@ -14,7 +14,7 @@ class AutoIncrementer implements AutoIncrementerInterface
 {
     #[Autowired] protected EntityMetadataInterface $entityMetadata;
     #[Autowired] protected ShardingInterface $sharding;
-    #[Autowired] protected MongodbConnectorInterface $connector;
+    #[Autowired] protected MongodbFactoryInterface $mongodbFactory;
 
     protected function createAutoIncrementIndex(MongodbInterface $mongodb, string $source): bool
     {
@@ -52,7 +52,7 @@ class AutoIncrementer implements AutoIncrementerInterface
     {
         list($connection, $source) = $this->sharding->getUniqueShard($entityClass, []);
 
-        $mongodb = $this->connector->get($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
 
         if ($pos = strpos($source, '.')) {
             $db = substr($source, 0, $pos);

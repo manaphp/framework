@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Db\Model;
 
 use ManaPHP\Db\Db;
-use ManaPHP\Db\DbConnectorInterface;
+use ManaPHP\Db\DbFactoryInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Persistence\ShardingInterface;
@@ -13,7 +13,7 @@ use function function_exists;
 
 class Metadata implements MetadataInterface
 {
-    #[Autowired] protected DbConnectorInterface $connector;
+    #[Autowired] protected DbFactoryInterface $dbFactory;
     #[Autowired] protected ShardingInterface $sharding;
 
     #[Autowired] protected int $ttl = 3600;
@@ -40,7 +40,7 @@ class Metadata implements MetadataInterface
         }
 
         list($connection, $table) = $this->sharding->getAnyShard($entityClass);
-        $db = $this->connector->get($connection);
+        $db = $this->dbFactory->get($connection);
         $data = $db->getMetadata($table);
 
         if ($this->ttl > 0) {

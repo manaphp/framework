@@ -12,7 +12,7 @@ use ManaPHP\Di\ConfigInterface;
 use ManaPHP\Di\Pool;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
-use ManaPHP\Mongodb\MongodbConnectorInterface;
+use ManaPHP\Mongodb\MongodbFactoryInterface;
 use ManaPHP\Mongodb\MongodbInterface;
 use Psr\Container\ContainerInterface;
 use function array_keys;
@@ -45,7 +45,7 @@ class MongodbCommand extends Command
 {
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected AliasInterface $alias;
-    #[Autowired] protected MongodbConnectorInterface $connector;
+    #[Autowired] protected MongodbFactoryInterface $mongodbFactory;
     #[Autowired] protected ConfigInterface $config;
 
     /**
@@ -102,7 +102,7 @@ class MongodbCommand extends Command
         array $db = []
     ): void {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->connector->get($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             $defaultDb = $mongodb->getDb();
             $dbs = $defaultDb ? [$defaultDb] : $mongodb->listDatabases();
@@ -264,7 +264,7 @@ class MongodbCommand extends Command
     public function csvAction(string $collection_pattern = '', bool $bom = false): void
     {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->connector->get($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             $dbs = $mongodb->getDb() ? [$mongodb->getDb()] : $mongodb->listDatabases();
             foreach ($dbs as $db) {
@@ -348,7 +348,7 @@ class MongodbCommand extends Command
         array $db = []
     ): void {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->connector->get($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             $dbs = $mongodb->getDb() ? [$mongodb->getDb()] : $mongodb->listDatabases();
             foreach ($dbs as $cdb) {

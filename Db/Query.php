@@ -47,7 +47,7 @@ use function substr;
 class Query extends AbstractQuery
 {
     #[Autowired] protected LoggerInterface $logger;
-    #[Autowired] protected DbConnectorInterface $connector;
+    #[Autowired] protected DbFactoryInterface $dbFactory;
 
     protected array $joins = [];
     protected array $conditions = [];
@@ -506,7 +506,7 @@ class Query extends AbstractQuery
             }
 
             $connection = key($shards);
-            $db = $this->connector->get($connection);
+            $db = $this->dbFactory->get($connection);
 
             $this->sql = $this->buildSql($db, $tables[0], $this->joins);
         }
@@ -656,7 +656,7 @@ class Query extends AbstractQuery
 
     protected function query(string $connection, string $table): array
     {
-        $db = $this->connector->get($connection);
+        $db = $this->dbFactory->get($connection);
 
         $joins = [];
         if ($this->joins) {
@@ -950,7 +950,7 @@ class Query extends AbstractQuery
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->connector->get($connection);
+            $db = $this->dbFactory->get($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->update($table, $fieldValues, $this->conditions, $this->bind);
@@ -966,7 +966,7 @@ class Query extends AbstractQuery
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->connector->get($connection);
+            $db = $this->dbFactory->get($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->delete($table, $this->conditions, $this->bind);

@@ -43,7 +43,7 @@ use function trim;
 
 class Query extends AbstractQuery
 {
-    #[Autowired] protected MongodbConnectorInterface $connector;
+    #[Autowired] protected MongodbFactoryInterface $mongodbFactory;
     #[Autowired] protected EntityManagerInterface $entityManager;
 
     protected array $types;
@@ -74,7 +74,7 @@ class Query extends AbstractQuery
     {
         list($connection, $source) = $this->getUniqueShard();
 
-        $mongodb = $this->connector->get($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
 
         if ($pos = strpos($source, '.')) {
             $db = substr($source, 0, $source);
@@ -661,7 +661,7 @@ class Query extends AbstractQuery
     {
         list($connection, $collection) = $this->getUniqueShard();
 
-        $mongodb = $this->connector->get($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
 
         if (!$this->aggregate) {
             $entityClass = $this->entityClass;
@@ -772,7 +772,7 @@ class Query extends AbstractQuery
 
         $affected_count = 0;
         foreach ($shards as $connection => $collections) {
-            $mongodb = $this->connector->get($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             foreach ($collections as $collection) {
                 $affected_count += $mongodb->delete($collection, $this->buildConditions());
@@ -788,7 +788,7 @@ class Query extends AbstractQuery
 
         $affected_count = 0;
         foreach ($shards as $connection => $collections) {
-            $mongodb = $this->connector->get($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             foreach ($collections as $collection) {
                 $affected_count += $mongodb->update($collection, $fieldValues, $this->buildConditions());

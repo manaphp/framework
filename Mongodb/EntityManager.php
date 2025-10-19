@@ -29,7 +29,7 @@ use function strlen;
 
 class EntityManager extends AbstractEntityManager implements EntityManagerInterface
 {
-    #[Autowired] protected MongodbConnectorInterface $mongodbConnector;
+    #[Autowired] protected MongodbFactoryInterface $mongodbFactory;
 
     #[Config] protected string $queryClass = 'ManaPHP\Mongodb\Query';
 
@@ -61,7 +61,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         if (($types = $this->fieldTypes[$entityClass] ?? null) === null) {
             list($connection, $collection) = $this->sharding->getAnyShard($entityClass);
 
-            $mongodb = $this->mongodbConnector->get($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
             if (!$docs = $mongodb->fetchAll($collection, [], ['limit' => 1])) {
                 throw new RuntimeException(['`{collection}` collection has none record', 'collection' => $collection]);
             }
@@ -174,7 +174,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
 
         $fieldValues['_id'] = $entity->_id;
 
-        $mongodb = $this->mongodbConnector->get($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
         $mongodb->insert($collection, $fieldValues);
 
         $this->dispatchEvent(new EntityCreated($entity));
@@ -231,7 +231,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
 
         $fieldValues['_id'] = $entity->_id;
 
-        $mongodb = $this->mongodbConnector->get($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
         $mongodb->insert($collection, $fieldValues);
 
         $this->dispatchEvent(new EntityRestored($entity));
@@ -287,7 +287,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
             }
         }
 
-        $mongodb = $this->mongodbConnector->get($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
         $mongodb->update($collection, $fieldValues, [$primaryKey => $entity->$primaryKey]);
 
         $this->dispatchEvent(new EntityUpdated($entity, $original));
@@ -308,7 +308,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
 
         $this->dispatchEvent(new EntityDeleting($entity));
 
-        $mongodb = $this->mongodbConnector->get($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
 
         $mongodb->delete($table, [$primaryKey => $entity->$primaryKey]);
 
@@ -321,7 +321,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
     {
         list($connection, $collection) = $this->sharding->getUniqueShard($entityClass, []);
 
-        return $this->mongodbConnector->get($connection)->aggregate(
+        return $this->mongodbFactory->get($connection)->aggregate(
             $collection,
             $pipeline,
             $options
