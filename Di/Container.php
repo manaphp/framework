@@ -20,6 +20,7 @@ use ReflectionUnionType;
 use function array_key_exists;
 use function class_exists;
 use function compact;
+use function explode;
 use function interface_exists;
 use function is_array;
 use function is_object;
@@ -66,10 +67,6 @@ class Container implements ContainerInterface
             $this->set($id, '#default');
 
             foreach ($definition->pool as $name => $def) {
-                if (is_string($def) && $def[0] === '#') {
-                    $def = "$id$def";
-                }
-
                 $this->set("$id#$name", $def);
             }
         } else {
@@ -302,7 +299,12 @@ class Container implements ContainerInterface
         } elseif (!is_string($definition)) {
             throw new Exception(sprintf('The definition of `%s` is not supported.', $id));
         } elseif (str_contains($definition, '#')) {
-            return $this->instances[$id] = $this->get($definition[0] === '#' ? "$id$definition" : $definition);
+            if (str_contains($id, '#')) {
+                list($type,) = explode('#', $id);
+            } else {
+                $type = $id;
+            }
+            return $this->instances[$id] = $this->get($definition[0] === '#' ? "$type$definition" : $definition);
         } elseif (interface_exists($definition)) {
             return $this->instances[$id] = $this->get($definition);
         } else {
