@@ -63,16 +63,14 @@ class Container implements ContainerInterface
         }
 
         if ($definition instanceof Pool) {
+            $this->set($id, '#default');
+
             foreach ($definition->pool as $name => $def) {
                 if (is_string($def) && $def[0] === '#') {
                     $def = "$id$def";
                 }
 
                 $this->set("$id#$name", $def);
-
-                if ($name === 'default') {
-                    $this->set($id, "#$name");
-                }
             }
         } else {
             $this->definitions[$id] = $definition;

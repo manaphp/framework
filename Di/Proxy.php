@@ -7,6 +7,7 @@ namespace ManaPHP\Di;
 use Psr\Container\ContainerInterface;
 use ReflectionProperty;
 use function call_user_func_array;
+use function is_string;
 use function sprintf;
 
 class Proxy implements Lazy
@@ -14,13 +15,13 @@ class Proxy implements Lazy
     protected ContainerInterface $container;
     protected ReflectionProperty $property;
     protected object $object;
-    protected ?string $value = null;
+    protected mixed $value = null;
 
     public function __construct(
         ContainerInterface $container,
         ReflectionProperty $property,
         object $object,
-        ?string $value
+        mixed $value
     ) {
         $this->container = $container;
         $this->property = $property;
@@ -30,14 +31,15 @@ class Proxy implements Lazy
 
     public function __call($name, $args)
     {
+        $container = $this->container;
+
         $proxy = false;
-        $id = null;
+        $type = null;
         foreach ($this->property->getType()?->getTypes() as $rType) {
-            $type = $rType->getName();
-            if ($type === Lazy::class) {
+            if ($rType->getName() === Lazy::class) {
                 $proxy = true;
             } else {
-                $id = $type;
+                $type = $rType->getName();
             }
         }
 
@@ -46,19 +48,22 @@ class Proxy implements Lazy
             throw new Exception(sprintf('%s::%s is not proxied', $object::class, $this->property->getName()));
         }
 
-        if ($id === null) {
+        if ($type === null) {
             throw new Exception('no type');
         }
 
         $value = $this->value;
         if ($value !== null) {
-            $id = $value[0] === '#' ? "$id$value" : $value;
+            if (is_string($value)) {
+                $value = $container->get($value[0] === '#' ? "$type$value" : $value);
+            }
+        } else {
+            $alias = "$type#" . $this->property->getName();
+            $value = $container->has($alias) ? $container->get($alias) : $container->get($type);
         }
 
-        $target = $this->container->get($id);
+        $this->property->setValue($this->object, $value);
 
-        $this->property->setValue($this->object, $target);
-
-        return call_user_func_array([$target, $name], $args);
+        return call_user_func_array([$value, $name], $args);
     }
 }
