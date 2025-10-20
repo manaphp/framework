@@ -49,14 +49,6 @@ class DbCommand extends Command
     protected array $tableConstants = [];
 
     /**
-     * @return array
-     */
-    protected function getConnections(): array
-    {
-        return array_keys($this->dbFactory->getDefinitions());
-    }
-
-    /**
      * @param string $connection
      * @param ?string $pattern
      *
@@ -332,7 +324,7 @@ class DbCommand extends Command
      */
     public function listAction(array $connections = [], string $table_pattern = ''): void
     {
-        foreach ($connections ?: $this->getConnections() as $connection) {
+        foreach ($connections ?: $this->dbFactory->getNames() as $connection) {
             $db = $this->dbFactory->getInstance($connection);
 
             $this->console->writeLn("connection: `$connection`");
@@ -384,7 +376,7 @@ class DbCommand extends Command
                 throw new Exception(['`{table}` is not exists', 'table' => $table]);
             }
         } else {
-            foreach ($this->getConnections() as $s) {
+            foreach ($this->dbFactory->getNames() as $s) {
                 $db = $this->dbFactory->getInstance($s);
                 if (in_array($table, $db->getTables(), true)) {
                     $connection = $s;
@@ -419,7 +411,7 @@ class DbCommand extends Command
     {
         $areas = $this->getAreas();
 
-        foreach ($connections ?: $this->getConnections() as $connection) {
+        foreach ($connections ?: $this->dbFactory->getNames() as $connection) {
             foreach ($this->getTables($connection, $table_pattern) as $table) {
                 $plainClass = Str::pascalize($table);
                 $entity = "App\Entities\\$plainClass";
@@ -465,7 +457,7 @@ class DbCommand extends Command
             $namespace = 'App\\' . ucfirst($namespace) . '\\Tables';
         }
 
-        foreach ($connections ?: $this->getConnections() as $connection) {
+        foreach ($connections ?: $this->dbFactory->getNames() as $connection) {
             foreach ($this->getTables($connection, $table_pattern) as $table) {
 
                 $plainClass = Str::pascalize($table);
@@ -488,7 +480,7 @@ class DbCommand extends Command
      */
     public function jsonAction(array $connections = [], string $table_pattern = ''): void
     {
-        foreach ($connections ?: $this->getConnections() as $connection) {
+        foreach ($connections ?: $this->dbFactory->getNames() as $connection) {
             $db = $this->dbFactory->getInstance($connection);
             foreach ($this->getTables($connection, $table_pattern) as $table) {
                 $fileName = "@runtime/db_json/$connection/$table.json";
@@ -523,7 +515,7 @@ class DbCommand extends Command
      */
     public function csvAction(array $connections = [], string $table_pattern = '', bool $bom = false): void
     {
-        foreach ($connections ?: $this->getConnections() as $connection) {
+        foreach ($connections ?: $this->dbFactory->getNames() as $connection) {
             $db = $this->dbFactory->getInstance($connection);
             foreach ($this->getTables($connection, $table_pattern) as $table) {
 
