@@ -8,12 +8,9 @@ use ManaPHP\AliasInterface;
 use ManaPHP\Cli\Command;
 use ManaPHP\Cli\Console;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Di\ConfigInterface;
-use ManaPHP\Di\FactoryInterface;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
 use ManaPHP\Mongodb\MongodbFactoryInterface;
-use ManaPHP\Mongodb\MongodbInterface;
 use Psr\Container\ContainerInterface;
 use function array_keys;
 use function count;
@@ -46,7 +43,6 @@ class MongodbCommand extends Command
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected MongodbFactoryInterface $mongodbFactory;
-    #[Autowired] protected ConfigInterface $config;
 
     /**
      * @return array
@@ -54,9 +50,7 @@ class MongodbCommand extends Command
     protected function getConnections(): array
     {
         $connections = [];
-        /** @var FactoryInterface $factory */
-        $factory = $this->config->get(MongodbInterface::class);
-        foreach ($factory->getDefinitions() ?? [] as $connection => $config) {
+        foreach ($this->mongodbFactory->getDefinitions() ?? [] as $connection => $config) {
             $config = json_stringify($config);
             if (str_contains($config, 'mongodb://')) {
                 $connections[] = $connection;
@@ -102,7 +96,7 @@ class MongodbCommand extends Command
         array $db = []
     ): void {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->mongodbFactory->get($connection);
+            $mongodb = $this->mongodbFactory->getInstance($connection);
 
             $defaultDb = $mongodb->getDb();
             $dbs = $defaultDb ? [$defaultDb] : $mongodb->listDatabases();
@@ -264,7 +258,7 @@ class MongodbCommand extends Command
     public function csvAction(string $collection_pattern = '', bool $bom = false): void
     {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->mongodbFactory->get($connection);
+            $mongodb = $this->mongodbFactory->getInstance($connection);
 
             $dbs = $mongodb->getDb() ? [$mongodb->getDb()] : $mongodb->listDatabases();
             foreach ($dbs as $db) {
@@ -348,7 +342,7 @@ class MongodbCommand extends Command
         array $db = []
     ): void {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->mongodbFactory->get($connection);
+            $mongodb = $this->mongodbFactory->getInstance($connection);
 
             $dbs = $mongodb->getDb() ? [$mongodb->getDb()] : $mongodb->listDatabases();
             foreach ($dbs as $cdb) {

@@ -6,5 +6,9 @@ namespace ManaPHP\Db;
 
 interface DbFactoryInterface
 {
-    public function get(string $name): DbInterface;
+    public function getInstance(string $name): DbInterface;
+
+    public function getDefinitions(): array;
+
+    public function getNames(): array;
 }

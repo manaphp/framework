@@ -40,7 +40,7 @@ class Metadata implements MetadataInterface
         }
 
         list($connection, $table) = $this->sharding->getAnyShard($entityClass);
-        $db = $this->dbFactory->get($connection);
+        $db = $this->dbFactory->getInstance($connection);
         $data = $db->getMetadata($table);
 
         if ($this->ttl > 0) {

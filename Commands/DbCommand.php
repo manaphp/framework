@@ -9,10 +9,7 @@ use ManaPHP\Cli\Command;
 use ManaPHP\Cli\Console;
 use ManaPHP\Db\Db;
 use ManaPHP\Db\DbFactoryInterface;
-use ManaPHP\Db\DbInterface;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Di\ConfigInterface;
-use ManaPHP\Di\FactoryInterface;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\Str;
 use ManaPHP\Helper\SuppressWarnings;
@@ -48,7 +45,6 @@ class DbCommand extends Command
 {
     #[Autowired] protected AliasInterface $alias;
     #[Autowired] protected DbFactoryInterface $dbFactory;
-    #[Autowired] protected ConfigInterface $config;
 
     protected array $tableConstants = [];
 
@@ -57,9 +53,7 @@ class DbCommand extends Command
      */
     protected function getConnections(): array
     {
-        /** @var FactoryInterface $factory */
-        $factory = $this->config->get(DbInterface::class);
-        return array_keys($factory->getDefinitions() ?? []);
+        return array_keys($this->dbFactory->getDefinitions());
     }
 
     /**
@@ -70,7 +64,7 @@ class DbCommand extends Command
      */
     protected function getTables(string $connection, ?string $pattern = null): array
     {
-        $db = $this->dbFactory->get($connection);
+        $db = $this->dbFactory->getInstance($connection);
         $tables = [];
         foreach ($db->getTables() as $table) {
             if ($pattern && !fnmatch($pattern, $table)) {
@@ -117,7 +111,7 @@ class DbCommand extends Command
     protected function getConstantsByDb(string $connection, string $table): string
     {
         if (!isset($this->tableConstants[$connection])) {
-            $db = $this->dbFactory->get($connection);
+            $db = $this->dbFactory->getInstance($connection);
             $metadata_table = 'metadata_constant';
             if (!in_array($metadata_table, $db->getTables(), true)) {
                 $this->tableConstants[$connection] = [];
@@ -175,13 +169,13 @@ class DbCommand extends Command
      * @param string $connection
      * @param string $class
      * @param string $table
-     * @param bool   $camelized
+     * @param bool $camelized
      *
      * @return string
      */
     protected function renderEntity(string $connection, string $class, string $table, bool $camelized = false): string
     {
-        $db = $this->dbFactory->get($connection);
+        $db = $this->dbFactory->getInstance($connection);
         $metadata = $db->getMetadata($table);
 
         $fields = (array)$metadata[Db::METADATA_ATTRIBUTES];
@@ -331,7 +325,7 @@ class DbCommand extends Command
     /**
      * list databases and tables
      *
-     * @param array  $connections   connections name list
+     * @param array $connections connections name list
      * @param string $table_pattern match table against a pattern
      *
      * @return void
@@ -339,7 +333,7 @@ class DbCommand extends Command
     public function listAction(array $connections = [], string $table_pattern = ''): void
     {
         foreach ($connections ?: $this->getConnections() as $connection) {
-            $db = $this->dbFactory->get($connection);
+            $db = $this->dbFactory->getInstance($connection);
 
             $this->console->writeLn("connection: `$connection`");
             foreach ($this->getTables($connection, $table_pattern) as $row => $table) {
@@ -376,22 +370,22 @@ class DbCommand extends Command
     /**
      * generate entity file in online
      *
-     * @param string $table      table name
+     * @param string $table table name
      * @param string $connection connection name
-     * @param bool   $camelized
+     * @param bool $camelized
      *
      * @return void
      */
     public function entityAction(string $table, string $connection = '', bool $camelized = false): void
     {
         if ($connection) {
-            $db = $this->dbFactory->get($connection);
+            $db = $this->dbFactory->getInstance($connection);
             if (!in_array($table, $db->getTables(), true)) {
                 throw new Exception(['`{table}` is not exists', 'table' => $table]);
             }
         } else {
             foreach ($this->getConnections() as $s) {
-                $db = $this->dbFactory->get($s);
+                $db = $this->dbFactory->getInstance($s);
                 if (in_array($table, $db->getTables(), true)) {
                     $connection = $s;
                     break;
@@ -414,10 +408,10 @@ class DbCommand extends Command
     /**
      * generate entities file in online
      *
-     * @param array  $connections   connections name list
+     * @param array $connections connections name list
      * @param string $table_pattern match table against a pattern
-     * @param bool   $optimized     output as more methods as possible
-     * @param bool   $camelized
+     * @param bool $optimized output as more methods as possible
+     * @param bool $camelized
      *
      * @return void
      */
@@ -455,17 +449,18 @@ class DbCommand extends Command
     /**
      * generate table files in online
      *
-     * @param array  $connections   connections name list
+     * @param array $connections connections name list
      * @param string $table_pattern match table against a pattern
-     * @param string $namespace     namespace of entities
+     * @param string $namespace namespace of entities
      *
      * @return void
      */
     public function tablesAction(
-        array $connections = [],
+        array  $connections = [],
         string $table_pattern = '',
         string $namespace = 'App\Tables'
-    ): void {
+    ): void
+    {
         if (!str_contains($namespace, '\\')) {
             $namespace = 'App\\' . ucfirst($namespace) . '\\Tables';
         }
@@ -486,7 +481,7 @@ class DbCommand extends Command
     /**
      * export db data to csv files
      *
-     * @param array  $connections   connections name list
+     * @param array $connections connections name list
      * @param string $table_pattern match table against a pattern
      *
      * @return void
@@ -494,7 +489,7 @@ class DbCommand extends Command
     public function jsonAction(array $connections = [], string $table_pattern = ''): void
     {
         foreach ($connections ?: $this->getConnections() as $connection) {
-            $db = $this->dbFactory->get($connection);
+            $db = $this->dbFactory->getInstance($connection);
             foreach ($this->getTables($connection, $table_pattern) as $table) {
                 $fileName = "@runtime/db_json/$connection/$table.json";
 
@@ -520,16 +515,16 @@ class DbCommand extends Command
     /**
      * export db data to csv files
      *
-     * @param array  $connections   connections name list
+     * @param array $connections connections name list
      * @param string $table_pattern match table against a pattern
-     * @param bool   $bom           contains BOM or not
+     * @param bool $bom contains BOM or not
      *
      * @return void
      */
     public function csvAction(array $connections = [], string $table_pattern = '', bool $bom = false): void
     {
         foreach ($connections ?: $this->getConnections() as $connection) {
-            $db = $this->dbFactory->get($connection);
+            $db = $this->dbFactory->getInstance($connection);
             foreach ($this->getTables($connection, $table_pattern) as $table) {
 
                 $fileName = "@runtime/db_csv/$connection/$table.csv";

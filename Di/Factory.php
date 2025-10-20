@@ -23,4 +23,9 @@ class Factory implements FactoryInterface
     {
         return $this->definitions;
     }
+
+    public function getNames(): array
+    {
+        return array_keys($this->definitions);
+    }
 }

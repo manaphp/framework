@@ -8,4 +8,6 @@ interface FactoryInterface
     public function register(string $type, ContainerInterface $container): void;
 
     public function getDefinitions(): array;
+
+    public function getNames(): array;
 }

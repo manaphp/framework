@@ -6,5 +6,9 @@ namespace ManaPHP\Redis;
 
 interface RedisFactoryInterface
 {
-    public function get(string $name): RedisInterface;
+    public function getInstance(string $name): RedisInterface;
+
+    public function getDefinitions(): array;
+
+    public function getNames(): array;
 }

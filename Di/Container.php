@@ -64,6 +64,7 @@ class Container implements ContainerInterface
         }
 
         if ($definition instanceof FactoryInterface) {
+            $this->instances[FactoryInterface::class . "#$id"] = $definition;
             $definition->register($id, $this);
         } else {
             $this->definitions[$id] = $definition;

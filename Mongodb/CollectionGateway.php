@@ -30,7 +30,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         list($connection, $collection) = $this->sharding->getUniqueShard($entityClass, []);
 
-        return $this->mongodbFactory->get($connection)->bulkInsert($collection, $documents);
+        return $this->mongodbFactory->getInstance($connection)->bulkInsert($collection, $documents);
     }
 
     public function bulkUpdate(string $entityClass, array $documents): int
@@ -51,7 +51,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $collections) {
-            $mongodb = $this->mongodbFactory->get($connection);
+            $mongodb = $this->mongodbFactory->getInstance($connection);
             foreach ($collections as $collection) {
                 $affected_count += $mongodb->bulkUpdate($collection, $documents, $primaryKey);
             }
@@ -73,7 +73,7 @@ class CollectionGateway implements CollectionGatewayInterface
         list($connection, $collection) = $this->sharding->getUniqueShard($entityClass, []);
 
         $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);
-        return $this->mongodbFactory->get($connection)->bulkUpsert($collection, $documents, $primaryKey);
+        return $this->mongodbFactory->getInstance($connection)->bulkUpsert($collection, $documents, $primaryKey);
     }
 
     /**
@@ -88,7 +88,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         list($connection, $collection) = $this->sharding->getUniqueShard($entityClass, $record);
 
-        $mongodb = $this->mongodbFactory->get($connection);
+        $mongodb = $this->mongodbFactory->getInstance($connection);
         $mongodb->insert($collection, $record);
 
         return 1;
@@ -100,7 +100,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->mongodbFactory->get($connection);
+            $db = $this->mongodbFactory->getInstance($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->delete($table, $conditions);
@@ -116,7 +116,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->mongodbFactory->get($connection);
+            $db = $this->mongodbFactory->getInstance($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->update($table, $fieldValues, $conditions);

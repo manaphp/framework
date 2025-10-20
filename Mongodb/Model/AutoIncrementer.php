@@ -52,7 +52,7 @@ class AutoIncrementer implements AutoIncrementerInterface
     {
         list($connection, $source) = $this->sharding->getUniqueShard($entityClass, []);
 
-        $mongodb = $this->mongodbFactory->get($connection);
+        $mongodb = $this->mongodbFactory->getInstance($connection);
 
         if ($pos = strpos($source, '.')) {
             $db = substr($source, 0, $pos);

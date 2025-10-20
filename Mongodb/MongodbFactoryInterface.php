@@ -6,5 +6,9 @@ namespace ManaPHP\Mongodb;
 
 interface MongodbFactoryInterface
 {
-    public function get(string $name): MongodbInterface;
+    public function getInstance(string $name): MongodbInterface;
+
+    public function getDefinitions(): array;
+
+    public function getNames(): array;
 }
