@@ -14,10 +14,10 @@ class PoolBusy implements Stringable
 {
     public function __construct(
         public PoolsInterface $pools,
-        public object $owner,
-        public string $type,
-        public int $capacity,
-        public float $timout,
+        public object         $owner,
+        public string         $type,
+        public int            $capacity,
+        public float          $timeout,
     ) {
 
     }
@@ -28,7 +28,7 @@ class PoolBusy implements Stringable
             ['owner'    => $this->owner::class,
              'type'     => $this->type,
              'capacity' => $this->capacity,
-             'timout'   => $this->timout,
+             'timeout'   => $this->timeout,
             ]
         );
     }
