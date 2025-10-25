@@ -19,6 +19,9 @@ use function is_string;
 use function str_contains;
 use function str_ends_with;
 use function str_replace;
+use function strlen;
+use function strrpos;
+use function substr;
 
 class Logger extends AbstractLogger
 {
@@ -26,6 +29,7 @@ class Logger extends AbstractLogger
     #[Autowired] protected MessageFormatterInterface $messageFormatter;
 
     #[Autowired] protected string $level = LogLevel::DEBUG;
+    #[Autowired] protected array $levels = [];
     #[Autowired] protected ?string $hostname;
     #[Autowired] protected string $time_format = 'Y-m-d\TH:i:s.uP';
     #[Autowired] protected array $appenders = [FileAppender::class];
@@ -70,21 +74,43 @@ class Logger extends AbstractLogger
         }
     }
 
-    public function log($level, mixed $message, array $context = []): void
+    protected function getCategoryLevel(string $category): string
     {
-        if (Level::gt($level, $this->level)) {
-            return;
+        if (($level = $this->levels[$category] ?? null) !== null) {
+            return $level;
         }
 
-        $log = new Log($level, $this->hostname ?? gethostname(), $this->time_format);
+        $prev = 0;
+        $len = strlen($category);
+        while (($next = strrpos($category, '.', $prev)) > 0) {
+            $s = substr($category, 0, $next);
+            if (($level = $this->levels[$s] ?? null) !== null) {
+                return $level;
+            }
+            $prev = $next - $len - 1;
+        }
+
+        return $this->level;
+    }
+
+    public function log($level, mixed $message, array $context = []): void
+    {
+        if ($this->levels === [] && Level::gt($level, $this->level)) {
+            return;
+        }
 
         $traces = Coroutine::getBacktrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 7);
         array_shift($traces);
 
-        $log->category = $this->getCategory($message, $context, $traces);
+        $category = $this->getCategory($message, $context, $traces);
 
+        if ($this->levels !== [] && Level::gt($level, $this->getCategoryLevel($category))) {
+            return;
+        }
+
+        $log = new Log($level, $this->hostname ?? gethostname(), $this->time_format);
+        $log->category = $category;
         $log->setLocation($traces[0]);
-
         $log->message = $this->messageFormatter->format($message, $context);
 
         $this->eventDispatcher->dispatch(new LoggerLog($this, $level, $message, $context, $log));
