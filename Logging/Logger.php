@@ -72,8 +72,7 @@ class Logger extends AbstractLogger
 
     public function log($level, mixed $message, array $context = []): void
     {
-        $levels = Level::map();
-        if ($levels[$level] > $levels[$this->level]) {
+        if (Level::gt($level, $this->level)) {
             return;
         }
 
