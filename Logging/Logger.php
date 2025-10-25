@@ -6,9 +6,9 @@ namespace ManaPHP\Logging;
 
 use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Helper\Container;
 use ManaPHP\Logging\Appender\FileAppender;
 use ManaPHP\Logging\Event\LoggerLog;
+use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
@@ -27,6 +27,7 @@ class Logger extends AbstractLogger
 {
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected MessageFormatterInterface $messageFormatter;
+    #[Autowired] protected ContainerInterface $container;
 
     #[Autowired] protected string $level = LogLevel::DEBUG;
     #[Autowired] protected array $levels = [];
@@ -36,17 +37,6 @@ class Logger extends AbstractLogger
 
     public const  MILLISECONDS = 'v';
     public const MICROSECONDS = 'u';
-
-    public function __construct()
-    {
-        foreach ($this->appenders as $index => $appender) {
-            if (is_string($appender)) {
-                $this->appenders[$index] = Container::make($appender);
-            } else {
-                $this->appenders[$index] = Container::make($appender['class'], $appender);
-            }
-        }
-    }
 
     protected function getCategory(mixed $message, array $context, array $traces): string
     {
@@ -115,7 +105,9 @@ class Logger extends AbstractLogger
 
         $this->eventDispatcher->dispatch(new LoggerLog($this, $level, $message, $context, $log));
 
-        foreach ($this->appenders as $appender) {
+        foreach ($this->appenders as $name) {
+            /** @var AppenderInterface $appender */
+            $appender = $this->container->get($name);
             $appender->append($log);
         }
     }
