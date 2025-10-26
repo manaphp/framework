@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace ManaPHP\Di;
 
-class Factory implements FactoryInterface
+use JsonSerializable;
+
+class Factory implements FactoryInterface, JsonSerializable
 {
     public function __construct(public array $definitions = [])
     {
@@ -27,5 +29,10 @@ class Factory implements FactoryInterface
     public function getNames(): array
     {
         return array_keys($this->definitions);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return ['definitions' => $this->definitions];
     }
 }
