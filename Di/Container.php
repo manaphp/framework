@@ -177,7 +177,7 @@ class Container implements ContainerInterface
         }
     }
 
-    protected function injectProperties(object $object, ReflectionClass $rClass, array $parameters): void
+    public function injectProperties(object $object, ReflectionClass $rClass, array $parameters): void
     {
         foreach ($rClass->getProperties() as $property) {
             if ($property->isStatic()) {
