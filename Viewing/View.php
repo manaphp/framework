@@ -11,7 +11,6 @@ use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Http\RouterInterface;
 use ManaPHP\Rendering\RendererInterface;
-use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use function array_merge;
 use function basename;
@@ -27,7 +26,7 @@ use function ucfirst;
 class View implements ViewInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected WidgetFactory $widgetFactory;
     #[Autowired] protected RouterInterface $router;
     #[Autowired] protected RendererInterface $renderer;
 
@@ -173,7 +172,7 @@ class View implements ViewInterface, ContextAware
         $widgetFile = $rClass->getFileName();
         $view = dirname($widgetFile, 2) . '/Views/Widgets/' . basename($rClass->getShortName(), 'Widget');
 
-        $widgetInstance = $this->container->get($widget);
+        $widgetInstance = $this->widgetFactory->get($widget);
         $vars = $widgetInstance->run($options);
 
         if (is_string($vars)) {

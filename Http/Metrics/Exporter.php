@@ -12,7 +12,6 @@ use ManaPHP\Http\Event\RequestEnd;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Swoole\WorkersTrait;
-use Psr\Container\ContainerInterface;
 use function in_array;
 
 class Exporter implements ExporterInterface
@@ -20,7 +19,7 @@ class Exporter implements ExporterInterface
     use WorkersTrait;
 
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected CollectorFactory $collectorFactory;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
     #[Autowired] protected WorkersDataInterface $workersData;
@@ -54,7 +53,7 @@ class Exporter implements ExporterInterface
     public function bootstrap(): void
     {
         foreach ($this->collectors as $name) {
-            $collector = $this->container->get($name);
+            $collector = $this->collectorFactory->get($name);
             if ($collector instanceof WorkerCollectorInterface) {
                 $this->worker_collectors[] = $name;
             } elseif ($collector instanceof WorkersCollectorInterface) {
@@ -73,7 +72,7 @@ class Exporter implements ExporterInterface
     {
         foreach ($data as $name => $args) {
             /** @var WorkerCollectorInterface $collector */
-            $collector = $this->container->get($name);
+            $collector = $this->collectorFactory->get($name);
             $collector->updated($args);
         }
     }
@@ -83,7 +82,7 @@ class Exporter implements ExporterInterface
         $data = [];
         foreach ($this->worker_collectors as $name) {
             /** @var WorkerCollectorInterface $collector */
-            $collector = $this->container->get($name);
+            $collector = $this->collectorFactory->get($name);
             $data[$name] = $collector->querying();
         }
 
@@ -98,7 +97,7 @@ class Exporter implements ExporterInterface
 
         $data = [];
         foreach ($this->collectors as $name) {
-            $collector = $this->container->get($name);
+            $collector = $this->collectorFactory->get($name);
             if (($collector instanceof WorkerCollectorInterface) && ($r = $collector->updating($handler)) !== null) {
                 $data[$name] = $r;
             }
@@ -114,8 +113,7 @@ class Exporter implements ExporterInterface
         $metrics = '';
         foreach ($collectors ?? $this->collectors as $name) {
             if ($name !== '' && $name !== null) {
-                /** @var CollectorInterface $collector */
-                $collector = $this->container->get($name);
+                $collector = $this->collectorFactory->get($name);
 
                 if (($data = $worker_collectors[$name] ?? null) !== null) {
                     $m = $collector->export($data);

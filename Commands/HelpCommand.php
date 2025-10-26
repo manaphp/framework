@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Commands;
 
 use ManaPHP\Cli\Command;
+use ManaPHP\Cli\CommandFactory;
 use ManaPHP\Cli\CommandsInterface;
 use ManaPHP\Cli\Console;
 use ManaPHP\Di\Attribute\Autowired;
@@ -12,7 +13,6 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Exception\JsonException;
 use ManaPHP\Helper\Str;
 use ManaPHP\Version;
-use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use function array_filter;
@@ -40,7 +40,7 @@ use function ucfirst;
 
 class HelpCommand extends Command
 {
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected CommandFactory $commandFactory;
     #[Autowired] protected CommandsInterface $commands;
 
     #[Config] protected string $app_id;
@@ -305,7 +305,7 @@ class HelpCommand extends Command
         if (($definition = $this->commands->getCommands()[$camelizedCommand] ?? null) === null) {
             return $this->console->error("$camelizedCommand Command not found");
         }
-        $instance = $this->container->get($definition);
+        $instance = $this->commandFactory->get($definition);
 
         foreach (get_class_methods($instance) as $method) {
             if (!preg_match('#^([a-z].*)Action$#', $method, $match)) {

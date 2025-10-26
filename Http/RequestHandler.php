@@ -6,7 +6,6 @@ namespace ManaPHP\Http;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\InvokerInterface;
-use ManaPHP\Di\MakerInterface;
 use ManaPHP\Eventing\EventDispatcherInterface;
 use ManaPHP\Eventing\ListenerProviderInterface;
 use ManaPHP\Exception\AbortException;
@@ -36,7 +35,6 @@ use ManaPHP\Http\Router\NotFoundRouteException;
 use ManaPHP\Viewing\View\Attribute\ViewMapping;
 use ManaPHP\Viewing\View\Attribute\ViewMappingInterface;
 use ManaPHP\Viewing\ViewInterface;
-use Psr\Container\ContainerInterface;
 use ReflectionAttribute;
 use ReflectionMethod;
 use Throwable;
@@ -50,8 +48,7 @@ use function method_exists;
 
 class RequestHandler implements RequestHandlerInterface
 {
-    #[Autowired] protected ContainerInterface $container;
-    #[Autowired] protected MakerInterface $maker;
+    #[Autowired] protected ControllerFactory $controllerFactory;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected ResponseInterface $response;
@@ -169,7 +166,7 @@ class RequestHandler implements RequestHandlerInterface
 
     protected function invoke(ReflectionMethod $rMethod): mixed
     {
-        $controller = $this->container->get($rMethod->class);
+        $controller = $this->controllerFactory->get($rMethod->class);
         $method = $rMethod->name;
 
         if ($this->request->method() === 'GET' && !$this->request->isAjax()) {

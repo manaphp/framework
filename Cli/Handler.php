@@ -9,7 +9,6 @@ use ManaPHP\Cli\Event\CliInvoking;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\InvokerInterface;
 use ManaPHP\Helper\Str;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionMethod;
 use function array_shift;
@@ -30,7 +29,7 @@ class Handler implements HandlerInterface
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected ArgumentsResolverInterface $argumentsResolver;
     #[Autowired] protected ConsoleInterface $console;
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected CommandFactory $commandFactory;
     #[Autowired] protected OptionsInterface $options;
     #[Autowired] protected InvokerInterface $invoker;
 
@@ -127,7 +126,7 @@ class Handler implements HandlerInterface
             return $this->console->error("`$cmd` command is not exists");
         }
 
-        $instance = $this->container->get($class);
+        $instance = $this->commandFactory->get($class);
 
         if (($method = $this->getMethod($class, $action)) === null) {
             return $this->console->error("`$cmd` action is not exists");

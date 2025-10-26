@@ -18,6 +18,7 @@ use function ucfirst;
 
 class ArgumentsResolver implements ArgumentsResolverInterface
 {
+    #[Autowired] protected ValueResolverFactory $valueResolverFactory;
     #[Autowired] protected ContainerInterface $container;
     #[Autowired] protected ValidatorInterface $validator;
 
@@ -45,7 +46,7 @@ class ArgumentsResolver implements ArgumentsResolverInterface
                 $resolver = __NAMESPACE__ . '\\ValueResolver\\' . ucfirst($resolver);
             }
 
-            $instance = $this->container->get($resolver);
+            $instance = $this->valueResolverFactory->get($resolver);
 
             if ($instance instanceof ScalarValueResolverInterface) {
                 $this->scalarValueResolvers[] = $instance;

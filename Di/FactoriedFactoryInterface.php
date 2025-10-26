@@ -5,19 +5,14 @@ namespace ManaPHP\Di;
 
 /**
  * @template T
+ * @extends TypedFactoryInterface<T>
  */
-interface FactoriedFactoryInterface
+interface FactoriedFactoryInterface extends TypedFactoryInterface
 {
     /**
      * @return class-string<T>
      */
     public function getType(): string;
-
-    /**
-     * @param string $name
-     * @return T
-     */
-    public function get(string $name): mixed;
 
     /**
      * @return array<string,T>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http;
 
-use ManaPHP\BootstrapperInterface;
+use ManaPHP\BootstrapperFactory;
 use ManaPHP\Debugging\DebuggerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\ListenerProviderInterface;
@@ -14,7 +14,6 @@ use ManaPHP\Http\Server\Listeners\LogServerStatusListener;
 use ManaPHP\Http\Server\Listeners\RenameProcessTitleListener;
 use ManaPHP\Swoole\ProcessesInterface;
 use ManaPHP\Swoole\WorkersInterface;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Throwable;
 use function date;
@@ -25,7 +24,7 @@ use function strlen;
 
 abstract class AbstractServer implements ServerInterface
 {
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected BootstrapperFactory $bootstrapperFactory;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected RequestInterface $request;
@@ -53,8 +52,7 @@ abstract class AbstractServer implements ServerInterface
     {
         foreach ($this->bootstrappers as $name) {
             if ($name !== '' && $name !== null) {
-                /** @var BootstrapperInterface $bootstrapper */
-                $bootstrapper = $this->container->get($name);
+                $bootstrapper = $this->bootstrapperFactory->get($name);
                 $bootstrapper->bootstrap();
             }
         }

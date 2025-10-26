@@ -8,7 +8,6 @@ use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Logging\Appender\FileAppender;
 use ManaPHP\Logging\Event\LoggerLog;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
@@ -27,7 +26,7 @@ class Logger extends AbstractLogger
 {
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected MessageFormatterInterface $messageFormatter;
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected AppenderFactory $appenderFactory;
 
     #[Autowired] protected string $level = LogLevel::DEBUG;
     #[Autowired] protected array $levels = [];
@@ -106,8 +105,7 @@ class Logger extends AbstractLogger
         $this->eventDispatcher->dispatch(new LoggerLog($this, $level, $message, $context, $log));
 
         foreach ($this->appenders as $name) {
-            /** @var AppenderInterface $appender */
-            $appender = $this->container->get($name);
+            $appender = $this->appenderFactory->get($name);
             $appender->append($log);
         }
     }

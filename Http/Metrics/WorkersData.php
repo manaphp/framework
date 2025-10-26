@@ -8,7 +8,6 @@ use ManaPHP\Coroutine\ContextAware;
 use ManaPHP\Coroutine\ContextManagerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Swoole\WorkersTrait;
-use Psr\Container\ContainerInterface;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 use function count;
@@ -18,7 +17,7 @@ class WorkersData implements WorkersDataInterface, ContextAware
     use WorkersTrait;
 
     #[Autowired] protected ContextManagerInterface $contextManager;
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected CollectorFactory $collectorFactory;
 
     public function getContext(): WorkersDataContext
     {
@@ -27,9 +26,9 @@ class WorkersData implements WorkersDataInterface, ContextAware
 
     public function getWorkerRequest(string $collector, int $cid, $worker_id): void
     {
-        /** @var string|WorkersCollectorInterface $collector */
-        $collector = $this->container->get($collector);
-        $this->sendMessage($worker_id)->getWorkerResponse($cid, $this->workers->getWorkerId(), $collector->querying());
+        /** @var WorkersCollectorInterface $workersCollector */
+        $workersCollector = $this->collectorFactory->get($collector);
+        $this->sendMessage($worker_id)->getWorkerResponse($cid, $this->workers->getWorkerId(), $workersCollector->querying());
     }
 
     public function getWorkerResponse(int $cid, int $worker_id, array $data): void
@@ -41,8 +40,8 @@ class WorkersData implements WorkersDataInterface, ContextAware
 
     public function get(string $collector, float $timeout = 1.0): array
     {
-        /** @var string|WorkersCollectorInterface $collector */
-        $collector = $this->container->get($collector);
+        /** @var WorkersCollectorInterface $workersCollector */
+        $workersCollector = $this->collectorFactory->get($collector);
 
         $context = $this->getContext();
 
@@ -51,13 +50,13 @@ class WorkersData implements WorkersDataInterface, ContextAware
 
         $worker_num = $this->workers->getWorkerNum();
         $context->channel = new Channel($worker_num);
-        $context->data[$this->workers->getWorkerId()] = $collector->querying();
+        $context->data[$this->workers->getWorkerId()] = $workersCollector->querying();
         $context->channel->push(1);
 
         $my_worker_id = $this->workers->getWorkerId();
         for ($worker_id = 0; $worker_id < $worker_num; $worker_id++) {
             if ($my_worker_id !== $worker_id) {
-                $this->sendMessage($worker_id)->getWorkerRequest($collector::class, Coroutine::getCid(), $my_worker_id);
+                $this->sendMessage($worker_id)->getWorkerRequest($workersCollector::class, Coroutine::getCid(), $my_worker_id);
             }
         }
 

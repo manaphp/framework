@@ -6,7 +6,6 @@ namespace ManaPHP\Persistence;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
-use ManaPHP\Di\ContainerInterface;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Persistence\Attribute\Column;
 use ManaPHP\Persistence\Attribute\Connection;
@@ -30,7 +29,10 @@ use function substr;
 
 class EntityMetadata implements EntityMetadataInterface
 {
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected RepositoryFactory $repositoryFactory;
+    #[Autowired] protected NamingStrategyFactory $namingStrategyFactory;
+    #[Autowired] protected ConstraintFactory $constraintFactory;
+    #[Autowired] protected RelationFactory $relationFactory;
     #[Autowired] protected ThoseInterface $those;
 
     #[Config] protected string $defaultNamingStrategy = 'ManaPHP\Persistence\UnderscoreNamingStrategy';
@@ -74,7 +76,7 @@ class EntityMetadata implements EntityMetadataInterface
     /**
      * @template T
      * @param ReflectionProperty $property
-     * @param class-string<T>    $name
+     * @param class-string<T> $name
      *
      * @return T
      */
@@ -295,7 +297,7 @@ class EntityMetadata implements EntityMetadataInterface
             $this->repository[$entityClass] = $repository;
         }
 
-        return $this->container->get($repository);
+        return $this->repositoryFactory->get($repository);
     }
 
     public function getNamingStrategy(string $entityClass): NamingStrategyInterface
@@ -309,7 +311,7 @@ class EntityMetadata implements EntityMetadataInterface
             $this->namingStrategy[$entityClass] = $namingStrategy;
         }
 
-        return $this->container->get($namingStrategy);
+        return $this->namingStrategyFactory->get($namingStrategy);
     }
 
     public function getConstraints(string $entityClass): array
@@ -332,9 +334,9 @@ class EntityMetadata implements EntityMetadataInterface
                         $attributeArguments = $attribute->getArguments();
 
                         if ($attributeArguments === []) {
-                            $constraint = $this->container->get($attributeName);
+                            $constraint = $this->constraintFactory->get($attributeName);
                         } else {
-                            $constraint = $this->container->make($attributeName, $attributeArguments);
+                            $constraint = $this->constraintFactory->make($attributeName, $attributeArguments);
                         }
                         $propertyConstraints[] = $constraint;
                     }
@@ -374,7 +376,7 @@ class EntityMetadata implements EntityMetadataInterface
                         $parameters['thatEntityClass'] = $rType->getName();
                     }
 
-                    $relations[$relation] = $this->container->make($attribute->getName(), $parameters);
+                    $relations[$relation] = $this->relationFactory->make($attribute->getName(), $parameters);
                 }
             }
 

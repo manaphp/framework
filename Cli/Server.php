@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace ManaPHP\Cli;
 
 use JetBrains\PhpStorm\NoReturn;
-use ManaPHP\BootstrapperInterface;
+use ManaPHP\BootstrapperFactory;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\AbortException;
-use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
 use Swoole\Event;
@@ -20,7 +19,7 @@ use function implode;
 
 class Server implements ServerInterface
 {
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected BootstrapperFactory $bootstrapperFactory;
     #[Autowired] protected LoggerInterface $logger;
     #[Autowired] protected ErrorHandlerInterface $errorHandler;
     #[Autowired] protected HandlerInterface $handler;
@@ -33,8 +32,7 @@ class Server implements ServerInterface
     {
         foreach ($this->bootstrappers as $name) {
             if ($name !== '' && $name !== null) {
-                /** @var BootstrapperInterface $bootstrapper */
-                $bootstrapper = $this->container->get($name);
+                $bootstrapper = $this->bootstrapperFactory->get($name);
                 $bootstrapper->bootstrap();
             }
         }

@@ -24,7 +24,6 @@ use ManaPHP\Ws\Attribute\MessageMapping;
 use ManaPHP\Ws\Attribute\OpenMapping;
 use ManaPHP\Ws\Server\Event\Close;
 use ManaPHP\Ws\Server\Event\Open;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -50,7 +49,7 @@ class Handler implements HandlerInterface
     #[Autowired] protected ErrorHandlerInterface $errorHandler;
     #[Autowired] protected ConnCtxInterface $connCtx;
     #[Autowired] protected InvokerInterface $invoker;
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected ControllerFactory $controllerFactory;
 
     public const CONN_CTX_HANDLER = '.handler';
     public const CONN_CTX_FD = '.fd';
@@ -168,7 +167,7 @@ class Handler implements HandlerInterface
 
     public function dispatch(string $handler, string $method, array $parameters): void
     {
-        $instance = $this->container->get($handler);
+        $instance = $this->controllerFactory->get($handler);
 
         $returnValue = $this->invoker->call([$instance, $method], $parameters);
 

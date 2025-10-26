@@ -16,11 +16,10 @@ use ManaPHP\Exception\AbortException;
 use ManaPHP\Exception\FileNotFoundException;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Helper\SuppressWarnings;
-use ManaPHP\Http\Response\AppenderInterface;
+use ManaPHP\Http\Response\AppenderFactory;
 use ManaPHP\Http\Response\Appenders\RequestIdAppender;
 use ManaPHP\Http\Response\Appenders\ResponseTimeAppender;
 use ManaPHP\Http\Response\Appenders\RouteAppender;
-use Psr\Container\ContainerInterface;
 use Stringable;
 use function array_keys;
 use function basename;
@@ -42,7 +41,7 @@ use function urlencode;
 class Response implements ResponseInterface, ContextAware
 {
     #[Autowired] protected ContextManagerInterface $contextManager;
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected AppenderFactory $appenderFactory;
     #[Autowired] protected RequestInterface $request;
     #[Autowired] protected RouterInterface $router;
     #[Autowired] protected ServerInterface|Lazy $server;
@@ -434,8 +433,7 @@ class Response implements ResponseInterface, ContextAware
     {
         foreach ($this->appenders as $appender) {
             if ($appender !== '' && $appender !== null) {
-                /** @var string|AppenderInterface $appender */
-                $appender = $this->container->get($appender);
+                $appender = $this->appenderFactory->get($appender);
                 $appender->append($this->request, $this);
             }
         }

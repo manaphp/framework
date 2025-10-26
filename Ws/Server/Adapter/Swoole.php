@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Ws\Server\Adapter;
 
 use ArrayObject;
-use ManaPHP\BootstrapperInterface;
+use ManaPHP\BootstrapperFactory;
 use ManaPHP\Coroutine\Context\Stickyable;
 use ManaPHP\Debugging\DebuggerInterface;
 use ManaPHP\Di\Attribute\Autowired;
@@ -24,7 +24,6 @@ use ManaPHP\Ws\Router\MappingScannerInterface;
 use ManaPHP\Ws\Server\Event\ServerStart;
 use ManaPHP\Ws\Server\Event\ServerStop;
 use ManaPHP\Ws\ServerInterface;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
@@ -39,7 +38,7 @@ use function sprintf;
 
 class Swoole implements ServerInterface
 {
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected BootstrapperFactory $bootstrapperFactory;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected LoggerInterface $logger;
@@ -122,8 +121,7 @@ class Swoole implements ServerInterface
     {
         foreach ($this->bootstrappers as $name) {
             if ($name !== '' && $name !== null) {
-                /** @var BootstrapperInterface $bootstrapper */
-                $bootstrapper = $this->container->get($name);
+                $bootstrapper = $this->bootstrapperFactory->get($name);
                 $bootstrapper->bootstrap();
             }
         }

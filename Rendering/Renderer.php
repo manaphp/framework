@@ -14,7 +14,6 @@ use ManaPHP\Exception\MisuseException;
 use ManaPHP\Exception\PreconditionException;
 use ManaPHP\Rendering\Renderer\Event\RendererRendered;
 use ManaPHP\Rendering\Renderer\Event\RendererRendering;
-use Psr\Container\ContainerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use function array_keys;
 use function array_pop;
@@ -36,7 +35,7 @@ class Renderer implements RendererInterface, ContextAware
     #[Autowired] protected ContextManagerInterface $contextManager;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
     #[Autowired] protected AliasInterface $alias;
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected EngineFactory $engineFactory;
 
     #[Autowired] protected array $engines
         = ['.phtml' => 'ManaPHP\Rendering\Engine\Php',
@@ -110,8 +109,7 @@ class Renderer implements RendererInterface, ContextAware
             $this->files[$template] = [$file, $extension];
         }
 
-        /** @var EngineInterface $engine */
-        $engine = $this->container->get($this->engines[$extension]);
+        $engine = $this->engineFactory->get($this->engines[$extension]);
 
         if (isset($vars['renderer'])) {
             throw new MisuseException('variable `renderer` is reserved for renderer');

@@ -13,7 +13,6 @@ use ManaPHP\Http\Server\Event\ServerReady;
 use ManaPHP\Swoole\Process\Attribute\Settings;
 use ManaPHP\Swoole\Process\Event\ProcessHandled;
 use ManaPHP\Swoole\Process\Event\ProcessHandling;
-use Psr\Container\ContainerInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use Swoole\Http\Server;
@@ -25,7 +24,7 @@ use function swoole_set_process_name;
 
 class Processes implements ProcessesInterface
 {
-    #[Autowired] protected ContainerInterface $container;
+    #[Autowired] protected ProcessFactory $processFactory;
     #[Autowired] protected ListenerProviderInterface $listenerProvider;
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
 
@@ -74,8 +73,7 @@ class Processes implements ProcessesInterface
         if (isset($event->server)) {
             foreach ($this->processes as $definition) {
                 if ($definition !== '' && $definition !== null) {
-                    /** @var ProcessInterface $process */
-                    $process = $this->container->get($definition);
+                    $process = $this->processFactory->get($definition);
 
                     $this->startProcess($event->server, $process);
                 }
