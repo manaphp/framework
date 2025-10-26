@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace ManaPHP;
 
 use JetBrains\PhpStorm\NoReturn;
+use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\ConfigInterface;
 use ManaPHP\Di\Container;
 use ManaPHP\Eventing\ListenersInterface;
 use ManaPHP\Eventing\TracerInterface;
+use ReflectionClass;
 use function define;
 use function defined;
 use function dirname;
@@ -17,6 +19,11 @@ use function get_included_files;
 
 class Kernel
 {
+    #[Autowired] protected EnvInterface $env;
+    #[Autowired] protected ConfigInterface $config;
+    #[Autowired] protected AliasInterface $alias;
+    #[Autowired] protected BootstrapperFactory $bootstrapperFactory;
+
     protected string $root;
     protected Container $container;
 
@@ -55,6 +62,8 @@ class Kernel
         ]);
 
         $GLOBALS['Psr\Container\ContainerInterface'] = $this->container;
+
+        $this->container->injectProperties($this, new ReflectionClass($this), []);
     }
 
     public function detectCoroutineCanEnabled(): bool
@@ -62,33 +71,38 @@ class Kernel
         return PHP_SAPI === 'cli' && extension_loaded('swoole');
     }
 
-    protected function loadConfig(string $server): ConfigInterface
+    protected function loadConfig(string $server): void
     {
         $configs = [];
         foreach (glob("$this->root/config/*.php") as $item) {
             $configs += require $item;
         }
 
+        foreach ($configs[ConfigInterface::class]['config'] ?? [] as $key => $val) {
+            $this->config->set($key, $val);
+        }
+        unset($configs[ConfigInterface::class]);
+
         foreach ($configs as $id => $definition) {
             $this->container->set($id, $definition);
         }
 
-        $config = $this->container->get(ConfigInterface::class);
-        $config->set('server', $server);
+        $this->config->set('server', $server);
         foreach ($configs as $id => $definition) {
-            $config->set($id, $definition);
+            $this->config->set($id, $definition);
         }
 
-        return $config;
+        foreach ($configs[ConfigInterface::class]['config'] ?? [] as $key => $val) {
+            $this->config->set($key, $val);
+        }
     }
 
-    protected function bootstrap(ConfigInterface $config): void
+    protected function bootstrap(): void
     {
-        $bootstrappers = $config->get(static::class)['bootstrappers'] ?? $this->bootstrappers;
+        $bootstrappers = $this->config->get(static::class)['bootstrappers'] ?? $this->bootstrappers;
         foreach ($bootstrappers as $name) {
             if ($name !== '' && $name !== null) {
-                /** @var BootstrapperInterface $bootstrapper */
-                $bootstrapper = $this->container->get($name);
+                $bootstrapper = $this->bootstrapperFactory->get($name);
                 $bootstrapper->bootstrap();
             }
         }
@@ -97,21 +111,19 @@ class Kernel
     #[NoReturn]
     public function start(string $server): void
     {
-        $this->container->get(EnvInterface::class)->load();
+        $this->env->load();
 
-        $config = $this->loadConfig($server);
+        $this->loadConfig($server);
 
-        if (($timezone = $config->get('timezone')) !== null) {
+        if (($timezone = $this->config->get('timezone')) !== null) {
             date_default_timezone_set($timezone);
         }
 
-        foreach ($config->get('aliases', []) as $aliases) {
-            foreach ($aliases as $k => $v) {
-                $this->container->get(AliasInterface::class)->set($k, $v);
-            }
+        foreach ($this->config->get('aliases', []) as $k => $v) {
+            $this->alias->set($k, $v);
         }
 
-        $this->bootstrap($config);
+        $this->bootstrap();
 
         /** @var string|ServerInterface $server */
         $this->container->get($server)->start();
