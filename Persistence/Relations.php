@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ManaPHP\Persistence;
 
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Di\ContainerInterface;
 use ManaPHP\Exception\InvalidValueException;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Persistence\Attribute\RelationInterface;
@@ -24,7 +23,6 @@ class Relations implements RelationsInterface
 {
     #[Autowired] protected ThoseInterface $those;
     #[Autowired] protected EntityMetadataInterface $entityMetadata;
-    #[Autowired] protected ContainerInterface $container;
 
     protected array $relations;
 

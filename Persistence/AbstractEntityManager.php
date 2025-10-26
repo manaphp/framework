@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ManaPHP\Persistence;
 
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Di\ContainerInterface;
 use ManaPHP\Di\MakerInterface;
 use ManaPHP\Persistence\Event\EntityEventInterface;
 use ManaPHP\Query\QueryInterface;
@@ -21,11 +20,10 @@ abstract class AbstractEntityManager implements EntityManagerInterface
     #[Autowired] protected ValidatorInterface $validator;
     #[Autowired] protected RelationsInterface $relations;
     #[Autowired] protected MakerInterface $maker;
-    #[Autowired] protected ContainerInterface $container;
 
     /**
      * @param Entity $entity
-     * @param array  $fields
+     * @param array $fields
      *
      * @return void
      */
@@ -62,7 +60,7 @@ abstract class AbstractEntityManager implements EntityManagerInterface
     }
 
     /**
-     * @param string  $entityClass
+     * @param string $entityClass
      * @param ?string $alias
      *
      * @return QueryInterface <static>
