@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Db;
 
-interface DbFactoryInterface
+use ManaPHP\Di\TypedFactoryInterface;
+
+/**
+ * @extends TypedFactoryInterface<DbInterface>
+ */
+interface DbFactoryInterface extends TypedFactoryInterface
 {
-    public function getInstance(string $name): DbInterface;
 
-    public function getDefinitions(): array;
-
-    public function getNames(): array;
 }

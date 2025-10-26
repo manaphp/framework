@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Mongodb;
 
-interface MongodbFactoryInterface
+use ManaPHP\Di\TypedFactoryInterface;
+
+/**
+ * @extends TypedFactoryInterface<MongodbInterface>
+ */
+interface MongodbFactoryInterface extends TypedFactoryInterface
 {
-    public function getInstance(string $name): MongodbInterface;
 
-    public function getDefinitions(): array;
-
-    public function getNames(): array;
 }

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Redis;
 
-interface RedisFactoryInterface
+use ManaPHP\Di\TypedFactoryInterface;
+
+/**
+ * @extends TypedFactoryInterface<RedisInterface>
+ */
+interface RedisFactoryInterface extends TypedFactoryInterface
 {
-    public function getInstance(string $name): RedisInterface;
 
-    public function getDefinitions(): array;
-
-    public function getNames(): array;
 }

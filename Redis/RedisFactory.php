@@ -4,31 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Redis;
 
-use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Di\FactoryInterface;
-use Psr\Container\ContainerInterface;
+use ManaPHP\Di\TypedFactory;
 
-class RedisFactory implements RedisFactoryInterface
+class RedisFactory extends TypedFactory implements RedisFactoryInterface
 {
-    #[Autowired] protected ContainerInterface $container;
-
-    public function getInstance(string $name): RedisInterface
+    public function getType(): string
     {
-        return $this->container->get(RedisInterface::class . "#$name");
-    }
-
-    public function getFactory(): FactoryInterface
-    {
-        return $this->container->get(FactoryInterface::class . '#' . RedisInterface::class);
-    }
-
-    public function getDefinitions(): array
-    {
-        return $this->getFactory()->getDefinitions();
-    }
-
-    public function getNames(): array
-    {
-        return $this->getFactory()->getNames();
+        return RedisInterface::class;
     }
 }
