@@ -17,7 +17,7 @@ interface FactoriedFactoryInterface
      * @param string $name
      * @return T
      */
-    public function getInstance(string $name): mixed;
+    public function get(string $name): mixed;
 
     /**
      * @return array<string,T>

@@ -17,7 +17,7 @@ abstract class FactoriedFactory implements FactoriedFactoryInterface
      * @param string $name
      * @return T
      */
-    public function getInstance(string $name): mixed
+    public function get(string $name): mixed
     {
         return $this->container->get($this->getType() . "#$name");
     }

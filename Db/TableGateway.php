@@ -16,14 +16,14 @@ class TableGateway implements TableGatewayInterface
     {
         list($connection, $table) = $this->sharding->getUniqueShard($entityClass, $record);
 
-        return $this->dbFactory->getInstance($connection)->insert($table, $record, $fetchInsertId);
+        return $this->dbFactory->get($connection)->insert($table, $record, $fetchInsertId);
     }
 
     public function insertBySql(string $entityClass, string $sql, array $bind = []): int
     {
         list($connection, $table) = $this->sharding->getUniqueShard($entityClass, $bind);
 
-        return $this->dbFactory->getInstance($connection)->insertBySql($table, $sql, $bind);
+        return $this->dbFactory->get($connection)->insertBySql($table, $sql, $bind);
     }
 
     public function delete(string $entityClass, string|array $conditions, array $bind = []): int
@@ -32,7 +32,7 @@ class TableGateway implements TableGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->dbFactory->getInstance($connection);
+            $db = $this->dbFactory->get($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->delete($table, $conditions, $bind);
@@ -48,7 +48,7 @@ class TableGateway implements TableGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->dbFactory->getInstance($connection);
+            $db = $this->dbFactory->get($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->deleteBySql($table, $sql, $bind);
@@ -64,7 +64,7 @@ class TableGateway implements TableGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->dbFactory->getInstance($connection);
+            $db = $this->dbFactory->get($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->update($table, $fieldValues, $conditions, $bind);
@@ -80,7 +80,7 @@ class TableGateway implements TableGatewayInterface
 
         $affected_count = 0;
         foreach ($shards as $connection => $tables) {
-            $db = $this->dbFactory->getInstance($connection);
+            $db = $this->dbFactory->get($connection);
 
             foreach ($tables as $table) {
                 $affected_count += $db->updateBySql($table, $sql, $bind);

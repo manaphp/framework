@@ -74,7 +74,7 @@ class Query extends AbstractQuery
     {
         list($connection, $source) = $this->getUniqueShard();
 
-        $mongodb = $this->mongodbFactory->getInstance($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
 
         if ($pos = strpos($source, '.')) {
             $db = substr($source, 0, $source);
@@ -661,7 +661,7 @@ class Query extends AbstractQuery
     {
         list($connection, $collection) = $this->getUniqueShard();
 
-        $mongodb = $this->mongodbFactory->getInstance($connection);
+        $mongodb = $this->mongodbFactory->get($connection);
 
         if (!$this->aggregate) {
             $entityClass = $this->entityClass;
@@ -772,7 +772,7 @@ class Query extends AbstractQuery
 
         $affected_count = 0;
         foreach ($shards as $connection => $collections) {
-            $mongodb = $this->mongodbFactory->getInstance($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             foreach ($collections as $collection) {
                 $affected_count += $mongodb->delete($collection, $this->buildConditions());
@@ -788,7 +788,7 @@ class Query extends AbstractQuery
 
         $affected_count = 0;
         foreach ($shards as $connection => $collections) {
-            $mongodb = $this->mongodbFactory->getInstance($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             foreach ($collections as $collection) {
                 $affected_count += $mongodb->update($collection, $fieldValues, $this->buildConditions());

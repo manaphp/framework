@@ -71,7 +71,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
             }
         }
 
-        $db = $this->dbFactory->getInstance($connection);
+        $db = $this->dbFactory->get($connection);
         if (!isset($entity->$primaryKey)) {
             $entity->$primaryKey = (int)$db->insert($table, $fieldValues, true);
         } else {
@@ -125,7 +125,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
             }
         }
 
-        $db = $this->dbFactory->getInstance($connection);
+        $db = $this->dbFactory->get($connection);
         if (!isset($entity->$primaryKey)) {
             $entity->$primaryKey = (int)$db->insert($table, $fieldValues, true);
         } else {
@@ -200,7 +200,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
             }
         }
 
-        $db = $this->dbFactory->getInstance($connection);
+        $db = $this->dbFactory->get($connection);
         $db->update($table, $fieldValues, [$columnMap[$primaryKey] ?? $primaryKey => $entity->$primaryKey]);
 
         $this->dispatchEvent(new EntityUpdated($entity, $original));
@@ -222,7 +222,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
 
         $this->dispatchEvent(new EntityDeleting($entity));
 
-        $db = $this->dbFactory->getInstance($connection);
+        $db = $this->dbFactory->get($connection);
 
         $db->delete($table, [$primaryKey => $entity->$primaryKey]);
 

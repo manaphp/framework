@@ -96,7 +96,7 @@ class MongodbCommand extends Command
         array $db = []
     ): void {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->mongodbFactory->getInstance($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             $defaultDb = $mongodb->getDb();
             $dbs = $defaultDb ? [$defaultDb] : $mongodb->listDatabases();
@@ -258,7 +258,7 @@ class MongodbCommand extends Command
     public function csvAction(string $collection_pattern = '', bool $bom = false): void
     {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->mongodbFactory->getInstance($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             $dbs = $mongodb->getDb() ? [$mongodb->getDb()] : $mongodb->listDatabases();
             foreach ($dbs as $db) {
@@ -342,7 +342,7 @@ class MongodbCommand extends Command
         array $db = []
     ): void {
         foreach ($this->getConnections() as $connection) {
-            $mongodb = $this->mongodbFactory->getInstance($connection);
+            $mongodb = $this->mongodbFactory->get($connection);
 
             $dbs = $mongodb->getDb() ? [$mongodb->getDb()] : $mongodb->listDatabases();
             foreach ($dbs as $cdb) {
