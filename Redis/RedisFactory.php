@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ManaPHP\Redis;
 
-use ManaPHP\Di\TypedFactory;
+use ManaPHP\Di\FactoriedFactory;
 
-class RedisFactory extends TypedFactory implements RedisFactoryInterface
+class RedisFactory extends FactoriedFactory implements RedisFactoryInterface
 {
     public function getType(): string
     {

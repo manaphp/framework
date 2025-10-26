@@ -7,9 +7,9 @@ use ManaPHP\Di\Attribute\Autowired;
 
 /**
  * @template T
- * @implements TypedFactoryInterface<T>
+ * @implements FactoriedFactoryInterface<T>
  */
-abstract class TypedFactory implements TypedFactoryInterface
+abstract class FactoriedFactory implements FactoriedFactoryInterface
 {
     #[Autowired] protected ContainerInterface $container;
 

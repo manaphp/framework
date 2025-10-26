@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ManaPHP\Mongodb;
 
-use ManaPHP\Di\TypedFactory;
+use ManaPHP\Di\FactoriedFactory;
 
-class MongodbFactory extends TypedFactory implements MongodbFactoryInterface
+class MongodbFactory extends FactoriedFactory implements MongodbFactoryInterface
 {
     public function getType(): string
     {

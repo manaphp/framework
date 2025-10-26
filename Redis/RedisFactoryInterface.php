@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Redis;
 
-use ManaPHP\Di\TypedFactoryInterface;
+use ManaPHP\Di\FactoriedFactoryInterface;
 
 /**
- * @extends TypedFactoryInterface<RedisInterface>
+ * @extends FactoriedFactoryInterface<RedisInterface>
  */
-interface RedisFactoryInterface extends TypedFactoryInterface
+interface RedisFactoryInterface extends FactoriedFactoryInterface
 {
 
 }

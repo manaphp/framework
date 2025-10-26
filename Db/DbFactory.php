@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ManaPHP\Db;
 
-use ManaPHP\Di\TypedFactory;
+use ManaPHP\Di\FactoriedFactory;
 
-class DbFactory extends TypedFactory implements DbFactoryInterface
+class DbFactory extends FactoriedFactory implements DbFactoryInterface
 {
     public function getType(): string
     {

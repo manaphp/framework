@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Mongodb;
 
-use ManaPHP\Di\TypedFactoryInterface;
+use ManaPHP\Di\FactoriedFactoryInterface;
 
 /**
- * @extends TypedFactoryInterface<MongodbInterface>
+ * @extends FactoriedFactoryInterface<MongodbInterface>
  */
-interface MongodbFactoryInterface extends TypedFactoryInterface
+interface MongodbFactoryInterface extends FactoriedFactoryInterface
 {
 
 }

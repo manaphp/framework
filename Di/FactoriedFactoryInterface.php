@@ -6,7 +6,7 @@ namespace ManaPHP\Di;
 /**
  * @template T
  */
-interface TypedFactoryInterface
+interface FactoriedFactoryInterface
 {
     /**
      * @return class-string<T>

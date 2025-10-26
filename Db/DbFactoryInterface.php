@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace ManaPHP\Db;
 
-use ManaPHP\Di\TypedFactoryInterface;
+use ManaPHP\Di\FactoriedFactoryInterface;
 
 /**
- * @extends TypedFactoryInterface<DbInterface>
+ * @extends FactoriedFactoryInterface<DbInterface>
  */
-interface DbFactoryInterface extends TypedFactoryInterface
+interface DbFactoryInterface extends FactoriedFactoryInterface
 {
 
 }
