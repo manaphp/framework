@@ -41,9 +41,6 @@ class Env implements EnvInterface, JsonSerializable
                 continue;
             }
 
-            if ($pos = strpos($line, ' # ')) {
-                $line = substr($line, 0, $pos);
-            }
             if (str_starts_with($line, 'export ')) {
                 $parts = explode('=', ltrim(substr($line, 7)), 2);
             } else {
