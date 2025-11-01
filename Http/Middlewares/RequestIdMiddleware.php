@@ -21,7 +21,7 @@ class RequestIdMiddleware
         SuppressWarnings::unused($event);
 
         if ($this->request->header('x-request-id') === null) {
-            $this->request->getContext()->_SERVER['HTTP_X_REQUEST_ID'] = bin2hex(random_bytes(16));
+            $this->request->getContext()->headers['x-request-id'] = bin2hex(random_bytes(16));
         }
     }
 }
