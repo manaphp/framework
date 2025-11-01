@@ -13,6 +13,7 @@ use ManaPHP\Http\Authorization\RoleRepositoryInterface;
 use ManaPHP\Http\Controller\Attribute\Authorize;
 use ManaPHP\Identifying\Identity\NoCredentialException;
 use ManaPHP\Identifying\IdentityInterface;
+use ReflectionAttribute;
 use ReflectionMethod;
 use function basename;
 use function explode;
@@ -65,9 +66,9 @@ class Authorization implements AuthorizationInterface, ContextAware
     {
         $rMethod = new ReflectionMethod($controller, $action);
 
-        if (($attribute = $rMethod->getAttributes(Authorize::class)[0] ?? null) === null) {
+        if (($attribute = $rMethod->getAttributes(Authorize::class, ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) === null) {
             $rClass = $rMethod->getDeclaringClass();
-            if (($attribute = $rClass->getAttributes(Authorize::class)[0] ?? null) === null) {
+            if (($attribute = $rClass->getAttributes(Authorize::class, ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) === null) {
                 return null;
             }
         }
