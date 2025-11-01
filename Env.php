@@ -41,11 +41,7 @@ class Env implements EnvInterface, JsonSerializable
                 continue;
             }
 
-            if (str_starts_with($line, 'export ')) {
-                $parts = explode('=', ltrim(substr($line, 7)), 2);
-            } else {
-                $parts = explode('=', $line, 2);
-            }
+            $parts = explode('=', $line, 2);
 
             if (count($parts) !== 2) {
                 throw new InvalidValueException(['has no = character, invalid line: `{line}`', 'line' => $line]);
