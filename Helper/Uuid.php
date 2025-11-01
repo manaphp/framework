@@ -42,6 +42,23 @@ class Uuid
         );
     }
 
+    public static function v7(): string
+    {
+        $timestamp = (int)(microtime(true) * 1000);
+
+        $bytes = unpack('N1a/n1b/n1c/n1d/n1e/N1f', random_bytes(16));
+
+        return sprintf(
+            '%08x-%04x-%04x-%04x-%04x%08x',
+            $timestamp >> 16,
+            $timestamp & 0xFFFF,
+            (0x7000 | ($bytes['a'] & 0x0FFF)),
+            (0x8000 | ($bytes['b'] & 0x3FFF)),
+            $bytes['c'],
+            ($bytes['d'] << 16) | $bytes['e']
+        );
+    }
+
     public static function encode_int32(int $n): string|false
     {
         $bytes = unpack('n1a/n1g/n1b/n1c/n1d/n1e/N1f', random_bytes(16));
