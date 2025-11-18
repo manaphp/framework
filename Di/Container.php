@@ -95,6 +95,22 @@ class Container implements ContainerInterface
         return $lazy ? $type : null;
     }
 
+    protected function getInjectedObject(string $type, string $name, ?string $value): object
+    {
+        if ($value !== null) {
+            $value = $this->get($value[0] === '#' ? "$type$value" : $value);
+        } else {
+            $alias = "$type#$name";
+            if (isset($this->definitions[$alias])) {
+                $value = $this->get($alias);
+            } else {
+                $value = $this->get($type);
+            }
+        }
+
+        return $value;
+    }
+
     protected function injectObject(ReflectionProperty $property, object $object, array $parameters): void
     {
         $name = $property->getName();
@@ -107,21 +123,8 @@ class Container implements ContainerInterface
             if ($rType instanceof ReflectionUnionType) {
                 $type = $this->getLazyTypeName($rType);
                 $value = new LazyPropertyProxy($this, $property, $object, $type, $value);
-            } else {
-                $type = $rType->getName();
-
-                if ($value !== null) {
-                    if (is_string($value)) {
-                        $value = $this->get($value[0] === '#' ? "$type$value" : $value);
-                    }
-                } else {
-                    $alias = "$type#$name";
-                    if (isset($this->definitions[$alias])) {
-                        $value = $this->get($alias);
-                    } else {
-                        $value = $this->get($type);
-                    }
-                }
+            } elseif (!is_object($value)) {
+                $value = $this->getInjectedObject($rType->getName(), $name, $value);
             }
         }
 
@@ -390,17 +393,8 @@ class Container implements ContainerInterface
                 throw new Exception(sprintf('Cannot autowire argument `$%s` of method %s().', $name, $signature));
             }
 
-            if ($type !== null) {
-                if ($value === null) {
-                    $alias = "$type#$name";
-                    if (isset($this->definitions[$alias])) {
-                        $value = $this->get($alias);
-                    } else {
-                        $value = $this->get($type);
-                    }
-                } elseif (is_string($value)) {
-                    $value = $this->get($value[0] === '#' ? "$type$value" : $value);
-                }
+            if ($type !== null && !is_object($value)) {
+                $value = $this->getInjectedObject($type, $name, $value);
             }
 
             $args[] = $value;
