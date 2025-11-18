@@ -116,7 +116,11 @@ class Container implements ContainerInterface
                     }
                 } else {
                     $alias = "$type#$name";
-                    $value = $this->has($alias) ? $this->get($alias) : $this->get($type);
+                    if (isset($this->definitions[$alias])) {
+                        $value = $this->get($alias);
+                    } else {
+                        $value = $this->get($type);
+                    }
                 }
             }
         }
