@@ -382,7 +382,7 @@ class Container implements ContainerInterface
             } elseif ($rParameter->isDefaultValueAvailable()) {
                 $value = $rParameter->getDefaultValue();
             } elseif ($type !== null) {
-                $value = $parameters[$type] ?? $type;
+                $value = $parameters[$type] ?? null;
             } else {
                 $signature = is_array($callable)
                     ? $callable[0]::class . '::' . $callable[1]
@@ -390,8 +390,17 @@ class Container implements ContainerInterface
                 throw new Exception(sprintf('Cannot autowire argument `$%s` of method %s().', $name, $signature));
             }
 
-            if ($type !== null && is_string($value)) {
-                $value = $this->get($value[0] === '#' ? "$type$value" : $value);
+            if ($type !== null) {
+                if ($value === null) {
+                    $alias = "$type#$name";
+                    if (isset($this->definitions[$alias])) {
+                        $value = $this->get($alias);
+                    } else {
+                        $value = $this->get($type);
+                    }
+                } elseif (is_string($value)) {
+                    $value = $this->get($value[0] === '#' ? "$type$value" : $value);
+                }
             }
 
             $args[] = $value;
