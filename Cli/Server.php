@@ -32,8 +32,7 @@ class Server implements ServerInterface
     {
         foreach ($this->bootstrappers as $name) {
             if ($name !== '' && $name !== null) {
-                $bootstrapper = $this->bootstrapperFactory->get($name);
-                $bootstrapper->bootstrap();
+                $this->bootstrapperFactory->bootstrap($name);
             }
         }
     }

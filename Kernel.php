@@ -102,8 +102,7 @@ class Kernel
         $bootstrappers = $this->config->get(static::class)['bootstrappers'] ?? $this->bootstrappers;
         foreach ($bootstrappers as $name) {
             if ($name !== '' && $name !== null) {
-                $bootstrapper = $this->bootstrapperFactory->get($name);
-                $bootstrapper->bootstrap();
+                $this->bootstrapperFactory->bootstrap($name);
             }
         }
     }
