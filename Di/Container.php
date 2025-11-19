@@ -7,6 +7,7 @@ namespace ManaPHP\Di;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config as ConfigAttribute;
 use ManaPHP\Di\Attribute\InterceptorInterface;
+use ManaPHP\Di\Event\FactoryObjectInjected;
 use ManaPHP\Di\Event\SingletonCreated;
 use ManaPHP\Exception\MisuseException;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -21,6 +22,7 @@ use function array_key_exists;
 use function class_exists;
 use function compact;
 use function explode;
+use function get_object_vars;
 use function interface_exists;
 use function is_array;
 use function is_object;
@@ -98,10 +100,14 @@ class Container implements ContainerInterface
     protected function getInjectedObject(string $type, string $name, ?string $value): object
     {
         if ($value !== null) {
+            if (str_contains($value, '#')) {
+                $this->dispatchEvent(new FactoryObjectInjected($type, $name, $value[0] === '#' ? "$type$value" : $value));
+            }
             $value = $this->get($value[0] === '#' ? "$type$value" : $value);
         } else {
             $alias = "$type#$name";
             if (isset($this->definitions[$alias])) {
+                $this->dispatchEvent(new FactoryObjectInjected($type, $name, $alias));
                 $value = $this->get($alias);
             } else {
                 $value = $this->get($type);
