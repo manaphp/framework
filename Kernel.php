@@ -10,6 +10,7 @@ use ManaPHP\Di\ConfigInterface;
 use ManaPHP\Di\Container;
 use ManaPHP\Eventing\ListenersInterface;
 use ManaPHP\Eventing\TracerInterface;
+use ManaPHP\Kernel\BootstrapperFactory;
 use ReflectionClass;
 use function define;
 use function defined;

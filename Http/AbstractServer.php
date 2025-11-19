@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http;
 
-use ManaPHP\BootstrapperFactory;
 use ManaPHP\Debugging\DebuggerInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Eventing\ListenerProviderInterface;
@@ -12,6 +11,7 @@ use ManaPHP\Http\Metrics\ExporterInterface;
 use ManaPHP\Http\Router\MappingScannerInterface;
 use ManaPHP\Http\Server\Listeners\LogServerStatusListener;
 use ManaPHP\Http\Server\Listeners\RenameProcessTitleListener;
+use ManaPHP\Kernel\BootstrapperFactory;
 use ManaPHP\Swoole\ProcessesInterface;
 use ManaPHP\Swoole\WorkersInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;

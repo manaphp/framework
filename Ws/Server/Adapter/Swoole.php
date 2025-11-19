@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace ManaPHP\Ws\Server\Adapter;
 
 use ArrayObject;
-use ManaPHP\BootstrapperFactory;
 use ManaPHP\Coroutine\Context\Stickyable;
 use ManaPHP\Debugging\DebuggerInterface;
 use ManaPHP\Di\Attribute\Autowired;
@@ -17,6 +16,7 @@ use ManaPHP\Http\Metrics\ExporterInterface;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\Server\Listeners\LogServerStatusListener;
 use ManaPHP\Http\Server\Listeners\RenameProcessTitleListener;
+use ManaPHP\Kernel\BootstrapperFactory;
 use ManaPHP\Swoole\ProcessesInterface;
 use ManaPHP\Swoole\WorkersInterface;
 use ManaPHP\Ws\HandlerInterface;

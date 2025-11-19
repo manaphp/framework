@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace ManaPHP\Cli;
 
 use JetBrains\PhpStorm\NoReturn;
-use ManaPHP\BootstrapperFactory;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\AbortException;
+use ManaPHP\Kernel\BootstrapperFactory;
 use Psr\Log\LoggerInterface;
 use Swoole\Coroutine;
 use Swoole\Event;
