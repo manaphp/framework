@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace ManaPHP\Logging;
+namespace ManaPHP\Text;
 
 use Stringable;
 use Throwable;
 
-interface MessageFormatterInterface
+interface InterpolatingFormatterInterface
 {
     public function format(string|Stringable $message, array $context): string;
 

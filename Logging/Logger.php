@@ -9,6 +9,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Logging\Appender\FileAppender;
 use ManaPHP\Logging\Event\LoggerLog;
 use ManaPHP\Logging\Message\Categorizable;
+use ManaPHP\Text\InterpolatingFormatterInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
@@ -24,7 +25,7 @@ use function substr;
 class Logger extends AbstractLogger
 {
     #[Autowired] protected EventDispatcherInterface $eventDispatcher;
-    #[Autowired] protected MessageFormatterInterface $messageFormatter;
+    #[Autowired] protected InterpolatingFormatterInterface $interpolatingFormatter;
     #[Autowired] protected AppenderFactory $appenderFactory;
 
     #[Autowired] protected string $level = LogLevel::DEBUG;
@@ -97,7 +98,7 @@ class Logger extends AbstractLogger
         $log = new Log($level, $this->hostname ?? gethostname(), $this->time_format);
         $log->category = $category;
         $log->setLocation($traces[0]);
-        $log->message = $this->messageFormatter->format($message, $context);
+        $log->message = $this->interpolatingFormatter->format($message, $context);
 
         $this->eventDispatcher->dispatch(new LoggerLog($this, $level, $message, $context, $log));
 

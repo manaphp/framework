@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Cli;
 
 use ManaPHP\Di\Attribute\Autowired;
-use ManaPHP\Logging\MessageFormatterInterface;
+use ManaPHP\Text\InterpolatingFormatterInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use ReflectionClass;
@@ -32,7 +32,7 @@ use function trim;
 class Console implements ConsoleInterface
 {
     #[Autowired] protected LoggerInterface $logger;
-    #[Autowired] protected MessageFormatterInterface $messageFormatter;
+    #[Autowired] protected InterpolatingFormatterInterface $interpolatingFormatter;
 
     #[Autowired] protected int $width = 80;
 
@@ -114,7 +114,7 @@ class Console implements ConsoleInterface
     public function write(string|Stringable $message, array $context = [], int $options = 0): void
     {
         if (is_string($message) && $context !== [] && str_contains($message, '{')) {
-            $message = $this->messageFormatter->interpolate($message, $context);
+            $message = $this->interpolatingFormatter->interpolate($message, $context);
         }
 
         if ($options === 0) {

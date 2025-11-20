@@ -9,7 +9,7 @@ use JsonSerializable;
 use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\SuppressWarnings;
-use ManaPHP\Logging\MessageFormatterInterface;
+use ManaPHP\Text\InterpolatingFormatterInterface;
 use Throwable;
 use function basename;
 use function count;
@@ -27,7 +27,7 @@ use function substr_count;
 
 class DataDump implements DataDumpInterface
 {
-    #[Autowired] protected MessageFormatterInterface $messageFormatter;
+    #[Autowired] protected InterpolatingFormatterInterface $interpolatingFormatter;
 
     #[Autowired] protected string $format = '[:time][:location] :message';
 
@@ -47,7 +47,7 @@ class DataDump implements DataDumpInterface
     public function formatMessage(mixed $message): string
     {
         if ($message instanceof Throwable) {
-            return $this->messageFormatter->exceptionToString($message);
+            return $this->interpolatingFormatter->exceptionToString($message);
         } elseif ($message instanceof JsonSerializable || $message instanceof ArrayObject) {
             return json_stringify($message, JSON_PARTIAL_OUTPUT_ON_ERROR);
         } elseif (!is_array($message)) {
@@ -65,7 +65,7 @@ class DataDump implements DataDumpInterface
                 }
 
                 if ($v instanceof Throwable) {
-                    $message[$k] = $this->messageFormatter->exceptionToString($v);
+                    $message[$k] = $this->interpolatingFormatter->exceptionToString($v);
                 } elseif (is_array($v)) {
                     $message[$k] = json_stringify($v, JSON_PARTIAL_OUTPUT_ON_ERROR);
                 } elseif ($v instanceof JsonSerializable || $v instanceof ArrayObject) {
@@ -93,7 +93,7 @@ class DataDump implements DataDumpInterface
             }
 
             if ($v instanceof Throwable) {
-                $v = $this->messageFormatter->exceptionToString($v);
+                $v = $this->interpolatingFormatter->exceptionToString($v);
             } elseif (is_array($v)) {
                 $v = json_stringify($v, JSON_PARTIAL_OUTPUT_ON_ERROR);
             } elseif ($v instanceof JsonSerializable || $v instanceof ArrayObject) {

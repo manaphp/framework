@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ManaPHP\Logging;
+namespace ManaPHP\Text;
 
 use JsonSerializable;
 use ManaPHP\AliasInterface;
@@ -20,7 +20,7 @@ use function preg_replace;
 use function realpath;
 use function str_contains;
 
-class MessageFormatter implements MessageFormatterInterface
+class InterpolatingFormatter implements InterpolatingFormatterInterface
 {
     #[Autowired] protected AliasInterface $alias;
 
