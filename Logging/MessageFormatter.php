@@ -24,7 +24,7 @@ class MessageFormatter implements MessageFormatterInterface
 {
     #[Autowired] protected AliasInterface $alias;
 
-    public function interpolate(string $message, array $context): string
+    public function interpolate(string|Stringable $message, array $context): string
     {
         $replaces = [];
         preg_match_all('#{([\w.]+)}#', $message, $matches);
@@ -54,7 +54,7 @@ class MessageFormatter implements MessageFormatterInterface
         return strtr($message, $replaces);
     }
 
-    public function format(mixed $message, array $context): string
+    public function format(string|Stringable $message, array $context): string
     {
         if (is_string($message)) {
             if ($context !== [] && str_contains($message, '{')) {
@@ -67,10 +67,8 @@ class MessageFormatter implements MessageFormatterInterface
             return $message;
         } elseif ($message instanceof Throwable) {
             return $this->exceptionToString($message);
-        } elseif ($message instanceof Stringable) {
-            return (string)$message;
         } else {
-            return json_stringify($message, JSON_PARTIAL_OUTPUT_ON_ERROR);
+            return (string)$message;
         }
     }
 
