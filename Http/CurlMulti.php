@@ -13,6 +13,7 @@ use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\CurlMulti\Error;
 use ManaPHP\Http\CurlMulti\Request;
 use ManaPHP\Http\CurlMulti\Response;
+use ManaPHP\Logging\Message;
 use Psr\Log\LoggerInterface;
 use function count;
 use function curl_close;
@@ -328,7 +329,7 @@ class CurlMulti implements CurlMultiInterface, Countable
 
     public function onError(Error $error): void
     {
-        $this->logger->error($error->message, ['category' => 'curl_multi']);
+        $this->logger->error(Message::of('curl_multi', $error->message));
     }
 
     public function count(): int

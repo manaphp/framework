@@ -20,6 +20,7 @@ use ManaPHP\Http\Session\Event\SessionDestroy;
 use ManaPHP\Http\Session\Event\SessionEnd;
 use ManaPHP\Http\Session\Event\SessionStart;
 use ManaPHP\Http\Session\Event\SessionUpdate;
+use ManaPHP\Logging\Message;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use function chr;
@@ -94,7 +95,7 @@ abstract class AbstractSession implements SessionInterface, ContextAware, ArrayA
                 $context->_SESSION = $data;
             } else {
                 $context->_SESSION = [];
-                $this->logger->error('unserialize failed', ['category' => 'session.unserialize']);
+                $this->logger->error(Message::of('session.unserialize', 'unserialize failed'));
             }
         } else {
             $session_id = $this->generateSessionId();

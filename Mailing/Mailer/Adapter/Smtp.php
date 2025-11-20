@@ -312,7 +312,7 @@ class Smtp extends AbstractMailer implements ContextAware
                 if ($failedRecipients !== null) {
                     $failedRecipients[] = $address;
                 }
-                $this->logger->info('Failed Recipient To <{0}>: {1}', [$address, $msg, 'category' => 'mailer.send']);
+                $this->logger->info(\ManaPHP\Logging\Message::of('mailer.send', 'Failed Recipient To <{0}>: {1}'), [$address, $msg]);
             } else {
                 $success++;
             }
@@ -320,7 +320,7 @@ class Smtp extends AbstractMailer implements ContextAware
 
         if (!$success) {
             $addresses = array_merge($message->getTo(), $message->getCc(), $message->getBcc());
-            $this->logger->info('Send Failed: {0}', [json_stringify($addresses), 'category' => 'mailer.send']);
+            $this->logger->info(\ManaPHP\Logging\Message::of('mailer.send', 'Send Failed: {0}'), [json_stringify($addresses)]);
             return $success;
         }
 

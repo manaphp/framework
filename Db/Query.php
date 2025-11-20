@@ -11,6 +11,7 @@ use ManaPHP\Helper\Arr;
 use ManaPHP\Helper\Sharding;
 use ManaPHP\Helper\Sharding\ShardingTooManyException;
 use ManaPHP\Helper\SuppressWarnings;
+use ManaPHP\Logging\Message;
 use ManaPHP\Query\AbstractQuery;
 use PDO;
 use Psr\Log\LoggerInterface;
@@ -709,7 +710,7 @@ class Query extends AbstractQuery
     public function execute(): array
     {
         if (in_array('FALSE', $this->conditions, true)) {
-            $this->logger->debug('SQL: {0}', [$this->sql, 'category' => 'db.query.skip']);
+            $this->logger->debug(Message::of('db.query.skip', 'SQL: {0}'), [$this->sql]);
             return [];
         }
 

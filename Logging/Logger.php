@@ -8,14 +8,13 @@ use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Logging\Appender\FileAppender;
 use ManaPHP\Logging\Event\LoggerLog;
+use ManaPHP\Logging\Message\Categorizable;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
 use Throwable;
 use function array_shift;
 use function gethostname;
-use function is_string;
-use function str_contains;
 use function str_ends_with;
 use function str_replace;
 use function strlen;
@@ -37,29 +36,22 @@ class Logger extends AbstractLogger
     public const  MILLISECONDS = 'v';
     public const MICROSECONDS = 'u';
 
-    protected function getCategory(mixed $message, array $context, array $traces): string
+    protected function getCategory(array $context, array $traces): string
     {
-        if (($v = $context['category'] ?? null) !== null
-            && is_string($v)
-            && (!is_string($message) || !str_contains($message, '{category}'))
-        ) {
-            return $v;
+        if (($v = $context['exception'] ?? null) !== null && $v instanceof Throwable) {
+            $trace = $v->getTrace()[0];
+        } elseif (isset($traces[1])) {
+            $trace = $traces[1];
+            if (str_ends_with($trace['function'], '{closure}')) {
+                $trace = $traces[2];
+            }
         } else {
-            if (($v = $context['exception'] ?? null) !== null && $v instanceof Throwable) {
-                $trace = $v->getTrace()[0];
-            } elseif (isset($traces[1])) {
-                $trace = $traces[1];
-                if (str_ends_with($trace['function'], '{closure}')) {
-                    $trace = $traces[2];
-                }
-            } else {
-                $trace = $traces[0];
-            }
-            if (isset($trace['class'])) {
-                return str_replace('\\', '.', $trace['class']) . '.' . $trace['function'];
-            } else {
-                return $trace['function'];
-            }
+            $trace = $traces[0];
+        }
+        if (isset($trace['class'])) {
+            return str_replace('\\', '.', $trace['class']) . '.' . $trace['function'];
+        } else {
+            return $trace['function'];
         }
     }
 
@@ -91,7 +83,12 @@ class Logger extends AbstractLogger
         $traces = Coroutine::getBacktrace(DEBUG_BACKTRACE_PROVIDE_OBJECT | DEBUG_BACKTRACE_IGNORE_ARGS, 7);
         array_shift($traces);
 
-        $category = $this->getCategory($message, $context, $traces);
+        if ($message instanceof Categorizable) {
+            $category = $message->getCategory();
+            $message = (string)$message;
+        } else {
+            $category = $this->getCategory($context, $traces);
+        }
 
         if ($this->levels !== [] && Level::gt($level, $this->getCategoryLevel($category))) {
             return;

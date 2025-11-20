@@ -10,6 +10,7 @@ use ManaPHP\Eventing\Attribute\Event;
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Logging\Event\LoggerLog;
+use ManaPHP\Logging\Message;
 use ManaPHP\Mongodb\Event\MongodbCommanded;
 use ManaPHP\Redis\Event\RedisCalled;
 use ManaPHP\Redis\Event\RedisCalling;
@@ -91,7 +92,7 @@ class Tracer implements TracerInterface
             }
 
             $message = $event instanceof Stringable ? $event : new EventWrapper($event);
-            $this->logger->$level($message, ['category' => str_replace('\\', '.', $name)]);
+            $this->logger->$level(Message::of(str_replace('\\', '.', $name), $message));
         }
     }
 
@@ -116,7 +117,7 @@ class Tracer implements TracerInterface
 
         $args = substr(json_stringify($arguments, JSON_PARTIAL_OUTPUT_ON_ERROR), 1, -1);
         if (stripos(',blPop,brPop,brpoplpush,subscribe,psubscribe,', ",$method,") !== false) {
-            $this->logger->debug("\$redis->$method({0}) ... blocking", [$args, 'category' => 'redis.' . $method]);
+            $this->logger->debug(Message::of('redis.' . $method, "\$redis->$method({0}) ... blocking"), [$args]);
         }
     }
 
@@ -136,7 +137,7 @@ class Tracer implements TracerInterface
 
             $ret = strlen($return) > 64 ? substr($return, 0, 64) . '...' : $return;
             $args = strlen($arguments) > 256 ? substr($arguments, 1, 256) . '...)' : substr($arguments, 1, -1);
-            $this->logger->debug("\$redis->$method({0}) => {1}", [$args, $ret, 'category' => 'redis.' . $method]);
+            $this->logger->debug(Message::of('redis.' . $method, "\$redis->$method({0}) => {1}"), [$args, $ret]);
         } else {
             $key = $arguments[0] ?? false;
             if (!$this->app_debug && is_string($key) && str_starts_with($key, 'cache:')) {
@@ -145,7 +146,7 @@ class Tracer implements TracerInterface
             $arguments = json_stringify($arguments, JSON_PARTIAL_OUTPUT_ON_ERROR);
 
             $args = strlen($arguments) > 256 ? substr($arguments, 1, 256) . '...)' : substr($arguments, 1, -1);
-            $this->logger->debug("\$redis->$method({0})", [$args, 'category' => 'redis.' . $method]);
+            $this->logger->debug(Message::of('redis.' . $method, "\$redis->$method({0})"), [$args]);
         }
     }
 
@@ -159,9 +160,9 @@ class Tracer implements TracerInterface
             $command_name
         )
         ) {
-            $this->logger->debug($event, ['category' => 'mongodb.command.' . $command_name]);
+            $this->logger->debug(Message::of('mongodb.command.' . $command_name, $event));
         } else {
-            $this->logger->info($event, ['category' => 'mongodb.command.' . $command_name]);
+            $this->logger->info(Message::of('mongodb.command.' . $command_name, $event));
         }
     }
 }

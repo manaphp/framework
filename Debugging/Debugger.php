@@ -35,6 +35,7 @@ use ManaPHP\Http\RouterInterface;
 use ManaPHP\Http\Server\Event\ServerReady;
 use ManaPHP\Logging\Event\LoggerLog;
 use ManaPHP\Logging\Level;
+use ManaPHP\Logging\Message;
 use ManaPHP\Mongodb\Event\MongodbBulkWritten;
 use ManaPHP\Mongodb\Event\MongodbCommanded;
 use ManaPHP\Mongodb\Event\MongodbQueried;
@@ -197,7 +198,7 @@ class Debugger implements DebuggerInterface, ContextAware
         if ($context->enabled) {
             $url = $this->router->createUrl("/?__debugger=$context->key.html", true);
             $this->response->setHeader('X-Debugger-Link', $url);
-            $this->logger->info($url, ['category' => 'debugger.link']);
+            $this->logger->info(Message::of('debugger.link', $url));
         }
     }
 

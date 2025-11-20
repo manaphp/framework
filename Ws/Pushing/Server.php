@@ -9,6 +9,7 @@ use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Identifying\IdentityInterface;
+use ManaPHP\Logging\Message;
 use ManaPHP\Messaging\PubSubInterface;
 use ManaPHP\Ws\Pushing\Server\Event\ServerPushing;
 use ManaPHP\Ws\ServerInterface as WsServerInterface;
@@ -174,10 +175,7 @@ class Server implements ServerInterface, BootstrapperInterface
         } elseif ($type === 'room') {
             $this->pushToRoom($receivers, $message);
         } else {
-            $this->logger->warning(
-                'unknown `{0}` type message: {1}',
-                [$type, $message, 'category' => 'wspServer.bad_type']
-            );
+            $this->logger->warning(Message::of('wspServer.bad_type', 'unknown `{0}` type message: {1}'), [$type, $message]);
         }
     }
 
@@ -198,7 +196,7 @@ class Server implements ServerInterface, BootstrapperInterface
                             $this->dispatch($type, $receivers, $message);
                             $this->eventDispatcher->dispatch(new ServerPushing($this, $type, $receivers, $message));
                         } else {
-                            $this->logger->warning($channel, ['category' => 'wspServer.bad_channel']);
+                            $this->logger->warning(Message::of('wspServer.bad_channel', $channel));
                         }
                     }
                 );

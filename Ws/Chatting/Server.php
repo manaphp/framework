@@ -9,6 +9,7 @@ use ManaPHP\Coroutine;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Identifying\IdentityInterface;
+use ManaPHP\Logging\Message;
 use ManaPHP\Messaging\PubSubInterface;
 use ManaPHP\Ws\Chatting\Server\Event\ServerPushed;
 use ManaPHP\Ws\Chatting\Server\Event\ServerPushing;
@@ -216,10 +217,7 @@ class Server implements ServerInterface, BootstrapperInterface
         } elseif ($type === 'kickout.name') {
             $this->kickoutName($room, $receivers, $message);
         } else {
-            $this->logger->warning(
-                'unknown `{0}` type message: {1}',
-                [$type, $message, 'category' => 'chatServer.bad_type']
-            );
+            $this->logger->warning(Message::of('chatServer.bad_type', 'unknown `{0}` type message: {1}'), [$type, $message]);
         }
     }
 
@@ -237,7 +235,7 @@ class Server implements ServerInterface, BootstrapperInterface
                             $this->dispatch($type, $room, $receivers, $message);
                             $this->eventDispatcher->dispatch(new ServerPushed($this, $type, $receivers, $message));
                         } else {
-                            $this->logger->warning($channel, ['category' => 'chatServer.bad_channel']);
+                            $this->logger->warning(Message::of('chatServer.bad_channel', $channel));
                         }
                     }
                 );
