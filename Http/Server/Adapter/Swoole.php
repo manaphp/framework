@@ -24,6 +24,8 @@ use ManaPHP\Http\Server\Event\ServerReady;
 use ManaPHP\Http\Server\Event\ServerShutdown;
 use ManaPHP\Http\Server\Event\ServerStart;
 use ManaPHP\Http\Server\Event\ServerTask;
+use ManaPHP\Http\Server\Event\ServerTaskerError;
+use ManaPHP\Http\Server\Event\ServerTaskerExit;
 use ManaPHP\Http\Server\Event\ServerTaskerStart;
 use ManaPHP\Http\Server\Event\ServerTaskerStop;
 use ManaPHP\Http\Server\Event\ServerWorkerError;
@@ -156,9 +158,9 @@ class Swoole extends AbstractServer implements ContextAware
         if ($worker_id >= $worker_num) {
             $tasker_id = $worker_id - $worker_num;
             $this->dispatchEvent(new ServerTaskerStart($server, $worker_id, $tasker_id));
+        } else {
+            $this->dispatchEvent(new ServerWorkerStart($server, $worker_id, $worker_num));
         }
-
-        $this->dispatchEvent(new ServerWorkerStart($server, $worker_id, $worker_num));
     }
 
     #[ServerCallback]
@@ -166,15 +168,23 @@ class Swoole extends AbstractServer implements ContextAware
     {
         $worker_num = $server->setting['worker_num'];
         if ($worker_id >= $worker_num) {
-            $this->dispatchEvent(new ServerTaskerStop($server, $worker_id, $worker_id - $worker_num));
+            $tasker_id = $worker_id - $worker_num;
+            $this->dispatchEvent(new ServerTaskerStop($server, $worker_id, $tasker_id));
+        } else {
+            $this->dispatchEvent(new ServerWorkerStop($server, $worker_id, $worker_num));
         }
-        $this->dispatchEvent(new ServerWorkerStop($server, $worker_id, $worker_num));
     }
 
     #[ServerCallback]
     public function onWorkerExit(Server $server, int $worker_id): void
     {
-        $this->dispatchEvent(new ServerWorkerExit($server, $worker_id));
+        $worker_num = $server->setting['worker_num'];
+        if ($worker_id >= $worker_num) {
+            $tasker_id = $worker_id - $worker_num;
+            $this->dispatchEvent(new ServerTaskerExit($server, $worker_id, $tasker_id));
+        } else {
+            $this->dispatchEvent(new ServerWorkerExit($server, $worker_id, $worker_num));
+        }
     }
 
     #[ServerCallback]
@@ -216,7 +226,13 @@ class Swoole extends AbstractServer implements ContextAware
     #[ServerCallback]
     public function onWorkerError(Server $server, int $worker_id, int $worker_pid, int $exit_code, int $signal): void
     {
-        $this->dispatchEvent(new ServerWorkerError($server, $worker_id, $worker_pid, $exit_code, $signal));
+        $worker_num = $server->setting['worker_num'];
+        if ($worker_id >= $worker_num) {
+            $tasker_id = $worker_id - $worker_num;
+            $this->dispatchEvent(new ServerTaskerError($server, $worker_id, $tasker_id, $worker_pid, $exit_code, $signal));
+        } else {
+            $this->dispatchEvent(new ServerWorkerError($server, $worker_id, $worker_pid, $exit_code, $signal));
+        }
     }
 
     #[ServerCallback]

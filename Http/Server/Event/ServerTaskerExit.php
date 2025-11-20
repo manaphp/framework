@@ -9,9 +9,9 @@ use Psr\Log\LogLevel;
 use Swoole\Http\Server;
 
 #[TraceLevel(LogLevel::NOTICE)]
-class ServerWorkerExit
+class ServerTaskerExit
 {
-    public function __construct(public Server $server, public int $worker_id, public int $worker_num)
+    public function __construct(public Server $server, public int $worker_id, public int $tasker_id)
     {
 
     }
