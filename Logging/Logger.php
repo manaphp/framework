@@ -17,7 +17,6 @@ use Stringable;
 use Throwable;
 use function array_shift;
 use function gethostname;
-use function is_string;
 use function json_stringify;
 use function str_contains;
 use function str_ends_with;
@@ -81,6 +80,11 @@ class Logger extends AbstractLogger
 
     protected function format(string|Stringable $message, array $context): string
     {
+        if ($message instanceof Throwable) {
+            $str = $context === [] ? '' : json_stringify($context);
+            return $str . PHP_EOL . $this->interpolatingFormatter->exceptionToString($message);
+        }
+
         if (($exception = $context['exception'] ?? null) !== null && $exception instanceof Throwable) {
             unset($context['exception']);
         } else {
@@ -95,25 +99,19 @@ class Logger extends AbstractLogger
             }
         }
 
-        if (is_string($message)) {
-            if ($context !== []) {
-                $message = $this->interpolatingFormatter->interpolate($message, $context);
-            }
-
-            if ($extra !== []) {
-                $message .= ' ' . json_stringify($extra);
-            }
-
-            if ($exception !== null) {
-                $message .= PHP_EOL . $this->interpolatingFormatter->exceptionToString($exception);
-            }
-
-            return $message;
-        } elseif ($message instanceof Throwable) {
-            return PHP_EOL . $this->interpolatingFormatter->exceptionToString($message);
-        } else {
-            return (string)$message;
+        if ($context !== []) {
+            $message = $this->interpolatingFormatter->interpolate($message, $context);
         }
+
+        if ($extra !== []) {
+            $message .= ' ' . json_stringify($extra);
+        }
+
+        if ($exception !== null) {
+            $message .= PHP_EOL . $this->interpolatingFormatter->exceptionToString($exception);
+        }
+
+        return $message;
     }
 
     public function log($level, mixed $message, array $context = []): void
