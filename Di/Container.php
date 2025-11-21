@@ -22,7 +22,6 @@ use function array_key_exists;
 use function class_exists;
 use function compact;
 use function explode;
-use function get_object_vars;
 use function interface_exists;
 use function is_array;
 use function is_object;
