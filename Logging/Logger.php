@@ -18,6 +18,7 @@ use Throwable;
 use function array_shift;
 use function gethostname;
 use function is_string;
+use function json_stringify;
 use function str_contains;
 use function str_ends_with;
 use function str_replace;
@@ -80,17 +81,36 @@ class Logger extends AbstractLogger
 
     protected function format(string|Stringable $message, array $context): string
     {
+        if (($exception = $context['exception'] ?? null) !== null && $exception instanceof Throwable) {
+            unset($context['exception']);
+        } else {
+            $exception = null;
+        }
+
+        $extra = [];
+        foreach ($context as $key => $value) {
+            if (!str_contains($message, "{{$key}}")) {
+                $extra[$key] = $value;
+                unset($context[$key]);
+            }
+        }
+
         if (is_string($message)) {
-            if ($context !== [] && str_contains($message, '{')) {
+            if ($context !== []) {
                 $message = $this->interpolatingFormatter->interpolate($message, $context);
             }
 
-            if (($exception = $context['exception'] ?? null) !== null && $exception instanceof Throwable) {
-                $message .= ': ' . $this->interpolatingFormatter->exceptionToString($exception);
+            if ($extra !== []) {
+                $message .= ' ' . json_stringify($extra);
             }
+
+            if ($exception !== null) {
+                $message .= PHP_EOL . $this->interpolatingFormatter->exceptionToString($exception);
+            }
+
             return $message;
         } elseif ($message instanceof Throwable) {
-            return $this->interpolatingFormatter->exceptionToString($message);
+            return PHP_EOL . $this->interpolatingFormatter->exceptionToString($message);
         } else {
             return (string)$message;
         }
