@@ -13,9 +13,12 @@ use ManaPHP\Text\InterpolatingFormatterInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\AbstractLogger;
 use Psr\Log\LogLevel;
+use Stringable;
 use Throwable;
 use function array_shift;
 use function gethostname;
+use function is_string;
+use function str_contains;
 use function str_ends_with;
 use function str_replace;
 use function strlen;
@@ -75,6 +78,24 @@ class Logger extends AbstractLogger
         return $this->level;
     }
 
+    protected function format(string|Stringable $message, array $context): string
+    {
+        if (is_string($message)) {
+            if ($context !== [] && str_contains($message, '{')) {
+                $message = $this->interpolatingFormatter->interpolate($message, $context);
+            }
+
+            if (($exception = $context['exception'] ?? null) !== null && $exception instanceof Throwable) {
+                $message .= ': ' . $this->interpolatingFormatter->exceptionToString($exception);
+            }
+            return $message;
+        } elseif ($message instanceof Throwable) {
+            return $this->interpolatingFormatter->exceptionToString($message);
+        } else {
+            return (string)$message;
+        }
+    }
+
     public function log($level, mixed $message, array $context = []): void
     {
         if ($this->levels === [] && Level::gt($level, $this->level)) {
@@ -98,7 +119,7 @@ class Logger extends AbstractLogger
         $log = new Log($level, $this->hostname ?? gethostname(), $this->time_format);
         $log->category = $category;
         $log->setLocation($traces[0]);
-        $log->message = $this->interpolatingFormatter->format($message, $context);
+        $log->message = $this->format($message, $context);
 
         $this->eventDispatcher->dispatch(new LoggerLog($this, $level, $message, $context, $log));
 

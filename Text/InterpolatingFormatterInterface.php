@@ -8,8 +8,6 @@ use Throwable;
 
 interface InterpolatingFormatterInterface
 {
-    public function format(string|Stringable $message, array $context): string;
-
     public function interpolate(string|Stringable $message, array $context): string;
 
     public function exceptionToString(Throwable $exception): string;
