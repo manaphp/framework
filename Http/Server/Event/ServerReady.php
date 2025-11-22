@@ -7,7 +7,7 @@ namespace ManaPHP\Http\Server\Event;
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::DEBUG)]
 class ServerReady
 {
     public function __construct(

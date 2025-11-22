@@ -12,7 +12,7 @@ use Psr\Log\LogLevel;
 use Stringable;
 use function json_stringify;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class MailerSending implements JsonSerializable, Stringable
 {
     public function __construct(

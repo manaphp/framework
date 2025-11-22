@@ -10,7 +10,7 @@ use Psr\Log\LogLevel;
 use Stringable;
 use function json_stringify;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::WARNING)]
 class PoolBusy implements Stringable
 {
     public function __construct(

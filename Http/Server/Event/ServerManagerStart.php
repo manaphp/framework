@@ -8,7 +8,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use Psr\Log\LogLevel;
 use Swoole\Http\Server;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::DEBUG)]
 class ServerManagerStart
 {
     public function __construct(public Server $server)

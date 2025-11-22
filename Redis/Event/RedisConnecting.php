@@ -8,7 +8,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Redis\Connection;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::INFO)]
+#[TraceLevel(LogLevel::DEBUG)]
 class RedisConnecting
 {
     public function __construct(

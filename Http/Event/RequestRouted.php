@@ -10,7 +10,7 @@ use ManaPHP\Http\Router\MatcherInterface;
 use ManaPHP\Http\RouterInterface;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::DEBUG)]
 class RequestRouted implements JsonSerializable
 {
     public function __construct(

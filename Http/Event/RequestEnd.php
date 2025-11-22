@@ -11,7 +11,7 @@ use ManaPHP\Http\ResponseInterface;
 use Psr\Log\LogLevel;
 use function strlen;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::DEBUG)]
 class RequestEnd implements JsonSerializable
 {
     public function __construct(

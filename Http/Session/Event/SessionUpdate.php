@@ -10,7 +10,7 @@ use ManaPHP\Http\AbstractSessionContext;
 use ManaPHP\Http\SessionInterface;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::INFO)]
+#[TraceLevel(LogLevel::DEBUG)]
 class SessionUpdate implements JsonSerializable
 {
     public function __construct(

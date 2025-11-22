@@ -9,7 +9,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use PDO;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::WARNING)]
+#[TraceLevel(LogLevel::NOTICE)]
 class DbAbnormal
 {
     public function __construct(

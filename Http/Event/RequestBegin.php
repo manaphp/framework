@@ -9,7 +9,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Http\RequestInterface;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class RequestBegin implements JsonSerializable
 {
     public function __construct(public RequestInterface $request)

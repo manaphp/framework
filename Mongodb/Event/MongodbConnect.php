@@ -8,7 +8,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Mongodb\Connection;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::INFO)]
+#[TraceLevel(LogLevel::DEBUG)]
 class MongodbConnect extends AbstractEvent
 {
     public function __construct(

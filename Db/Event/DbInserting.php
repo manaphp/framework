@@ -7,7 +7,7 @@ namespace ManaPHP\Db\Event;
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class DbInserting extends DbExecutingBase
 {
 }

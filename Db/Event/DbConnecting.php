@@ -8,7 +8,7 @@ use ManaPHP\Db\ConnectionInterface;
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::INFO)]
+#[TraceLevel(LogLevel::DEBUG)]
 class DbConnecting
 {
     public function __construct(

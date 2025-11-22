@@ -8,7 +8,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Ws\Pushing\ServerInterface;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class ServerPushing extends AbstractEvent
 {
     public function __construct(

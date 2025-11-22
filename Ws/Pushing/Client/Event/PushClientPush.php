@@ -8,7 +8,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Ws\Pushing\ClientInterface;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class PushClientPush
 {
     public function __construct(

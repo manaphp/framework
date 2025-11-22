@@ -8,7 +8,7 @@ use ManaPHP\Db\DbInterface;
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class DbBegin
 {
     public function __construct(

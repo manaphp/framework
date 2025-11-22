@@ -8,7 +8,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Mongodb\MongodbInterface;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class MongodbUpdating extends AbstractEvent
 {
     public function __construct(

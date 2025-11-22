@@ -8,7 +8,7 @@ use ManaPHP\Cli\HandlerInterface;
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class CliInvoked
 {
     public function __construct(

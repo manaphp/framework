@@ -9,7 +9,7 @@ use ManaPHP\Http\AbstractSessionContext;
 use ManaPHP\Http\SessionInterface;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::INFO)]
 class SessionCreate
 {
     public function __construct(

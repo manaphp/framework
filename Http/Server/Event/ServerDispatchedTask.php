@@ -11,7 +11,7 @@ use Swoole\Http\Server;
 use function get_class;
 use function is_object;
 
-#[TraceLevel(LogLevel::INFO)]
+#[TraceLevel(LogLevel::DEBUG)]
 class ServerDispatchedTask implements JsonSerializable
 {
     public function __construct(
