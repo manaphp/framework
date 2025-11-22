@@ -170,18 +170,12 @@ class Db implements DbInterface, ContextAware
         return $this->prefix;
     }
 
-    public function execute(string $type, string $sql, array $bind = []): int
+    public function execute(string $doing, string $done, string $sql, array $bind = []): int
     {
-        $event = [
-            'delete' => [DbDeleting::class, DbDeleted::class],
-            'update' => [DbUpdating::class, DbUpdated::class],
-            'insert' => [DbInserting::class, DbInserted::class]
-        ][$type] ?? null;
-
         $context = $this->getContext();
 
-        $this->eventDispatcher->dispatch(new DbExecuting($this, $type, $sql, $bind));
-        $event && $this->eventDispatcher->dispatch(new $event[0]($this, $type, $sql, $bind));
+        $this->eventDispatcher->dispatch(new DbExecuting($this, $doing, $sql, $bind));
+        $this->eventDispatcher->dispatch(new $doing($this, $sql, $bind));
 
         if ($context->connection) {
             $connection = $context->connection;
@@ -199,25 +193,25 @@ class Db implements DbInterface, ContextAware
             }
         }
 
-        $event && $this->eventDispatcher->dispatch(new $event[1]($this, $type, $sql, $bind, $count, $elapsed));
-        $this->eventDispatcher->dispatch(new DbExecuted($this, $type, $sql, $bind, $count, $elapsed));
+        $this->eventDispatcher->dispatch(new $done($this, $sql, $bind, $count, $elapsed));
+        $this->eventDispatcher->dispatch(new DbExecuted($this, $done, $sql, $bind, $count, $elapsed));
 
         return $count;
     }
 
     public function executeInsert(string $sql, array $bind = []): int
     {
-        return $this->execute('insert', $sql, $bind);
+        return $this->execute(DbInserting::class, DbInserted::class, $sql, $bind);
     }
 
     public function executeUpdate(string $sql, array $bind = []): int
     {
-        return $this->execute('update', $sql, $bind);
+        return $this->execute(DbUpdating::class, DbUpdated::class, $sql, $bind);
     }
 
     public function executeDelete(string $sql, array $bind = []): int
     {
-        return $this->execute('delete', $sql, $bind);
+        return $this->execute(DbDeleting::class, DbDeleted::class, $sql, $bind);
     }
 
     public function fetchOne(
@@ -303,7 +297,7 @@ class Db implements DbInterface, ContextAware
 
         $connection = $context->connection ?: $this->pools->pop($this, $this->timeout);
 
-        $this->eventDispatcher->dispatch(new DbInserting($this, 'insert', $sql, $bind));
+        $this->eventDispatcher->dispatch(new DbInserting($this, $sql, $bind));
 
         try {
             $start_time = microtime(true);
@@ -322,7 +316,7 @@ class Db implements DbInterface, ContextAware
         }
 
         $this->eventDispatcher->dispatch(
-            new DbInserted($this, 'insert', $sql, $bind, $affected_rows, $elapsed)
+            new DbInserted($this, $sql, $bind, $affected_rows, $elapsed)
         );
 
         return $insert_id;

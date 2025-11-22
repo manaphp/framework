@@ -10,7 +10,6 @@ class DbExecutedBase extends AbstractEvent
 {
     public function __construct(
         public DbInterface $db,
-        public string      $type,
         public string      $sql,
         public array       $bind,
         public int         $count,

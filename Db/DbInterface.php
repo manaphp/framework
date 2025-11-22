@@ -4,13 +4,22 @@ declare(strict_types=1);
 
 namespace ManaPHP\Db;
 
+use ManaPHP\Db\Event\DbExecutedBase;
+use ManaPHP\Db\Event\DbExecutingBase;
 use PDO;
 
 interface DbInterface
 {
     public function getPrefix(): string;
 
-    public function execute(string $type, string $sql, array $bind = []): int;
+    /**
+     * @param class-string<DbExecutingBase> $doing
+     * @param class-string<DbExecutedBase> $done
+     * @param string $sql
+     * @param array $bind
+     * @return int
+     */
+    public function execute(string $doing, string $done, string $sql, array $bind = []): int;
 
     public function executeInsert(string $sql, array $bind = []): int;
 
