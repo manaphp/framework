@@ -332,7 +332,7 @@ class Db implements DbInterface, ContextAware
     {
         $table = $this->completeTable($table);
 
-        return $this->execute('insert', /**@lang text */ "INSERT INTO $table $sql", $bind);
+        return $this->executeInsert(/**@lang text */ "INSERT INTO $table $sql", $bind);
     }
 
     public function update(string $table, array $fieldValues, string|array $conditions, array $bind = []): int
@@ -380,14 +380,14 @@ class Db implements DbInterface, ContextAware
             = /**@lang text */
             "UPDATE $table SET " . implode(',', $setFields) . ' WHERE ' . implode(' AND ', $wheres);
 
-        return $this->execute('update', $sql, $bind);
+        return $this->executeUpdate($sql, $bind);
     }
 
     public function updateBySql(string $table, string $sql, array $bind = []): int
     {
         $table = $this->completeTable($table);
 
-        return $this->execute('update', /** @lang text */ "UPDATE $table SET $sql", $bind);
+        return $this->executeUpdate(/** @lang text */ "UPDATE $table SET $sql", $bind);
     }
 
     public function upsert(
@@ -452,14 +452,14 @@ class Db implements DbInterface, ContextAware
         $sql
             = /** @lang text */
             "DELETE FROM $table WHERE " . implode(' AND ', $wheres);
-        return $this->execute('delete', $sql, $bind);
+        return $this->executeDelete($sql, $bind);
     }
 
     public function deleteBySql(string $table, string $sql, array $bind = []): int
     {
         $table = $this->completeTable($table);
 
-        return $this->execute('delete', /**@lang text */ "DELETE FROM $table WHERE $sql", $bind);
+        return $this->executeDelete(/**@lang text */ "DELETE FROM $table WHERE $sql", $bind);
     }
 
     public function begin(): void
