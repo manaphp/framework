@@ -13,12 +13,13 @@ class ServerTaskerError
 {
     public function __construct(
         public Server $server,
-        public int $worker_id,
-        public int $task_id,
-        public int $worker_pid,
-        public int $exit_code,
-        public int $signal
-    ) {
+        public int    $worker_id,
+        public int    $task_id,
+        public int    $worker_pid,
+        public int    $exit_code,
+        public int    $signal
+    )
+    {
 
     }
 }

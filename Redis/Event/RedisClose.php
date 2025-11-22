@@ -14,10 +14,11 @@ use RedisCluster;
 class RedisClose
 {
     public function __construct(
-        public Connection $connection,
-        public string $uri,
+        public Connection         $connection,
+        public string             $uri,
         public Redis|RedisCluster $redis,
-    ) {
+    )
+    {
 
     }
 }

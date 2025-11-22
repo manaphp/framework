@@ -25,12 +25,13 @@ class HasManyToMany extends AbstractRelation
     protected array $orderBy;
 
     public function __construct(
-        string $pivotEntity,
+        string  $pivotEntity,
         ?string $thatEntity = null,
         ?string $pivotSelfField = null,
         ?string $pivotThatField = null,
-        array $orderBy = []
-    ) {
+        array   $orderBy = []
+    )
+    {
         $this->pivotEntity = $pivotEntity;
         $this->thatEntityClass = $thatEntity ?? $this->inferThatEntity($pivotEntity, $this->selfEntityClass);
         $this->pivotSelfField = $pivotSelfField ?? $this->entityMetadata->getReferencedKey($this->selfEntityClass);

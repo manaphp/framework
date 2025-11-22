@@ -75,10 +75,11 @@ class Client implements ClientInterface
 
     public function queueDelete(
         string $queue,
-        bool $if_unused = false,
-        bool $if_empty = false,
-        bool $nowait = false
-    ): void {
+        bool   $if_unused = false,
+        bool   $if_empty = false,
+        bool   $nowait = false
+    ): void
+    {
         /** @var EngineInterface $engine */
         $engine = $this->pools->pop($this, $this->timeout);
 
@@ -115,11 +116,12 @@ class Client implements ClientInterface
 
     public function basicPublish(
         string|Exchange $exchange,
-        string|Queue $routing_key,
-        string|array $body,
-        array $properties = [],
-        bool $mandatory = false
-    ): void {
+        string|Queue    $routing_key,
+        string|array    $body,
+        array           $properties = [],
+        bool            $mandatory = false
+    ): void
+    {
         if (!is_string($body)) {
             $body = json_stringify($body);
             $properties['content_type'] ??= 'application/json';
@@ -140,11 +142,12 @@ class Client implements ClientInterface
 
     public function basicConsume(
         string|Queue $queue,
-        callable $callback,
-        bool $no_ack = false,
-        bool $exclusive = false,
-        string $tag = ''
-    ): string {
+        callable     $callback,
+        bool         $no_ack = false,
+        bool         $exclusive = false,
+        string       $tag = ''
+    ): string
+    {
         if ($this->engine === null) {
             /** @noinspection PhpFieldAssignmentTypeMismatchInspection */
             $this->engine = $this->pools->pop($this, $this->timeout);

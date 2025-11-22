@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Server;
 
+use function class_exists;
 use function extension_loaded;
 
 class Detector

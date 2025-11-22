@@ -7,15 +7,17 @@ namespace ManaPHP\Pooling\Pool\Event;
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Pooling\PoolsInterface;
 use Psr\Log\LogLevel;
+use function json_stringify;
 
 #[TraceLevel(LogLevel::DEBUG)]
 class PoolPopping
 {
     public function __construct(
         public PoolsInterface $pools,
-        public object $owner,
-        public string $type,
-    ) {
+        public object         $owner,
+        public string         $type,
+    )
+    {
 
     }
 

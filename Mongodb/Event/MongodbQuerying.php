@@ -13,10 +13,11 @@ class MongodbQuerying extends AbstractEvent
 {
     public function __construct(
         public MongodbInterface $mongodb,
-        public string $namespace,
-        public array $filter,
-        public array $options
-    ) {
+        public string           $namespace,
+        public array            $filter,
+        public array            $options
+    )
+    {
 
     }
 }

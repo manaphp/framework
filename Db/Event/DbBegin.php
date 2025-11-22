@@ -13,7 +13,8 @@ class DbBegin
 {
     public function __construct(
         public DbInterface $db,
-    ) {
+    )
+    {
 
     }
 }

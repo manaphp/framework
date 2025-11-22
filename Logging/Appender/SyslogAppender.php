@@ -9,7 +9,15 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Exception\NotSupportedException;
 use ManaPHP\Logging\AppenderInterface;
 use ManaPHP\Logging\Log;
+use function date;
+use function parse_url;
+use function preg_match_all;
+use function preg_split;
+use function socket_close;
+use function socket_create;
+use function socket_sendto;
 use function strlen;
+use function strtr;
 
 /** @noinspection SpellCheckingInspection */
 //#/etc/rsyslog.d/99-app.conf

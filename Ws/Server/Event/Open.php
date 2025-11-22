@@ -8,7 +8,8 @@ class Open
 {
     public function __construct(
         public int $fd,
-    ) {
+    )
+    {
 
     }
 }

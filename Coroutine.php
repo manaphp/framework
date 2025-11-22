@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace ManaPHP;
 
 use Swoole\Coroutine as SwooleCoroutine;
+use function array_shift;
+use function debug_backtrace;
 
 class Coroutine
 {

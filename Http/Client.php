@@ -68,12 +68,13 @@ class Client implements ClientInterface
     }
 
     public function request(
-        string $method,
-        string|array $url,
+        string            $method,
+        string|array      $url,
         null|string|array $body = null,
-        array $headers = [],
-        mixed $options = []
-    ): Response {
+        array             $headers = [],
+        mixed             $options = []
+    ): Response
+    {
         if (isset($headers[self::HEADER_X_REQUEST_ID])) {
             SuppressWarnings::noop();
         }
@@ -206,12 +207,13 @@ class Client implements ClientInterface
     }
 
     public function rest(
-        string $method,
+        string       $method,
         string|array $url,
         string|array $body = [],
-        array $headers = [],
-        mixed $options = []
-    ): Response {
+        array        $headers = [],
+        mixed        $options = []
+    ): Response
+    {
         if (is_string($body)) {
             if (!isset($headers[self::HEADER_CONTENT_TYPE])) {
                 if (preg_match('#^\[|{#', $body)) {
@@ -276,9 +278,10 @@ class Client implements ClientInterface
     public function patch(
         string|array $url,
         string|array $body = [],
-        array $headers = [],
-        mixed $options = []
-    ): Response {
+        array        $headers = [],
+        mixed        $options = []
+    ): Response
+    {
         return $this->request('PATCH', $url, $body, $headers, $options);
     }
 

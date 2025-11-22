@@ -15,9 +15,10 @@ use function strlen;
 class RequestEnd implements JsonSerializable
 {
     public function __construct(
-        public RequestInterface $request,
+        public RequestInterface  $request,
         public ResponseInterface $response,
-    ) {
+    )
+    {
 
     }
 

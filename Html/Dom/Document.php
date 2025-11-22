@@ -11,6 +11,11 @@ use ManaPHP\Di\MakerInterface;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Html\Dom\Document\Exception as DocumentException;
 use ManaPHP\Http\ClientInterface;
+use function rtrim;
+use function str_starts_with;
+use function strpos;
+use function strrpos;
+use function substr;
 
 class Document
 {
@@ -195,10 +200,11 @@ class Document
     }
 
     public function absolutizeImgSrc(
-        ?string $selector = null,
+        ?string     $selector = null,
         ?DOMElement $context = null,
-        string $attr = 'src'
-    ): static {
+        string      $attr = 'src'
+    ): static
+    {
         /** @var DOMElement $item */
         if ($selector) {
             foreach ($this->query->xpath($selector, $context) as $item) {

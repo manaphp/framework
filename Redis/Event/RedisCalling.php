@@ -13,9 +13,10 @@ class RedisCalling
 {
     public function __construct(
         public Connection $redis,
-        public string $method,
-        public array $arguments
-    ) {
+        public string     $method,
+        public array      $arguments
+    )
+    {
 
     }
 }

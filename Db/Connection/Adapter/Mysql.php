@@ -11,9 +11,19 @@ use ManaPHP\Db\SqlFragmentable;
 use ManaPHP\Exception\DsnFormatException;
 use ManaPHP\Exception\InvalidArgumentException;
 use PDO;
+use function array_keys;
+use function array_merge;
 use function count;
+use function explode;
+use function implode;
 use function is_int;
 use function is_string;
+use function key;
+use function parse_str;
+use function parse_url;
+use function str_contains;
+use function str_replace;
+use function trim;
 
 class Mysql extends AbstractConnection
 {
@@ -97,10 +107,10 @@ class Mysql extends AbstractConnection
         parent::__construct();
     }
 
-    #[ArrayShape([Db::METADATA_ATTRIBUTES          => 'array',
-                  Db::METADATA_PRIMARY_KEY         => 'array',
-                  Db::METADATA_AUTO_INCREMENT_KEY  => 'mixed|null',
-                  Db::METADATA_INT_TYPE_ATTRIBUTES => 'array'])]
+    #[ArrayShape([Db::METADATA_ATTRIBUTES => 'array',
+        Db::METADATA_PRIMARY_KEY => 'array',
+        Db::METADATA_AUTO_INCREMENT_KEY => 'mixed|null',
+        Db::METADATA_INT_TYPE_ATTRIBUTES => 'array'])]
     public function getMetadata(string $table): array
     {
         $fields = $this->query('DESCRIBE ' . $this->escapeIdentifier($table), [], PDO::FETCH_NUM);
@@ -271,11 +281,12 @@ class Mysql extends AbstractConnection
     }
 
     public function upsert(
-        string $table,
-        array $insertFieldValues,
-        array $updateFieldValues = [],
+        string  $table,
+        array   $insertFieldValues,
+        array   $updateFieldValues = [],
         ?string $primaryKey = null
-    ): int {
+    ): int
+    {
         if (!$primaryKey) {
             $primaryKey = (string)key($insertFieldValues);
         }

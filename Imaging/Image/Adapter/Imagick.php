@@ -18,7 +18,12 @@ use ManaPHP\Exception\RuntimeException;
 use ManaPHP\Imaging\AbstractImage;
 use function dirname;
 use function extension_loaded;
+use function is_dir;
+use function mkdir;
+use function pathinfo;
+use function realpath;
 use function sprintf;
+use function strtolower;
 
 class Imagick extends AbstractImage
 {
@@ -110,14 +115,15 @@ class Imagick extends AbstractImage
     }
 
     public function do_text(
-        string $text,
-        int $offsetX = 0,
-        int $offsetY = 0,
-        float $opacity = 1.0,
-        int $color = 0x000000,
-        int $size = 12,
+        string  $text,
+        int     $offsetX = 0,
+        int     $offsetY = 0,
+        float   $opacity = 1.0,
+        int     $color = 0x000000,
+        int     $size = 12,
         ?string $font_file = null
-    ): static {
+    ): static
+    {
         $draw = new ImagickDraw();
         $textColor = sprintf('rgb(%u,%u,%u)', ($color >> 16) & 0xFF, ($color >> 8) & 0xFF, $color & 0xFF);
         $draw->setFillColor(new ImagickPixel($textColor));

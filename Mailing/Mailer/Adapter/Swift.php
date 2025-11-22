@@ -13,6 +13,9 @@ use Swift_Attachment;
 use Swift_Mailer;
 use Swift_Message;
 use Swift_SmtpTransport;
+use function parse_str;
+use function parse_url;
+use function str_contains;
 
 class Swift extends AbstractMailer
 {

@@ -18,8 +18,8 @@ interface RepositoryInterface
 
     /**
      * @param array|Restrictions $restrictions
-     * @param array              $fields
-     * @param array              $orders
+     * @param array $fields
+     * @param array $orders
      *
      * @return array<T>
      */
@@ -29,7 +29,7 @@ interface RepositoryInterface
 
     /**
      * @param int|string $id
-     * @param array      $fields
+     * @param array $fields
      *
      * @return T
      */
@@ -37,7 +37,7 @@ interface RepositoryInterface
 
     /**
      * @param array|Restrictions $restrictions
-     * @param array              $fields
+     * @param array $fields
      *
      * @return ?T
      */
@@ -45,7 +45,7 @@ interface RepositoryInterface
 
     /**
      * @param array|Restrictions $restrictions
-     * @param array              $fields
+     * @param array $fields
      *
      * @return T
      */

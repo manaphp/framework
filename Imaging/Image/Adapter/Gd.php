@@ -124,14 +124,15 @@ class Gd extends AbstractImage
     }
 
     public function do_text(
-        string $text,
-        int $offsetX = 0,
-        int $offsetY = 0,
-        float $opacity = 1.0,
-        int $color = 0x000000,
-        int $size = 12,
+        string  $text,
+        int     $offsetX = 0,
+        int     $offsetY = 0,
+        float   $opacity = 1.0,
+        int     $color = 0x000000,
+        int     $size = 12,
         ?string $font_file = null
-    ): static {
+    ): static
+    {
         $red = ($color >> 16) & 0xFF;
         $green = ($color >> 8) & 0xFF;
         $blue = $color & 0xFF;

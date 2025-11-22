@@ -14,10 +14,11 @@ use Psr\Log\LogLevel;
 class SessionUpdate implements JsonSerializable
 {
     public function __construct(
-        public SessionInterface $session,
+        public SessionInterface       $session,
         public AbstractSessionContext $context,
-        public string $session_id,
-    ) {
+        public string                 $session_id,
+    )
+    {
 
     }
 

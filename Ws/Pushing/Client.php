@@ -9,8 +9,10 @@ use ManaPHP\Exception\MissingFieldException;
 use ManaPHP\Messaging\PubSubInterface;
 use ManaPHP\Ws\Pushing\Client\Event\PushClientPush;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function implode;
 use function is_array;
 use function is_string;
+use function json_stringify;
 
 class Client implements ClientInterface
 {

@@ -11,6 +11,8 @@ use DOMXPath;
 use ManaPHP\Exception\MisuseException;
 use function is_array;
 use function is_int;
+use function strpos;
+use function substr;
 
 class Query
 {

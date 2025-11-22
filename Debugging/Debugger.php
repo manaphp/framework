@@ -152,7 +152,7 @@ class Debugger implements DebuggerInterface, ContextAware
                 $key = implode(
                     ':',
                     ['__debugger', $this->app_id, $this->request->ip(),
-                     $this->request->handler()]
+                        $this->request->handler()]
                 );
                 $this->redisCache->publish($key, $this->response->getHeader('X-Debugger-Link'));
             }

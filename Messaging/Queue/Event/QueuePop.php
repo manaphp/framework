@@ -10,9 +10,10 @@ class QueuePop
 {
     public function __construct(
         public QueueInterface $queue,
-        public string $topic,
-        public ?string $msg,
-    ) {
+        public string         $topic,
+        public ?string        $msg,
+    )
+    {
 
     }
 }

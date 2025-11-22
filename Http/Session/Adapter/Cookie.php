@@ -9,7 +9,13 @@ use ManaPHP\Http\AbstractSession;
 use ManaPHP\Http\Session\Adapter\Cookie\Exception as CookieException;
 use ManaPHP\Security\CryptInterface;
 use function count;
+use function explode;
 use function is_array;
+use function json_parse;
+use function json_stringify;
+use function md5;
+use function session_get_cookie_params;
+use function time;
 
 class Cookie extends AbstractSession
 {

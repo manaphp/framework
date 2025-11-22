@@ -173,10 +173,10 @@ class Db implements DbInterface, ContextAware
     public function execute(string $type, string $sql, array $bind = []): int
     {
         $event = [
-                     'delete' => [DbDeleting::class, DbDeleted::class],
-                     'update' => [DbUpdating::class, DbUpdated::class],
-                     'insert' => [DbInserting::class, DbInserted::class]
-                 ][$type] ?? null;
+            'delete' => [DbDeleting::class, DbDeleted::class],
+            'update' => [DbUpdating::class, DbUpdated::class],
+            'insert' => [DbInserting::class, DbInserted::class]
+        ][$type] ?? null;
 
         $context = $this->getContext();
 
@@ -222,19 +222,21 @@ class Db implements DbInterface, ContextAware
 
     public function fetchOne(
         string $sql,
-        array $bind = [],
-        int $mode = PDO::FETCH_ASSOC,
-        bool $useMaster = false
-    ): ?array {
+        array  $bind = [],
+        int    $mode = PDO::FETCH_ASSOC,
+        bool   $useMaster = false
+    ): ?array
+    {
         return $this->fetchAll($sql, $bind, $mode, $useMaster)[0] ?? null;
     }
 
     public function fetchAll(
         string $sql,
-        array $bind = [],
-        int $mode = PDO::FETCH_ASSOC,
-        bool $useMaster = false
-    ): array {
+        array  $bind = [],
+        int    $mode = PDO::FETCH_ASSOC,
+        bool   $useMaster = false
+    ): array
+    {
         $context = $this->getContext();
 
         if ($context->connection) {
@@ -389,11 +391,12 @@ class Db implements DbInterface, ContextAware
     }
 
     public function upsert(
-        string $table,
-        array $insertFieldValues,
-        array $updateFieldValues = [],
+        string  $table,
+        array   $insertFieldValues,
+        array   $updateFieldValues = [],
         ?string $primaryKey = null
-    ): int {
+    ): int
+    {
         if (!$primaryKey) {
             $primaryKey = (string)key($insertFieldValues);
         }

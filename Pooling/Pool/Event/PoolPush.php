@@ -8,16 +8,18 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Pooling\PoolsInterface;
 use Psr\Log\LogLevel;
 use Stringable;
+use function json_stringify;
 
 #[TraceLevel(LogLevel::DEBUG)]
 class PoolPush implements Stringable
 {
     public function __construct(
         public PoolsInterface $pools,
-        public object $owner,
-        public object $instance,
-        public string $type,
-    ) {
+        public object         $owner,
+        public object         $instance,
+        public string         $type,
+    )
+    {
 
     }
 

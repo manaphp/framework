@@ -19,7 +19,7 @@ interface FileInterface
     public function moveTo(
         string $dst,
         string $allowedExtensions = 'jpg,jpeg,png,gif,doc,xls,pdf,zip',
-        bool $overwrite = false
+        bool   $overwrite = false
     ): void;
 
     public function getExtension(): string;

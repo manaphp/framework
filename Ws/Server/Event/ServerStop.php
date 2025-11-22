@@ -14,9 +14,10 @@ class ServerStop
 {
     public function __construct(
         public ServerInterface $server,
-        public Server $swoole,
-        public int $worker_id,
-    ) {
+        public Server          $swoole,
+        public int             $worker_id,
+    )
+    {
 
     }
 }

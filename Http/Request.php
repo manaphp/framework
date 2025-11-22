@@ -58,13 +58,14 @@ class Request implements RequestInterface, JsonSerializable, ContextAware
     }
 
     public function prepare(
-        array $GET,
-        array $POST,
-        array $SERVER,
+        array   $GET,
+        array   $POST,
+        array   $SERVER,
         ?string $RAW_BODY = null,
-        array $COOKIE = [],
-        array $FILES = []
-    ): void {
+        array   $COOKIE = [],
+        array   $FILES = []
+    ): void
+    {
         $context = $this->getContext();
 
         if (!$POST

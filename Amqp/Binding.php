@@ -12,11 +12,12 @@ class Binding
     public array $arguments;
 
     public function __construct(
-        string|Queue $queue,
+        string|Queue    $queue,
         string|Exchange $exchange,
-        string $binding_key,
-        array $arguments = []
-    ) {
+        string          $binding_key,
+        array           $arguments = []
+    )
+    {
         $this->queue = $queue;
         $this->exchange = $exchange;
         $this->binding_key = $binding_key;

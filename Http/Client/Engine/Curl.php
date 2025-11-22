@@ -11,7 +11,19 @@ use ManaPHP\Http\Client\ConnectionException;
 use ManaPHP\Http\Client\EngineInterface;
 use ManaPHP\Http\Client\Request;
 use ManaPHP\Http\Client\Response;
+use function curl_close;
+use function curl_errno;
+use function curl_error;
+use function curl_exec;
+use function curl_getinfo;
+use function curl_init;
+use function curl_setopt;
+use function explode;
 use function is_int;
+use function microtime;
+use function parse_url;
+use function round;
+use function substr;
 
 class Curl implements EngineInterface
 {

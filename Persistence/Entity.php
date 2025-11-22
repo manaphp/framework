@@ -28,8 +28,8 @@ class Entity implements ArrayAccess, JsonSerializable, Stringable
     /**
      * Assigns values to an entity from an array
      *
-     * @param array|Entity $data   =entity_var(new static)
-     * @param array        $fields =entity_fields(static::class)
+     * @param array|Entity $data =entity_var(new static)
+     * @param array $fields =entity_fields(static::class)
      *
      * @return static
      */

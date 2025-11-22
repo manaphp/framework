@@ -13,11 +13,12 @@ class RedisCalled
 {
     public function __construct(
         public Connection $redis,
-        public string $method,
-        public array $arguments,
-        public float $elapsed,
-        public mixed $return,
-    ) {
+        public string     $method,
+        public array      $arguments,
+        public float      $elapsed,
+        public mixed      $return,
+    )
+    {
 
     }
 }

@@ -14,9 +14,10 @@ use function preg_split;
 class EventWrapper implements JsonSerializable, Stringable
 {
     public function __construct(
-        public object $event,
+        public object  $event,
         public ?string $fields = null,
-    ) {
+    )
+    {
 
     }
 

@@ -32,9 +32,14 @@ use Swoole\Runtime;
 use Swoole\WebSocket\Frame;
 use Swoole\WebSocket\Server;
 use Throwable;
+use function array_merge;
+use function basename;
 use function dirname;
 use function in_array;
+use function json_stringify;
 use function sprintf;
+use function str_repeat;
+use function strtoupper;
 
 class Swoole implements ServerInterface
 {
@@ -289,12 +294,6 @@ class Swoole implements ServerInterface
         console_log('info', 'shutdown');
     }
 
-    /**
-     * @param int   $fd
-     * @param mixed $data
-     *
-     * @return bool
-     */
     public function push(int $fd, string $data): bool
     {
         return @$this->swoole->push($fd, $data);

@@ -9,7 +9,13 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Rendering\Engine\Sword\Compiler;
 use ManaPHP\Rendering\EngineInterface;
+use function extract;
+use function file_exists;
+use function filemtime;
+use function str_replace;
+use function str_starts_with;
 use function strlen;
+use function substr;
 
 class Sword implements EngineInterface
 {

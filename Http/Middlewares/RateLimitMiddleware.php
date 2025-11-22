@@ -16,6 +16,9 @@ use ManaPHP\Redis\RedisInterface;
 use ReflectionMethod;
 use function sprintf;
 use function strlen;
+use function strpos;
+use function substr;
+use function trim;
 
 class RateLimitMiddleware
 {

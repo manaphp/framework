@@ -33,15 +33,16 @@ class Client implements ClientInterface
 
     /** @noinspection PhpTypedPropertyMightBeUninitializedInspection */
     public function __construct(
-        string $endpoint,
+        string  $endpoint,
         ?string $proxy = null,
-        float $timeout = 3.0,
+        float   $timeout = 3.0,
         ?string $protocol = null,
-        bool $masking = true,
+        bool    $masking = true,
         ?string $origin = null,
-        string $user_agent = 'manaphp/client',
-        int $pool_size = 4
-    ) {
+        string  $user_agent = 'manaphp/client',
+        int     $pool_size = 4
+    )
+    {
         $this->endpoint = $endpoint;
         $this->proxy = $proxy;
         $this->timeout = $timeout;

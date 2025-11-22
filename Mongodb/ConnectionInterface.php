@@ -22,9 +22,9 @@ interface ConnectionInterface
 
     public function fetchAll(
         string $namespace,
-        array $filter = [],
-        array $options = [],
-        bool $secondaryPreferred = true
+        array  $filter = [],
+        array  $options = [],
+        bool   $secondaryPreferred = true
     ): array;
 
     public function command(array $command, string $db): array;

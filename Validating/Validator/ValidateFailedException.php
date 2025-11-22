@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Validating\Validator;
 
 use ManaPHP\Exception;
+use function json_stringify;
 
 class ValidateFailedException extends Exception
 {

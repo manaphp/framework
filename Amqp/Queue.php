@@ -12,10 +12,6 @@ class Queue implements JsonSerializable
     public string $name;
     public array $features;
 
-    /**
-     * @param string $name
-     * @param array  $features
-     */
     public function __construct(string $name, array $features = [])
     {
         $this->name = $name;

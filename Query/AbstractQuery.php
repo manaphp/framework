@@ -489,12 +489,6 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
         }
     }
 
-    /**
-     * @param string     $field
-     * @param string|int $date
-     *
-     * @return static
-     */
     public function whereMonth(string $field, int|string $date): static
     {
         if ($this->entityClass) {
@@ -516,12 +510,6 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
         }
     }
 
-    /**
-     * @param string     $field
-     * @param string|int $date
-     *
-     * @return static
-     */
     public function whereYear(string $field, int|string $date): static
     {
         if ($this->entityClass) {

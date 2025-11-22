@@ -10,16 +10,18 @@ use ManaPHP\Http\Client\Request;
 use ManaPHP\Http\ClientInterface;
 use Psr\Log\LogLevel;
 use Stringable;
+use function json_stringify;
 
 #[TraceLevel(LogLevel::NOTICE)]
 class HttpClientRequesting implements JsonSerializable, Stringable
 {
     public function __construct(
         public ClientInterface $client,
-        public string $method,
-        public string|array $url,
-        public Request $request
-    ) {
+        public string          $method,
+        public string|array    $url,
+        public Request         $request
+    )
+    {
 
     }
 

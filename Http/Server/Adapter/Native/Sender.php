@@ -16,6 +16,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use function header;
 use function headers_sent;
 use function readfile;
+use function setcookie;
 use function strlen;
 
 class Sender implements SenderInterface

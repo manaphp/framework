@@ -10,8 +10,16 @@ use ManaPHP\Http\Client\Response\Cookie;
 use Stringable;
 use function array_slice;
 use function count;
+use function get_object_vars;
 use function is_array;
+use function json_parse;
+use function str_starts_with;
 use function strlen;
+use function strpos;
+use function strtoupper;
+use function substr;
+use function time;
+use function trim;
 
 class Response implements JsonSerializable, Stringable
 {

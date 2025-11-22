@@ -6,6 +6,8 @@ namespace ManaPHP\Http\Metrics;
 
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Di\Attribute\Config;
+use function array_shift;
+use function implode;
 
 class Formatter implements FormatterInterface
 {
@@ -58,11 +60,12 @@ class Formatter implements FormatterInterface
     }
 
     protected function histogramInternal(
-        string $name,
+        string          $name,
         array|Histogram $histograms,
-        array $labels,
-        array $levels = []
-    ): string {
+        array           $labels,
+        array           $levels = []
+    ): string
+    {
         $str = '';
         if ($levels === []) {
             foreach ($histograms->buckets as $le_name => $le_value) {

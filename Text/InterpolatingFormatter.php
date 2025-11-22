@@ -19,6 +19,7 @@ use function preg_match_all;
 use function preg_replace;
 use function realpath;
 use function str_contains;
+use function strtr;
 
 class InterpolatingFormatter implements InterpolatingFormatterInterface
 {

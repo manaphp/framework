@@ -13,10 +13,11 @@ class TransientRedis extends Redis
      * @noinspection MagicMethodsValidityInspection
      */
     public function __construct(
-        PoolsInterface $pools,
+        PoolsInterface   $pools,
         protected object $owner,
-        Connection $connection
-    ) {
+        Connection       $connection
+    )
+    {
         $this->pools = $pools;
         $this->connection = $connection;
     }

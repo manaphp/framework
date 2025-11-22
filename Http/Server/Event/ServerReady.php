@@ -11,11 +11,12 @@ use Psr\Log\LogLevel;
 class ServerReady
 {
     public function __construct(
-        public mixed $server,
+        public mixed  $server,
         public string $host,
-        public int $port,
-        public array $settings = []
-    ) {
+        public int    $port,
+        public array  $settings = []
+    )
+    {
 
     }
 }

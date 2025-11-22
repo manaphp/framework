@@ -86,15 +86,16 @@ class MongodbCommand extends Command
     /**
      * generate entities file from data files or online data
      *
-     * @param int   $sample sample size
-     * @param array $db     db name list
+     * @param int $sample sample size
+     * @param array $db db name list
      *
      * @return void
      */
     public function entitiesAction(
-        int $sample = 1000,
+        int   $sample = 1000,
         array $db = []
-    ): void {
+    ): void
+    {
         foreach ($this->getConnections() as $connection) {
             $mongodb = $this->mongodbFactory->get($connection);
 
@@ -196,7 +197,7 @@ class MongodbCommand extends Command
     }
 
     /**
-     * @param array  $fieldTypes
+     * @param array $fieldTypes
      * @param string $entityName
      *
      * @return string
@@ -251,7 +252,7 @@ class MongodbCommand extends Command
      * export mongodb data to csv files
      *
      * @param string $collection_pattern match collections against a pattern
-     * @param bool   $bom                contains BOM or not
+     * @param bool $bom contains BOM or not
      *
      * @return void
      */
@@ -331,16 +332,17 @@ class MongodbCommand extends Command
      * list databases and collections
      *
      * @param string $collection_pattern match collections against a pattern
-     * @param string $field              collection must contain one this field
-     * @param array  $db
+     * @param string $field collection must contain one this field
+     * @param array $db
      *
      * @return void
      */
     public function listAction(
         string $collection_pattern = '',
         string $field = '',
-        array $db = []
-    ): void {
+        array  $db = []
+    ): void
+    {
         foreach ($this->getConnections() as $connection) {
             $mongodb = $this->mongodbFactory->get($connection);
 

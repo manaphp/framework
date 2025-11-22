@@ -10,10 +10,11 @@ class QueuePush
 {
     public function __construct(
         public QueueInterface $queue,
-        public string $topic,
-        public string $body,
-        public int $priority,
-    ) {
+        public string         $topic,
+        public string         $body,
+        public int            $priority,
+    )
+    {
 
     }
 }

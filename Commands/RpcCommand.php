@@ -49,12 +49,6 @@ class RpcCommand extends Command
         }
     }
 
-    /**
-     * @param string $class
-     * @param array  $methods
-     *
-     * @return string
-     */
     protected function renderService(string $class, array $methods): string
     {
         $serviceName = basename($class, 'Controller') . 'Service';

@@ -27,7 +27,7 @@ class MappingScanner implements MappingScannerInterface
 
     #[Autowired] protected array $files
         = ['@app/Controllers/*Controller.php',
-           '@app/Areas/*/Controllers/*Controller.php'
+            '@app/Areas/*/Controllers/*Controller.php'
         ];
 
     protected function load(): void

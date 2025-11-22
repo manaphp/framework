@@ -10,9 +10,10 @@ class SendMessage
 {
     public function __construct(
         public WorkersInterface $workers,
-        public string $caller,
-        public int $task_worker_id
-    ) {
+        public string           $caller,
+        public int              $task_worker_id
+    )
+    {
     }
 
     public function __call($method, $args): bool

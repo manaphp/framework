@@ -6,6 +6,16 @@ namespace ManaPHP\Http\Captcha\Adapter;
 
 use ManaPHP\Http\AbstractCaptcha;
 use function count;
+use function explode;
+use function imagecolorallocate;
+use function imagecreatetruecolor;
+use function imagedestroy;
+use function imagefilledrectangle;
+use function imagejpeg;
+use function imagettftext;
+use function ob_get_clean;
+use function ob_start;
+use function random_int;
 use function strlen;
 
 class Gd extends AbstractCaptcha

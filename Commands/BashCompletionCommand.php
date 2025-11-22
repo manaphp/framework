@@ -128,12 +128,6 @@ class BashCompletionCommand extends Command
         return $argument_values;
     }
 
-    /**
-     * @param array  $words
-     * @param string $current
-     *
-     * @return array
-     */
     protected function filterWords(array $words, string $current): array
     {
         if ($current === '') {

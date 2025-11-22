@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Ws\Client;
 
 use JsonSerializable;
+use function get_object_vars;
 
 class Message implements JsonSerializable
 {

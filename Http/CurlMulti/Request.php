@@ -16,11 +16,12 @@ class Request
     public float $start_time;
 
     public function __construct(
-        string|array $url,
-        ?callable $callbacks = null,
-        string $method = 'GET',
+        string|array      $url,
+        ?callable         $callbacks = null,
+        string            $method = 'GET',
         string|array|null $body = null
-    ) {
+    )
+    {
         $this->url = $url;
         $this->callbacks = $callbacks;
         $this->method = $method;

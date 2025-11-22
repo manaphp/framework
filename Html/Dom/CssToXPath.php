@@ -5,6 +5,14 @@ declare(strict_types=1);
 namespace ManaPHP\Html\Dom;
 
 use function count;
+use function explode;
+use function implode;
+use function ltrim;
+use function str_contains;
+use function str_replace;
+use function str_starts_with;
+use function strtolower;
+use function trim;
 
 class CssToXPath
 {

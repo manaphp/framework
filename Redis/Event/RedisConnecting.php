@@ -13,8 +13,9 @@ class RedisConnecting
 {
     public function __construct(
         public Connection $connection,
-        public string $uri,
-    ) {
+        public string     $uri,
+    )
+    {
 
     }
 }

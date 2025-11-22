@@ -16,8 +16,9 @@ class RequestInvoked
 
     public function __construct(
         public ReflectionMethod $method,
-        public mixed $return,
-    ) {
+        public mixed            $return,
+    )
+    {
         $this->controller = $this->method->class;
         $this->action = $this->method->name;
     }

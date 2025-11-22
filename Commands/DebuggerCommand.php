@@ -24,8 +24,8 @@ class DebuggerCommand extends Command
      * monitor generated urls
      *
      * @param ?string $app_id
-     * @param string  $path
-     * @param string  $ip
+     * @param string $path
+     * @param string $ip
      *
      * @return void
      */

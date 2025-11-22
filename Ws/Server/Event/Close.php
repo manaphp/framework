@@ -8,7 +8,8 @@ class Close
 {
     public function __construct(
         public int $fd,
-    ) {
+    )
+    {
 
     }
 }

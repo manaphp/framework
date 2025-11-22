@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ManaPHP\Di;
 
 use JsonSerializable;
+use function array_keys;
 
 class Factory implements FactoryInterface, JsonSerializable
 {

@@ -8,6 +8,7 @@ use Attribute;
 use ManaPHP\Exception\MisuseException;
 use ManaPHP\Persistence\Entity;
 use ManaPHP\Query\QueryInterface;
+use function array_column;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class HasMany extends AbstractRelation

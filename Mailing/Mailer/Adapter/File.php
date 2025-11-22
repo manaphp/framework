@@ -9,6 +9,9 @@ use ManaPHP\Helper\LocalFS;
 use ManaPHP\Mailing\AbstractMailer;
 use ManaPHP\Mailing\Mailer\Message;
 use function count;
+use function date;
+use function json_stringify;
+use function str_repeat;
 
 class File extends AbstractMailer
 {

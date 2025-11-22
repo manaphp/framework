@@ -40,7 +40,7 @@ interface QueryInterface
 
     /**
      * @param string $field =entity_field(new Model)
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return static
      */
@@ -49,7 +49,7 @@ interface QueryInterface
     /**
      * @param string $field =entity_field(new Model)
      * @param string $operator
-     * @param mixed  $value
+     * @param mixed $value
      *
      * @return static
      */
@@ -57,8 +57,8 @@ interface QueryInterface
 
     /**
      * @param string $field =entity_field(new Model)
-     * @param int    $divisor
-     * @param int    $remainder
+     * @param int $divisor
+     * @param int $remainder
      *
      * @return static
      */
@@ -69,7 +69,7 @@ interface QueryInterface
     /**
      * Appends a BETWEEN condition to the current conditions
      *
-     * @param string           $field =entity_field(new Model)
+     * @param string $field =entity_field(new Model)
      * @param int|float|string $min
      * @param int|float|string $max
      *
@@ -80,7 +80,7 @@ interface QueryInterface
     /**
      * Appends a NOT BETWEEN condition to the current conditions
      *
-     * @param string           $field =entity_field(new Model)
+     * @param string $field =entity_field(new Model)
      * @param int|float|string $min
      * @param int|float|string $max
      *
@@ -89,7 +89,7 @@ interface QueryInterface
     public function whereNotBetween(string $field, mixed $min, mixed $max): static;
 
     /**
-     * @param string     $field =entity_field(new Model)
+     * @param string $field =entity_field(new Model)
      * @param int|string $min
      * @param int|string $max
      *
@@ -101,7 +101,7 @@ interface QueryInterface
      * Appends an IN condition to the current conditions
      *
      * @param string $field =entity_field(new Model)
-     * @param array  $values
+     * @param array $values
      *
      * @return static
      */
@@ -111,7 +111,7 @@ interface QueryInterface
      * Appends a NOT IN condition to the current conditions
      *
      * @param string $field =entity_field(new Model)
-     * @param array  $values
+     * @param array $values
      *
      * @return static
      */
@@ -135,7 +135,7 @@ interface QueryInterface
 
     /**
      * @param string|array $fields =entity_fields(new Model) ?: entity_field(new Model)
-     * @param string       $value
+     * @param string $value
      *
      * @return static
      */
@@ -143,7 +143,7 @@ interface QueryInterface
 
     /**
      * @param string|array $fields =entity_fields(new Model) ?: entity_field(new Model)
-     * @param string       $value
+     * @param string $value
      *
      * @return static
      */
@@ -151,8 +151,8 @@ interface QueryInterface
 
     /**
      * @param string|array $fields =entity_fields(new Model) ?: entity_field(new Model)
-     * @param string       $value
-     * @param ?int         $length
+     * @param string $value
+     * @param ?int $length
      *
      * @return static
      */
@@ -160,8 +160,8 @@ interface QueryInterface
 
     /**
      * @param string|array $fields =entity_fields(new Model) ?: entity_field(new Model)
-     * @param string       $value
-     * @param ?int         $length
+     * @param string $value
+     * @param ?int $length
      *
      * @return static
      */
@@ -169,7 +169,7 @@ interface QueryInterface
 
     /**
      * @param string|array $fields =entity_fields(new Model)?: entity_field(new Model)
-     * @param string       $value
+     * @param string $value
      *
      * @return static
      */
@@ -177,7 +177,7 @@ interface QueryInterface
 
     /**
      * @param string|array $fields =entity_fields(new Model) ?: entity_field(new Model)
-     * @param string       $value
+     * @param string $value
      *
      * @return static
      */
@@ -185,7 +185,7 @@ interface QueryInterface
 
     /**
      * @param string|array $fields =entity_fields(new Model) ?: entity_field(new Model)
-     * @param string       $value
+     * @param string $value
      *
      * @return static
      */
@@ -193,7 +193,7 @@ interface QueryInterface
 
     /**
      * @param string|array $fields =entity_fields(new Model) ?: entity_field(new Model)
-     * @param string       $value
+     * @param string $value
      *
      * @return static
      */
@@ -285,7 +285,7 @@ interface QueryInterface
 
     /**
      * @param string $field =entity_field(new Model)
-     * @param mixed  $default
+     * @param mixed $default
      *
      * @return mixed
      */
@@ -350,7 +350,7 @@ interface QueryInterface
     public function callable(callable $call): static;
 
     /**
-     * @param string     $field =entity_field(new Model)
+     * @param string $field =entity_field(new Model)
      * @param string|int $date
      *
      * @return static
@@ -358,7 +358,7 @@ interface QueryInterface
     public function whereDate(string $field, int|string $date): static;
 
     /**
-     * @param string     $field =entity_field(new Model)
+     * @param string $field =entity_field(new Model)
      * @param string|int $date
      *
      * @return static
@@ -366,7 +366,7 @@ interface QueryInterface
     public function whereMonth(string $field, int|string $date): static;
 
     /**
-     * @param string     $field =entity_field(new Model)
+     * @param string $field =entity_field(new Model)
      * @param string|int $date
      *
      * @return static

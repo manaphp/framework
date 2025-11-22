@@ -47,12 +47,6 @@ class SwordCommand extends Command
         }
     }
 
-    /**
-     * @param string $file
-     * @param bool   $replace
-     *
-     * @return void
-     */
     protected function compile(string $file, bool $replace): void
     {
         if ($replace) {

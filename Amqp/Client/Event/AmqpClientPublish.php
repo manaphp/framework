@@ -13,11 +13,12 @@ class AmqpClientPublish extends AbstractEvent
     public function __construct(
         public ClientInterface $client,
         public string|Exchange $exchange,
-        public string|Queue $routing_key,
-        public string|array $body,
-        public array $properties,
-        public bool $mandatory,
-    ) {
+        public string|Queue    $routing_key,
+        public string|array    $body,
+        public array           $properties,
+        public bool            $mandatory,
+    )
+    {
 
     }
 }

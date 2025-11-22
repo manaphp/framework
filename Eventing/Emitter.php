@@ -18,7 +18,7 @@ class Emitter implements EmitterInterface
 
     /**
      * @param string $event
-     * @param mixed  $data
+     * @param mixed $data
      *
      * @return mixed
      */

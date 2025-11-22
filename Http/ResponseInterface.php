@@ -9,13 +9,13 @@ use Stringable;
 interface ResponseInterface
 {
     public function setCookie(
-        string $name,
-        mixed $value,
-        int $expire = 0,
+        string  $name,
+        mixed   $value,
+        int     $expire = 0,
         ?string $path = null,
         ?string $domain = null,
-        bool $secure = false,
-        bool $httponly = true
+        bool    $secure = false,
+        bool    $httponly = true
     ): static;
 
     public function getCookies(): array;

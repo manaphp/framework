@@ -183,7 +183,7 @@ class HelpCommand extends Command
 
     /**
      * @param ReflectionMethod $rMethod
-     * @param string           $method
+     * @param string $method
      *
      * @throws JsonException
      */

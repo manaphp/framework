@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ManaPHP\Rendering\Engine;
 
 use ManaPHP\Rendering\EngineInterface;
+use function extract;
 
 class Php implements EngineInterface
 {

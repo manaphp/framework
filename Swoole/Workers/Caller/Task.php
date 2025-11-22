@@ -10,10 +10,11 @@ class Task
 {
     public function __construct(
         public WorkersInterface $workers,
-        public string $caller,
-        public int $task_worker_id,
-        public ?float $timeout,
-    ) {
+        public string           $caller,
+        public int              $task_worker_id,
+        public ?float           $timeout,
+    )
+    {
     }
 
     public function __call($method, $args): mixed

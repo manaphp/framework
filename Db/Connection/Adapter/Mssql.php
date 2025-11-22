@@ -12,6 +12,10 @@ use ManaPHP\Exception\NotImplementedException;
 use ManaPHP\Exception\PreconditionException;
 use PDO;
 use function count;
+use function explode;
+use function implode;
+use function parse_url;
+use function trim;
 
 class Mssql extends AbstractConnection
 {
@@ -56,9 +60,9 @@ class Mssql extends AbstractConnection
         parent::__construct();
     }
 
-    #[ArrayShape([Db::METADATA_ATTRIBUTES         => 'array',
-                  Db::METADATA_PRIMARY_KEY        => 'array',
-                  Db::METADATA_AUTO_INCREMENT_KEY => 'mixed|null'])]
+    #[ArrayShape([Db::METADATA_ATTRIBUTES => 'array',
+        Db::METADATA_PRIMARY_KEY => 'array',
+        Db::METADATA_AUTO_INCREMENT_KEY => 'mixed|null'])]
     public function getMetadata(string $table): array
     {
         $parts = explode('.', $table);

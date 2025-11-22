@@ -151,12 +151,12 @@ class Query extends AbstractQuery
         if (preg_match('#^(.+)\s*([<>=]+)\s*(.+)$#', $cond, $match)) {
             list(, $op1, $op2, $op3) = $match;
             $alg = [
-                '='  => '$eq',
+                '=' => '$eq',
                 '!=' => '$neq',
                 '<>' => '$neq',
-                '>'  => '$gt',
+                '>' => '$gt',
                 '>=' => '$gte',
-                '<'  => '$lt',
+                '<' => '$lt',
                 '<=' => '$lte'
             ];
             $normalized_op1 = is_numeric($op1) ? (float)$op1 : '$' . $op1;
@@ -194,13 +194,13 @@ class Query extends AbstractQuery
             $accumulator = strtolower($match[1]);
             $normalizes = [
                 'group_concat' => 'push',
-                'std'          => 'stdDevPop',
-                'stddev'       => 'stdDevPop',
-                'stddev_pop'   => 'stdDevPop',
-                'stddev_samp'  => 'stdDevSamp',
-                'addtoset'     => 'addToSet',
-                'stddevpop'    => 'stdDevPop',
-                'stddevsamp'   => 'stdDevSamp'
+                'std' => 'stdDevPop',
+                'stddev' => 'stdDevPop',
+                'stddev_pop' => 'stdDevPop',
+                'stddev_samp' => 'stdDevSamp',
+                'addtoset' => 'addToSet',
+                'stddevpop' => 'stdDevPop',
+                'stddevsamp' => 'stdDevSamp'
             ];
             if (isset($normalizes[$accumulator])) {
                 $accumulator = $normalizes[$accumulator];

@@ -8,6 +8,9 @@ use ManaPHP\Helper\SuppressWarnings;
 use Stringable;
 use function is_array;
 use function is_string;
+use function json_stringify;
+use function preg_match_all;
+use function strtr;
 
 class Exception extends \Exception
 {

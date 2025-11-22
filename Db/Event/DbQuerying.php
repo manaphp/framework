@@ -13,9 +13,10 @@ class DbQuerying
 {
     public function __construct(
         public DbInterface $db,
-        public string $sql,
-        public array $bind,
-    ) {
+        public string      $sql,
+        public array       $bind,
+    )
+    {
 
     }
 }

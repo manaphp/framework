@@ -29,12 +29,12 @@ interface ImageInterface
     public function watermark(string $file, int $offsetX = 0, int $offsetY = 0, float $opacity = 1.0): static;
 
     public function text(
-        string $text,
-        int $offsetX = 0,
-        int $offsetY = 0,
-        float $opacity = 1.0,
-        int $color = 0x000000,
-        int $size = 12,
+        string  $text,
+        int     $offsetX = 0,
+        int     $offsetY = 0,
+        float   $opacity = 1.0,
+        int     $color = 0x000000,
+        int     $size = 12,
         ?string $font_file = null
     ): static;
 

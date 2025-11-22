@@ -8,8 +8,23 @@ use ManaPHP\AliasInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\CreateDirectoryFailedException;
 use ManaPHP\Http\AbstractSession;
+use function clearstatcache;
 use function dirname;
+use function error_get_last;
+use function file_exists;
+use function file_get_contents;
+use function file_put_contents;
+use function filemtime;
+use function is_dir;
+use function is_file;
+use function mkdir;
+use function scandir;
 use function sprintf;
+use function substr;
+use function time;
+use function touch;
+use function trigger_error;
+use function unlink;
 
 class File extends AbstractSession
 {
@@ -62,7 +77,7 @@ class File extends AbstractSession
 
     /**
      * @param string $session_id
-     * @param int    $ttl
+     * @param int $ttl
      *
      * @return bool
      */

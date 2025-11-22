@@ -177,11 +177,12 @@ class Connection implements ConnectionInterface
     }
 
     protected function fetchAllInternal(
-        string $namespace,
-        array $filter,
-        array $options,
+        string         $namespace,
+        array          $filter,
+        array          $options,
         ReadPreference $readPreference
-    ): array {
+    ): array
+    {
         $cursor = $this->getManager()->executeQuery(
             $namespace,
             new MongodbQuery($filter, $options),
@@ -193,10 +194,11 @@ class Connection implements ConnectionInterface
 
     public function fetchAll(
         string $namespace,
-        array $filter = [],
-        array $options = [],
-        bool $secondaryPreferred = true
-    ): array {
+        array  $filter = [],
+        array  $options = [],
+        bool   $secondaryPreferred = true
+    ): array
+    {
         if (is_bool($secondaryPreferred)) {
             if ($secondaryPreferred) {
                 $readPreference = new ReadPreference(ReadPreference::SECONDARY_PREFERRED);

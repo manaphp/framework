@@ -13,10 +13,11 @@ class ServerPushing extends AbstractEvent
 {
     public function __construct(
         public ServerInterface $server,
-        public string $type,
-        public array $receivers,
-        public string $message,
-    ) {
+        public string          $type,
+        public array           $receivers,
+        public string          $message,
+    )
+    {
 
     }
 }

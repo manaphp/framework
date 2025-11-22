@@ -63,14 +63,15 @@ class Response implements ResponseInterface, ContextAware
     }
 
     public function setCookie(
-        string $name,
-        mixed $value,
-        int $expire = 0,
+        string  $name,
+        mixed   $value,
+        int     $expire = 0,
         ?string $path = null,
         ?string $domain = null,
-        bool $secure = false,
-        bool $httponly = true
-    ): static {
+        bool    $secure = false,
+        bool    $httponly = true
+    ): static
+    {
         $context = $this->getContext();
 
         if ($expire > 0) {

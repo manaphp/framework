@@ -26,11 +26,35 @@ namespace ManaPHP\Rendering\Engine;
 
 use JetBrains\PhpStorm\ArrayShape;
 use ManaPHP\Rendering\EngineInterface;
+use function array_combine;
+use function array_merge;
 use function array_slice;
 use function count;
+use function end;
+use function explode;
+use function file_get_contents;
 use function in_array;
 use function is_string;
+use function ltrim;
+use function method_exists;
+use function preg_match;
+use function preg_match_all;
+use function preg_replace;
+use function rtrim;
+use function str_contains;
+use function str_ends_with;
+use function str_repeat;
+use function str_replace;
+use function str_starts_with;
 use function strlen;
+use function strpbrk;
+use function strpos;
+use function strspn;
+use function strstr;
+use function strtolower;
+use function substr;
+use function substr_count;
+use function trim;
 
 class Markdown implements EngineInterface
 {

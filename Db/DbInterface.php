@@ -20,16 +20,16 @@ interface DbInterface
 
     public function fetchOne(
         string $sql,
-        array $bind = [],
-        int $mode = PDO::FETCH_ASSOC,
-        bool $useMaster = false
+        array  $bind = [],
+        int    $mode = PDO::FETCH_ASSOC,
+        bool   $useMaster = false
     ): ?array;
 
     public function fetchAll(
         string $sql,
-        array $bind = [],
-        int $mode = PDO::FETCH_ASSOC,
-        bool $useMaster = false
+        array  $bind = [],
+        int    $mode = PDO::FETCH_ASSOC,
+        bool   $useMaster = false
     ): array;
 
     public function insert(string $table, array $record, bool $fetchInsertId = false): mixed;
@@ -41,9 +41,9 @@ interface DbInterface
     public function updateBySql(string $table, string $sql, array $bind = []): int;
 
     public function upsert(
-        string $table,
-        array $insertFieldValues,
-        array $updateFieldValues = [],
+        string  $table,
+        array   $insertFieldValues,
+        array   $updateFieldValues = [],
         ?string $primaryKey = null
     ): int;
 

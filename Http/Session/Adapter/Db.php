@@ -8,6 +8,7 @@ use ManaPHP\Db\DbInterface;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\AbstractSession;
 use ManaPHP\Identifying\IdentityInterface;
+use function time;
 
 /**
  * CREATE TABLE `manaphp_session` (

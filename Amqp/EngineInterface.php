@@ -20,18 +20,18 @@ interface EngineInterface
 
     public function basicPublish(
         string|Exchange $exchange,
-        string|Queue $routing_key,
-        string|array $body,
-        array $properties,
-        bool $mandatory
+        string|Queue    $routing_key,
+        string|array    $body,
+        array           $properties,
+        bool            $mandatory
     ): void;
 
     public function basicConsume(
         string|Queue $queue,
-        callable $callback,
-        bool $no_ack,
-        bool $exclusive,
-        string $tag
+        callable     $callback,
+        bool         $no_ack,
+        bool         $exclusive,
+        string       $tag
     ): string;
 
     public function wait(int $prefetchSize, int $prefetchCount): void;

@@ -16,7 +16,9 @@ use ManaPHP\Ws\ServerInterface as WsServerInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use function count;
+use function explode;
 use function strlen;
+use function substr;
 
 class Server implements ServerInterface, BootstrapperInterface
 {

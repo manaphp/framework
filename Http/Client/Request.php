@@ -6,7 +6,10 @@ namespace ManaPHP\Http\Client;
 
 use JsonSerializable;
 use function count;
+use function get_object_vars;
+use function http_build_query;
 use function is_array;
+use function str_contains;
 
 class Request implements JsonSerializable
 {
@@ -19,12 +22,13 @@ class Request implements JsonSerializable
     public string $remote_ip;
 
     public function __construct(
-        string $method,
-        string|array $url,
+        string            $method,
+        string|array      $url,
         null|string|array $body,
-        array $headers,
-        array $options
-    ) {
+        array             $headers,
+        array             $options
+    )
+    {
         $this->method = $method;
 
         if (is_array($url)) {

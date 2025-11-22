@@ -14,11 +14,12 @@ class LoggerLog
 {
     public function __construct(
         public LoggerInterface $logger,
-        public string $level,
-        public mixed $message,
-        public array $context,
-        public Log $log,
-    ) {
+        public string          $level,
+        public mixed           $message,
+        public array           $context,
+        public Log             $log,
+    )
+    {
 
     }
 }

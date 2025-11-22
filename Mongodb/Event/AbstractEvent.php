@@ -6,6 +6,8 @@ namespace ManaPHP\Mongodb\Event;
 
 use JsonSerializable;
 use Stringable;
+use function get_object_vars;
+use function json_stringify;
 
 class AbstractEvent implements JsonSerializable, Stringable
 {

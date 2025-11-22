@@ -13,9 +13,10 @@ class MongodbCommanding extends AbstractEvent
 {
     public function __construct(
         public MongodbInterface $mongodb,
-        public string $db,
-        public array $command,
-    ) {
+        public string           $db,
+        public array            $command,
+    )
+    {
 
     }
 }

@@ -12,7 +12,9 @@ use ManaPHP\Http\Server\Adapter\Native\SenderInterface;
 use ManaPHP\Http\Server\Event\ServerReady;
 use ManaPHP\Http\Server\StaticHandlerInterface;
 use function console_log;
+use function file_get_contents;
 use function get_included_files;
+use function header;
 use function putenv;
 use function shell_exec;
 

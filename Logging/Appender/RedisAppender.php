@@ -9,6 +9,8 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Logging\AppenderInterface;
 use ManaPHP\Logging\Log;
 use ManaPHP\Redis\RedisInterface;
+use function date;
+use function json_stringify;
 use function sprintf;
 
 class RedisAppender implements AppenderInterface

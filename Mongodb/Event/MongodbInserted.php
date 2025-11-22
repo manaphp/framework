@@ -13,10 +13,11 @@ class MongodbInserted extends AbstractEvent
 {
     public function __construct(
         public MongodbInterface $mongodb,
-        public int $count,
-        public string $namespace,
-        public array $document
-    ) {
+        public int              $count,
+        public string           $namespace,
+        public array            $document
+    )
+    {
 
     }
 }

@@ -12,6 +12,8 @@ use ManaPHP\Helper\SuppressWarnings;
 use ManaPHP\Http\Event\RequestBegin;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
+use function strpos;
+use function substr;
 
 class CorsMiddleware
 {

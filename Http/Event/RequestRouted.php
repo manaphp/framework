@@ -14,9 +14,10 @@ use Psr\Log\LogLevel;
 class RequestRouted implements JsonSerializable
 {
     public function __construct(
-        public RouterInterface $router,
+        public RouterInterface   $router,
         public ?MatcherInterface $matcher,
-    ) {
+    )
+    {
 
     }
 

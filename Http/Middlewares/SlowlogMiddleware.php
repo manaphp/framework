@@ -11,7 +11,11 @@ use ManaPHP\Helper\LocalFS;
 use ManaPHP\Http\Event\RequestEnd;
 use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
+use function date;
 use function is_string;
+use function json_stringify;
+use function microtime;
+use function round;
 use function sprintf;
 
 class SlowlogMiddleware

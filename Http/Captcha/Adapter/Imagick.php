@@ -9,6 +9,8 @@ use ImagickDraw;
 use ImagickPixel;
 use ManaPHP\Http\AbstractCaptcha;
 use function count;
+use function min;
+use function random_int;
 use function strlen;
 
 class Imagick extends AbstractCaptcha

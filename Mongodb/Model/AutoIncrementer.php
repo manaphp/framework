@@ -9,6 +9,8 @@ use ManaPHP\Mongodb\MongodbFactoryInterface;
 use ManaPHP\Mongodb\MongodbInterface;
 use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Persistence\ShardingInterface;
+use function strpos;
+use function substr;
 
 class AutoIncrementer implements AutoIncrementerInterface
 {

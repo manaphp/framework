@@ -19,6 +19,7 @@ use PhpAmqpLib\Exception\AMQPProtocolChannelException;
 use PhpAmqpLib\Message\AMQPMessage;
 use function is_object;
 use function is_string;
+use function parse_url;
 
 class Php implements EngineInterface
 {
@@ -126,10 +127,11 @@ class Php implements EngineInterface
 
     public function queueDelete(
         string $queue,
-        bool $if_unused = false,
-        bool $if_empty = false,
-        bool $nowait = false
-    ): void {
+        bool   $if_unused = false,
+        bool   $if_empty = false,
+        bool   $nowait = false
+    ): void
+    {
         unset($this->queues[$queue]);
 
         $channel = $this->getChannel();
@@ -184,11 +186,12 @@ class Php implements EngineInterface
 
     public function basicPublish(
         string|Exchange $exchange,
-        string|Queue $routing_key,
-        string|array $body,
-        array $properties,
-        bool $mandatory
-    ): void {
+        string|Queue    $routing_key,
+        string|array    $body,
+        array           $properties,
+        bool            $mandatory
+    ): void
+    {
         $channel = $this->getChannel();
         if (is_object($exchange)) {
             $this->exchangeDeclareInternal($channel, $exchange);
@@ -206,11 +209,12 @@ class Php implements EngineInterface
 
     public function basicConsume(
         string|Queue $queue,
-        callable $callback,
-        bool $no_ack,
-        bool $exclusive,
-        string $tag
-    ): string {
+        callable     $callback,
+        bool         $no_ack,
+        bool         $exclusive,
+        string       $tag
+    ): string
+    {
         $channel = $this->getChannel();
 
         if (is_object($queue)) {

@@ -11,8 +11,14 @@ use ManaPHP\Http\Client\ConnectionException;
 use ManaPHP\Http\Client\EngineInterface;
 use ManaPHP\Http\Client\Request;
 use ManaPHP\Http\Client\Response;
+use function error_get_last;
 use function is_int;
 use function is_string;
+use function microtime;
+use function parse_url;
+use function round;
+use function strrpos;
+use function substr;
 
 class Fopen implements EngineInterface
 {

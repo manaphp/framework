@@ -13,7 +13,8 @@ class RequestDispatchBase
 
     public function __construct(
         public ReflectionMethod $method,
-    ) {
+    )
+    {
         $this->controller = $this->method->class;
         $this->action = $this->method->name;
     }

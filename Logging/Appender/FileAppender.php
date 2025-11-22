@@ -10,6 +10,15 @@ use ManaPHP\Di\Attribute\Config;
 use ManaPHP\Logging\AppenderInterface;
 use ManaPHP\Logging\Log;
 use function dirname;
+use function error_get_last;
+use function file_put_contents;
+use function is_dir;
+use function is_file;
+use function mkdir;
+use function preg_match_all;
+use function preg_replace;
+use function strtr;
+use function trigger_error;
 
 class FileAppender implements AppenderInterface
 {

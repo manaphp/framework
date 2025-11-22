@@ -7,8 +7,14 @@ namespace ManaPHP\Persistence\Hierarchy\Adapter;
 use ManaPHP\Helper\Str;
 use ManaPHP\Persistence\Hierarchy\Exception as HierarchyException;
 use ManaPHP\Query\QueryInterface;
+use function array_sum;
+use function base_convert;
+use function basename;
 use function count;
+use function pow;
+use function str_pad;
 use function strlen;
+use function substr;
 
 /**
  * @method static QueryInterface query()

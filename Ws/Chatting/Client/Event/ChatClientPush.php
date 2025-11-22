@@ -13,11 +13,12 @@ class ChatClientPush
 {
     public function __construct(
         public ClientInterface $client,
-        public string $type,
-        public string $room,
-        public string|array $receivers,
-        public string|array $message,
-    ) {
+        public string          $type,
+        public string          $room,
+        public string|array    $receivers,
+        public string|array    $message,
+    )
+    {
 
     }
 }

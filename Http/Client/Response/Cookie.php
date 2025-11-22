@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace ManaPHP\Http\Client\Response;
 
+use function explode;
 use function sprintf;
+use function strpos;
+use function strtolower;
+use function strtotime;
+use function substr;
+use function trim;
 
 class Cookie
 {

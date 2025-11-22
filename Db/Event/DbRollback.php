@@ -13,7 +13,8 @@ class DbRollback
 {
     public function __construct(
         public DbInterface $db,
-    ) {
+    )
+    {
 
     }
 }

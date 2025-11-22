@@ -11,11 +11,11 @@ interface CookiesInterface
     public function set(
         string $name,
         string $value,
-        int $expire = 0,
+        int    $expire = 0,
         string $path = '',
         string $domain = '',
-        bool $secure = false,
-        bool $httponly = true
+        bool   $secure = false,
+        bool   $httponly = true
     ): static;
 
     public function get(string $name, mixed $default = null): mixed;

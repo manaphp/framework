@@ -16,10 +16,11 @@ class ServerDispatchedTask implements JsonSerializable
 {
     public function __construct(
         public Server $server,
-        public int $task_id,
-        public int $src_worker_id,
-        public mixed $data
-    ) {
+        public int    $task_id,
+        public int    $src_worker_id,
+        public mixed  $data
+    )
+    {
 
     }
 

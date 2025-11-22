@@ -13,9 +13,10 @@ class DbConnecting
 {
     public function __construct(
         public ConnectionInterface $connection,
-        public string $dsn,
-        public string $uri,
-    ) {
+        public string              $dsn,
+        public string              $uri,
+    )
+    {
 
     }
 }

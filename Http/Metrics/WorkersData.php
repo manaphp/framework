@@ -11,6 +11,8 @@ use ManaPHP\Swoole\WorkersTrait;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 use function count;
+use function ksort;
+use function microtime;
 
 class WorkersData implements WorkersDataInterface, ContextAware
 {

@@ -11,11 +11,12 @@ use ManaPHP\Amqp\Queue;
 class AmqpClientConsumed extends AbstractEvent
 {
     public function __construct(
-        public ClientInterface $client,
-        public string|Queue $queue,
+        public ClientInterface  $client,
+        public string|Queue     $queue,
         public MessageInterface $message,
-        public mixed $return,
-    ) {
+        public mixed            $return,
+    )
+    {
 
     }
 }

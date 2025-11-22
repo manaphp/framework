@@ -13,12 +13,13 @@ class MongodbCommanded extends AbstractEvent
 {
     public function __construct(
         public MongodbInterface $mongodb,
-        public string $db,
-        public array $command,
-        public array $result,
-        public int $count,
-        public float $elapsed,
-    ) {
+        public string           $db,
+        public array            $command,
+        public array            $result,
+        public int              $count,
+        public float            $elapsed,
+    )
+    {
 
     }
 }

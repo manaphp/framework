@@ -8,8 +8,18 @@ use JsonSerializable;
 use ManaPHP\Helper\Container;
 use ManaPHP\Mailing\MailerInterface;
 use ManaPHP\Rendering\RendererInterface;
+use function basename;
+use function bin2hex;
+use function date;
+use function explode;
+use function get_object_vars;
 use function is_array;
 use function is_string;
+use function md5;
+use function pathinfo;
+use function preg_match;
+use function random_bytes;
+use function substr;
 
 class Message implements JsonSerializable
 {
@@ -150,7 +160,7 @@ class Message implements JsonSerializable
     }
 
     /**
-     * @param string  $html
+     * @param string $html
      * @param ?string $text
      *
      * @return static

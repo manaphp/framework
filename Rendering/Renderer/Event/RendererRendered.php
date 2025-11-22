@@ -13,10 +13,11 @@ class RendererRendered
 {
     public function __construct(
         public RendererInterface $renderer,
-        public string $template,
-        public string $file,
-        public array $vars,
-    ) {
+        public string            $template,
+        public string            $file,
+        public array             $vars,
+    )
+    {
 
     }
 }

@@ -9,8 +9,9 @@ class TaskWaitCallMessage
     public function __construct(
         public string $id,
         public string $method,
-        public array $arguments
-    ) {
+        public array  $arguments
+    )
+    {
 
     }
 }

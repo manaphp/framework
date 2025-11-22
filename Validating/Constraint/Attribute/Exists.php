@@ -14,8 +14,11 @@ use ManaPHP\Persistence\Entity;
 use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
+use function class_exists;
 use function get_class;
 use function sprintf;
+use function strrpos;
+use function substr;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Exists extends AbstractConstraint

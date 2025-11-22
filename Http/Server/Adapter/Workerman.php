@@ -15,7 +15,12 @@ use Throwable;
 use Workerman\Connection\ConnectionInterface;
 use Workerman\Protocols\Http;
 use Workerman\Worker;
+use function basename;
 use function dirname;
+use function json_stringify;
+use function microtime;
+use function str_contains;
+use function str_repeat;
 use function strlen;
 
 class Workerman extends AbstractServer implements ContextAware

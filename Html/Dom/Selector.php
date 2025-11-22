@@ -9,6 +9,8 @@ use DOMNode;
 use DOMText;
 use function in_array;
 use function is_string;
+use function strpos;
+use function substr;
 
 class Selector
 {

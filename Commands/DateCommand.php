@@ -33,7 +33,7 @@ class DateCommand extends Command
 
     /**
      * @param string $url
-     * @param bool   $onlyOnce
+     * @param bool $onlyOnce
      *
      * @return ?int
      * @noinspection PhpUnusedLocalVariableInspection

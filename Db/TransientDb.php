@@ -14,11 +14,12 @@ class TransientDb extends Db
      * @noinspection PhpMissingParentConstructorInspection
      */
     public function __construct(
-        PoolsInterface $pools,
-        protected object $owner,
+        PoolsInterface      $pools,
+        protected object    $owner,
         ConnectionInterface $connection,
-        protected string $type
-    ) {
+        protected string    $type
+    )
+    {
         $this->pools = $pools;
 
         $this->context = new DbContext();

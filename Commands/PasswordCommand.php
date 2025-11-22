@@ -15,10 +15,10 @@ class PasswordCommand extends Command
     /**
      * generate a new password
      *
-     * @param int    $length
+     * @param int $length
      * @param string $password
-     * @param int    $base
-     * @param int    $cost
+     * @param int $base
+     * @param int $cost
      *
      * @return void
      */

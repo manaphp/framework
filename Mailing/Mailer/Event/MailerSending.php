@@ -10,14 +10,16 @@ use ManaPHP\Mailing\Mailer\Message;
 use ManaPHP\Mailing\MailerInterface;
 use Psr\Log\LogLevel;
 use Stringable;
+use function json_stringify;
 
 #[TraceLevel(LogLevel::NOTICE)]
 class MailerSending implements JsonSerializable, Stringable
 {
     public function __construct(
         public MailerInterface $mailer,
-        public Message $message
-    ) {
+        public Message         $message
+    )
+    {
 
     }
 

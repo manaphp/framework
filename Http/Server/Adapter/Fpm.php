@@ -8,6 +8,7 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Http\AbstractServer;
 use ManaPHP\Http\Server\Adapter\Native\SenderInterface;
 use ManaPHP\Http\Server\Event\ServerReady;
+use function file_get_contents;
 
 class Fpm extends AbstractServer
 {

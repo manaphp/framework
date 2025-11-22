@@ -13,7 +13,8 @@ class DbCommit
 {
     public function __construct(
         public DbInterface $db,
-    ) {
+    )
+    {
 
     }
 }

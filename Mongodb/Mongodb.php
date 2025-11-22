@@ -227,10 +227,11 @@ class Mongodb implements MongodbInterface
 
     public function fetchAll(
         string $source,
-        array $filter = [],
-        array $options = [],
-        bool $secondaryPreferred = true
-    ): array {
+        array  $filter = [],
+        array  $options = [],
+        bool   $secondaryPreferred = true
+    ): array
+    {
         $namespace = $this->completeNamespace($source);
 
         $this->eventDispatcher->dispatch(new MongodbQuerying($this, $namespace, $filter, $options));
@@ -295,7 +296,7 @@ class Mongodb implements MongodbInterface
         } catch (RuntimeException $e) {
             throw new MongodbException(
                 ['`{1}` aggregate for `{2}` collection failed: {3}', json_stringify($pipeline), $source,
-                 $e->getMessage()]
+                    $e->getMessage()]
             );
         }
     }

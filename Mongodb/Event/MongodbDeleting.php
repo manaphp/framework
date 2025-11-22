@@ -13,9 +13,10 @@ class MongodbDeleting extends AbstractEvent
 {
     public function __construct(
         public MongodbInterface $mongodb,
-        public string $namespace,
-        public array $filter,
-    ) {
+        public string           $namespace,
+        public array            $filter,
+    )
+    {
 
     }
 }

@@ -10,6 +10,9 @@ use ManaPHP\Db\AbstractConnection;
 use ManaPHP\Db\Db;
 use ManaPHP\Di\Attribute\Autowired;
 use PDO;
+use function explode;
+use function str_contains;
+use function str_replace;
 
 class Sqlite extends AbstractConnection
 {

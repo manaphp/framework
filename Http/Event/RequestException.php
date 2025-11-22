@@ -13,7 +13,8 @@ class RequestException
 {
     public function __construct(
         public Throwable $exception
-    ) {
+    )
+    {
 
     }
 }

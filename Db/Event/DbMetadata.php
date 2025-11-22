@@ -13,10 +13,11 @@ class DbMetadata extends AbstractEvent
 {
     public function __construct(
         public DbInterface $db,
-        public string $table,
-        public array $meta,
-        public float $elapsed,
-    ) {
+        public string      $table,
+        public array       $meta,
+        public float       $elapsed,
+    )
+    {
 
     }
 }

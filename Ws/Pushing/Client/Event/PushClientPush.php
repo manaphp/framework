@@ -13,11 +13,12 @@ class PushClientPush
 {
     public function __construct(
         public ClientInterface $client,
-        public string $type,
-        public string $receivers,
-        public string $message,
-        public string $endpoint,
-    ) {
+        public string          $type,
+        public string          $receivers,
+        public string          $message,
+        public string          $endpoint,
+    )
+    {
 
     }
 }

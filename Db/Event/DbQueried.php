@@ -13,12 +13,13 @@ class DbQueried extends AbstractEvent
 {
     public function __construct(
         public DbInterface $db,
-        public string $sql,
-        public array $bind,
-        public int $count,
-        public mixed $result,
-        public float $elapsed,
-    ) {
+        public string      $sql,
+        public array       $bind,
+        public int         $count,
+        public mixed       $result,
+        public float       $elapsed,
+    )
+    {
 
     }
 }

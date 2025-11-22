@@ -12,10 +12,14 @@ use DOMNode;
 use DOMText;
 use IteratorAggregate;
 use Traversable;
+use function array_keys;
 use function array_slice;
+use function array_values;
 use function count;
+use function current;
 use function in_array;
 use function is_string;
+use function json_stringify;
 
 class SelectorList implements IteratorAggregate, Countable, ArrayAccess
 {

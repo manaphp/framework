@@ -13,9 +13,10 @@ class MongodbBulkUpserting extends AbstractEvent
 {
     public function __construct(
         public MongodbInterface $mongodb,
-        public string $namespace,
-        public array $documents,
-    ) {
+        public string           $namespace,
+        public array            $documents,
+    )
+    {
 
     }
 }

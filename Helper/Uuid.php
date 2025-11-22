@@ -6,6 +6,7 @@ namespace ManaPHP\Helper;
 
 use ManaPHP\Exception\InvalidValueException;
 use function hexdec;
+use function microtime;
 use function preg_match;
 use function random_bytes;
 use function sprintf;

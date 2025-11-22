@@ -13,9 +13,10 @@ class MongodbBulkUpdating extends AbstractEvent
 {
     public function __construct(
         public MongodbInterface $mongodb,
-        public string $namespace,
-        public array $document,
-    ) {
+        public string           $namespace,
+        public array            $document,
+    )
+    {
 
     }
 }

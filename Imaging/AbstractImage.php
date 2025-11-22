@@ -113,24 +113,25 @@ abstract class AbstractImage implements ImageInterface
     }
 
     abstract public function do_text(
-        string $text,
-        int $offsetX = 0,
-        int $offsetY = 0,
-        float $opacity = 1.0,
-        int $color = 0x000000,
-        int $size = 12,
+        string  $text,
+        int     $offsetX = 0,
+        int     $offsetY = 0,
+        float   $opacity = 1.0,
+        int     $color = 0x000000,
+        int     $size = 12,
         ?string $font_file = null
     ): static;
 
     public function text(
-        string $text,
-        int $offsetX = 0,
-        int $offsetY = 0,
-        float $opacity = 1.0,
-        int $color = 0x000000,
-        int $size = 12,
+        string  $text,
+        int     $offsetX = 0,
+        int     $offsetY = 0,
+        float   $opacity = 1.0,
+        int     $color = 0x000000,
+        int     $size = 12,
         ?string $font_file = null
-    ): static {
+    ): static
+    {
         $this->do_text($text, $offsetX, $offsetY, $opacity, $color, $size, $font_file);
 
         return $this;
@@ -138,9 +139,9 @@ abstract class AbstractImage implements ImageInterface
 
     abstract public function do_watermark(
         string $file,
-        int $offsetX = 0,
-        int $offsetY = 0,
-        float $opacity = 1.0
+        int    $offsetX = 0,
+        int    $offsetY = 0,
+        float  $opacity = 1.0
     ): static;
 
     public function watermark(string $file, int $offsetX = 0, int $offsetY = 0, float $opacity = 1.0): static

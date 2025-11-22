@@ -14,10 +14,11 @@ class HttpClientStart
 {
     public function __construct(
         public ClientInterface $client,
-        public string $method,
-        public string|array $url,
-        public Request $request
-    ) {
+        public string          $method,
+        public string|array    $url,
+        public Request         $request
+    )
+    {
 
     }
 }

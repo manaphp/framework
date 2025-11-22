@@ -8,6 +8,7 @@ use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use ManaPHP\Amqp\MessageInterface;
 use PhpAmqpLib\Message\AMQPMessage;
+use function json_parse;
 
 class Message implements MessageInterface, JsonSerializable
 {

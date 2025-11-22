@@ -13,7 +13,8 @@ class RequestRouting
 {
     public function __construct(
         public RouterInterface $router
-    ) {
+    )
+    {
 
     }
 }

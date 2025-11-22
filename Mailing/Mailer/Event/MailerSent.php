@@ -14,9 +14,10 @@ class MailerSent
 {
     public function __construct(
         public MailerInterface $mailer,
-        public Message $message,
-        public array $failedRecipients,
-    ) {
+        public Message         $message,
+        public array           $failedRecipients,
+    )
+    {
 
     }
 }

@@ -10,8 +10,9 @@ class QueueDelete
 {
     public function __construct(
         public QueueInterface $queue,
-        public string $topic,
-    ) {
+        public string         $topic,
+    )
+    {
 
     }
 }

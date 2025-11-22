@@ -8,6 +8,18 @@ use JsonSerializable;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\InvalidArgumentException;
 use ManaPHP\Exception\MisuseException;
+use function bin2hex;
+use function date;
+use function is_numeric;
+use function preg_match_all;
+use function random_bytes;
+use function str_contains;
+use function str_replace;
+use function str_starts_with;
+use function strpos;
+use function strtr;
+use function substr;
+use function time;
 
 class Alias implements AliasInterface, JsonSerializable
 {

@@ -8,10 +8,11 @@ class Proxy
 {
     public function __construct(
         protected PoolsInterface $pools,
-        protected object $owner,
-        protected object $instance,
-        protected string $type = 'default'
-    ) {
+        protected object         $owner,
+        protected object         $instance,
+        protected string         $type = 'default'
+    )
+    {
     }
 
     public function __destruct()

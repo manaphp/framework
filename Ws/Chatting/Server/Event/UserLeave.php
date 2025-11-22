@@ -13,11 +13,12 @@ class UserLeave
 {
     public function __construct(
         public ServerInterface $server,
-        public int $fd,
-        public string|int $id,
-        public string $name,
-        public string $room,
-    ) {
+        public int             $fd,
+        public string|int      $id,
+        public string          $name,
+        public string          $room,
+    )
+    {
 
     }
 }

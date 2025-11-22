@@ -23,12 +23,6 @@ abstract class AbstractQueue implements QueueInterface
         $this->do_push($topic, $body, $priority);
     }
 
-    /**
-     * @param string $topic
-     * @param int    $timeout
-     *
-     * @return ?string
-     */
     abstract public function do_pop(string $topic, int $timeout = PHP_INT_MAX): ?string;
 
     public function pop(string $topic, int $timeout = PHP_INT_MAX): ?string

@@ -211,12 +211,13 @@ class Stream implements EngineInterface
     }
 
     protected function receiveContentLengthBody(
-        mixed $stream,
+        mixed  $stream,
         string $url,
         string $body,
-        int $length,
-        float $end_time
-    ): string {
+        int    $length,
+        float  $end_time
+    ): string
+    {
         $write = null;
         $except = null;
         while ($length !== strlen($body)) {

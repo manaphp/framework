@@ -78,7 +78,7 @@ class CollectionGateway implements CollectionGatewayInterface
 
     /**
      * @param string $entityClass
-     * @param array  $record =entity_var(new static)
+     * @param array $record =entity_var(new static)
      *
      * @return int
      */

@@ -20,12 +20,13 @@ class Cookies implements CookiesInterface, JsonSerializable
     public function set(
         string $name,
         string $value,
-        int $expire = 0,
+        int    $expire = 0,
         string $path = '',
         string $domain = '',
-        bool $secure = false,
-        bool $httponly = true
-    ): static {
+        bool   $secure = false,
+        bool   $httponly = true
+    ): static
+    {
         $this->request->getContext()->_COOKIE[$name] = $value;
         $this->response->setCookie($name, $value, $expire, $path, $domain, $secure, $httponly);
 

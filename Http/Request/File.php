@@ -10,6 +10,10 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Helper\LocalFS;
 use ManaPHP\Http\Request\File\Exception as FileException;
 use function dirname;
+use function error_get_last;
+use function is_uploaded_file;
+use function pathinfo;
+use function unlink;
 
 class File implements FileInterface, JsonSerializable
 {
@@ -59,8 +63,9 @@ class File implements FileInterface, JsonSerializable
     public function moveTo(
         string $dst,
         string $allowedExtensions = 'jpg,jpeg,png,gif,doc,xls,pdf,zip',
-        bool $overwrite = false
-    ): void {
+        bool   $overwrite = false
+    ): void
+    {
         if ($allowedExtensions !== '*') {
             $extension = pathinfo($dst, PATHINFO_EXTENSION);
             if (!$extension || preg_match("#\b$extension\b#", $allowedExtensions) !== 1) {

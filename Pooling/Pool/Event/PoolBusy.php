@@ -8,6 +8,7 @@ use ManaPHP\Eventing\Attribute\TraceLevel;
 use ManaPHP\Pooling\PoolsInterface;
 use Psr\Log\LogLevel;
 use Stringable;
+use function json_stringify;
 
 #[TraceLevel(LogLevel::NOTICE)]
 class PoolBusy implements Stringable
@@ -18,7 +19,8 @@ class PoolBusy implements Stringable
         public string         $type,
         public int            $capacity,
         public float          $timeout,
-    ) {
+    )
+    {
 
     }
 

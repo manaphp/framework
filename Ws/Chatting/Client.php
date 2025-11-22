@@ -8,8 +8,10 @@ use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Messaging\PubSubInterface;
 use ManaPHP\Ws\Chatting\Client\Event\ChatClientPush;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use function implode;
 use function is_array;
 use function is_string;
+use function json_stringify;
 
 class Client implements ClientInterface
 {

@@ -27,19 +27,19 @@ interface ClientInterface
     public const CONTENT_TYPE_FORM = 'application/x-www-form-urlencoded; charset=UTF-8';
 
     public function rest(
-        string $method,
+        string       $method,
         string|array $url,
         string|array $body = [],
-        array $headers = [],
-        mixed $options = []
+        array        $headers = [],
+        mixed        $options = []
     ): Response;
 
     public function request(
-        string $method,
-        string|array $url,
+        string            $method,
+        string|array      $url,
         null|string|array $body = null,
-        array $headers = [],
-        array $options = []
+        array             $headers = [],
+        array             $options = []
     ): Response;
 
     public function get(string|array $url, array $headers = [], mixed $options = []): Response;
@@ -47,8 +47,8 @@ interface ClientInterface
     public function post(
         string|array $url,
         string|array $body = [],
-        array $headers = [],
-        mixed $options = []
+        array        $headers = [],
+        mixed        $options = []
     ): Response;
 
     public function delete(string|array $url, array $headers = [], mixed $options = []): Response;
@@ -58,14 +58,14 @@ interface ClientInterface
     public function patch(
         string|array $url,
         string|array $body = [],
-        array $headers = [],
-        mixed $options = []
+        array        $headers = [],
+        mixed        $options = []
     ): Response;
 
     public function head(
         string|array $url,
         string|array $body = [],
-        array $headers = [],
-        mixed $options = []
+        array        $headers = [],
+        mixed        $options = []
     ): Response;
 }

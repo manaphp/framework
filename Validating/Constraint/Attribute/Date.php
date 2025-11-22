@@ -10,8 +10,10 @@ use ManaPHP\Validating\Validation;
 use ReflectionProperty;
 use function date;
 use function is_int;
+use function is_numeric;
 use function is_object;
 use function is_string;
+use function strtotime;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Date extends AbstractConstraint

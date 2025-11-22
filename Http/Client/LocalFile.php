@@ -8,6 +8,10 @@ use JetBrains\PhpStorm\ArrayShape;
 use JsonSerializable;
 use ManaPHP\AliasInterface;
 use ManaPHP\Helper\Container;
+use function basename;
+use function file_exists;
+use function file_get_contents;
+use function is_readable;
 
 class LocalFile implements FileInterface, JsonSerializable
 {

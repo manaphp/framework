@@ -13,7 +13,8 @@ class RequestRendering
 {
     public function __construct(
         public ViewInterface $view,
-    ) {
+    )
+    {
 
     }
 }

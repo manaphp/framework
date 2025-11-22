@@ -7,9 +7,28 @@ namespace ManaPHP\Ws\Client;
 use ManaPHP\Di\Attribute\Autowired;
 use ManaPHP\Exception\NotSupportedException;
 use ManaPHP\Ws\ClientInterface;
+use function base64_encode;
 use function chr;
+use function fclose;
+use function fgets;
+use function fread;
+use function fsockopen;
+use function fwrite;
+use function microtime;
 use function ord;
+use function pack;
+use function parse_url;
+use function random_bytes;
+use function round;
+use function sha1;
+use function str_contains;
+use function stream_get_line;
+use function stream_select;
+use function stream_set_blocking;
+use function stream_set_timeout;
 use function strlen;
+use function strpos;
+use function substr;
 
 class Engine implements EngineInterface
 {

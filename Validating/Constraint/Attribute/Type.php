@@ -25,11 +25,12 @@ use function ucfirst;
 class Type extends AbstractConstraint
 {
     public function __construct(
-        public string $type,
-        public array $true = [1, '1', 'true', 'on', 'yes'],
-        public array $false = [0, '0', 'false', 'off', 'no'],
+        public string  $type,
+        public array   $true = [1, '1', 'true', 'on', 'yes'],
+        public array   $false = [0, '0', 'false', 'off', 'no'],
         public ?string $message = null
-    ) {
+    )
+    {
         parent::__construct($this->message);
     }
 

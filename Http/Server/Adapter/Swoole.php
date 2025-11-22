@@ -42,9 +42,11 @@ use Swoole\Http\Response;
 use Swoole\Http\Server;
 use Swoole\Runtime;
 use Throwable;
+use function basename;
 use function dirname;
 use function in_array;
 use function strlen;
+use function strtoupper;
 use function substr;
 
 class Swoole extends AbstractServer implements ContextAware

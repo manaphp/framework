@@ -14,9 +14,9 @@ interface ClientInterface
 
     public function queueDelete(
         string $queue,
-        bool $if_unused = false,
-        bool $if_empty = false,
-        bool $nowait = false
+        bool   $if_unused = false,
+        bool   $if_empty = false,
+        bool   $nowait = false
     ): void;
 
     public function queueBind(Binding $binding): void;
@@ -25,18 +25,18 @@ interface ClientInterface
 
     public function basicPublish(
         string|Exchange $exchange,
-        string|Queue $routing_key,
-        string|array $body,
-        array $properties = [],
-        bool $mandatory = false
+        string|Queue    $routing_key,
+        string|array    $body,
+        array           $properties = [],
+        bool            $mandatory = false
     ): void;
 
     public function basicConsume(
         string|Queue $queue,
-        callable $callback,
-        bool $no_ack = false,
-        bool $exclusive = false,
-        string $tag = ''
+        callable     $callback,
+        bool         $no_ack = false,
+        bool         $exclusive = false,
+        string       $tag = ''
     ): string;
 
     public function startConsume(int $prefetch_size = 0, int $prefetch_count = 0): void;

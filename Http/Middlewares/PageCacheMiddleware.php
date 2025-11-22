@@ -18,10 +18,15 @@ use ManaPHP\Http\RequestInterface;
 use ManaPHP\Http\ResponseInterface;
 use ManaPHP\Redis\RedisInterface;
 use ReflectionMethod;
+use function http_build_query;
 use function in_array;
 use function is_array;
 use function is_int;
+use function ksort;
+use function max;
+use function md5;
 use function sprintf;
+use function str_contains;
 
 class PageCacheMiddleware implements ContextAware
 {
