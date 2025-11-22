@@ -45,6 +45,7 @@ use Throwable;
 use function basename;
 use function dirname;
 use function in_array;
+use function round;
 use function strlen;
 use function strtoupper;
 use function substr;
@@ -59,6 +60,7 @@ class Swoole extends AbstractServer implements ContextAware
     #[Autowired] protected array $settings = [];
 
     #[Config] protected string $app_id;
+    #[Config] protected string $app_env;
 
     protected array $_SERVER;
 
@@ -69,15 +71,15 @@ class Swoole extends AbstractServer implements ContextAware
         $_SERVER['DOCUMENT_ROOT'] = $document_root;
 
         $this->_SERVER = [
-            'DOCUMENT_ROOT'   => $document_root,
+            'DOCUMENT_ROOT' => $document_root,
             'SCRIPT_FILENAME' => $script_filename,
-            'SCRIPT_NAME'     => '/' . basename($script_filename),
-            'SERVER_ADDR'     => $this->host === '0.0.0.0' ? Ip::local() : $this->host,
-            'SERVER_PORT'     => $this->port,
+            'SCRIPT_NAME' => '/' . basename($script_filename),
+            'SERVER_ADDR' => $this->host === '0.0.0.0' ? Ip::local() : $this->host,
+            'SERVER_PORT' => $this->port,
             'SERVER_SOFTWARE' => 'Swoole/' . SWOOLE_VERSION . ' (' . PHP_OS . ') PHP/' . PHP_VERSION,
-            'PHP_SELF'        => '/' . basename($script_filename),
-            'QUERY_STRING'    => '',
-            'REQUEST_SCHEME'  => 'http',
+            'PHP_SELF' => '/' . basename($script_filename),
+            'QUERY_STRING' => '',
+            'REQUEST_SCHEME' => 'http',
         ];
 
         $this->settings['enable_coroutine'] = MANAPHP_COROUTINE_ENABLED;
@@ -133,6 +135,17 @@ class Swoole extends AbstractServer implements ContextAware
     public function onStart(Server $server): void
     {
         $this->dispatchEvent(new ServerStart($server));
+
+        $elapsed = round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 3);
+        $this->logger->info('🌿 App started:', [
+            'time' => $elapsed,
+            'listen' => $this->host . ':' . $this->port,
+            'env' => $this->app_env,
+            'php' => PHP_VERSION,
+            'swoole' => SWOOLE_VERSION,
+            'workers' => $server->setting['worker_num'],
+            'pid' => $server->master_pid,
+        ]);
     }
 
     #[ServerCallback]
