@@ -7,7 +7,7 @@ namespace ManaPHP\Persistence\Event;
 use ManaPHP\Eventing\Attribute\TraceLevel;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::INFO)]
+#[TraceLevel(LogLevel::DEBUG)]
 class EntityCreating extends AbstractEntityEvent
 {
 }
