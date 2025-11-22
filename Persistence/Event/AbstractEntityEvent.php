@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace ManaPHP\Persistence\Event;
 
+use JsonSerializable;
 use ManaPHP\Persistence\Entity;
 
-class AbstractEntityEvent implements EntityEventInterface
+class AbstractEntityEvent implements EntityEventInterface, JsonSerializable
 {
     public function __construct(protected Entity $entity, protected ?Entity $original = null)
     {
@@ -37,5 +38,10 @@ class AbstractEntityEvent implements EntityEventInterface
         }
 
         return false;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return ['entity' => $this->entity::class, 'fields' => $this->entity->toArray()];
     }
 }
