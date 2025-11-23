@@ -39,7 +39,7 @@ class SlowlogMiddleware
 
         $replaced = [];
         $ts = microtime(true);
-        $replaced[':date'] = date('Y-m-d\TH:i:s', $ts) . sprintf('.%03d', ($ts - (int)$ts) * 1000);
+        $replaced[':date'] = date('Y-m-d\TH:i:s', (int)$ts) . sprintf('.%03d', ($ts - (int)$ts) * 1000);
         $replaced[':client_ip'] = $this->request->ip();
         $replaced[':request_id'] = $this->request->header('x-request-id', '');
         $replaced[':elapsed'] = sprintf('%.03f', $elapsed);
