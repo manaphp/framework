@@ -10,7 +10,7 @@ use ManaPHP\Http\Client\Response;
 use ManaPHP\Http\ClientInterface;
 use Psr\Log\LogLevel;
 
-#[TraceLevel(LogLevel::NOTICE)]
+#[TraceLevel(LogLevel::WARNING)]
 class HttpClientError
 {
     public function __construct(
