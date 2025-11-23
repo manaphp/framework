@@ -15,7 +15,6 @@ use ManaPHP\Http\Server\Event\ServerShutdown;
 use function console_log;
 use function json_stringify;
 use function ltrim;
-use function sprintf;
 
 class LogServerStatusListener
 {
@@ -31,13 +30,13 @@ class LogServerStatusListener
 
         $settings = json_stringify($settings);
 
-        console_log('info', ['listen on: %s:%d with setting: %s', $host, $port, $settings]);
+        console_log('info', 'listen on: {host}:{port} with setting: {settings}', ['host' => $host, 'port' => $port, 'settings' => $settings]);
 
         $prefix = $this->config->get(RouterInterface::class)['prefix'] ?? '';
         $prefix = ltrim($prefix, '?');
         $host = $host === '0.0.0.0' ? '127.0.0.1' : $host;
         /** @noinspection HttpUrlsUsage */
-        console_log('info', sprintf('http://%s:%s%s', $host, $port, $prefix));
+        console_log('info', 'http://{host}:{port}{prefix}', ['host' => $host, 'port' => $port, 'prefix' => $prefix]);
     }
 
     public function onServerShutdown(#[Event] ServerShutdown $event): void

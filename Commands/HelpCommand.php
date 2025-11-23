@@ -303,7 +303,7 @@ class HelpCommand extends Command
     {
         $camelizedCommand = Str::camelize($command);
         if (($definition = $this->commands->getCommands()[$camelizedCommand] ?? null) === null) {
-            return $this->console->error("$camelizedCommand Command not found");
+            return $this->console->error('{command} Command not found', ['command' => $camelizedCommand]);
         }
         $instance = $this->commandFactory->get($definition);
 

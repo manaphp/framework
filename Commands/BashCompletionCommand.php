@@ -268,7 +268,7 @@ EOT;
             LocalFS::filePut($file, PHP_EOL === '\n' ? $content : str_replace("\r", '', $content));
             LocalFS::chmod($file, 0755);
         } catch (\Exception $e) {
-            return $this->console->error('write bash completion script failed: ' . $e->getMessage());
+            return $this->console->error('write bash completion script failed: {message}', ['message' => $e->getMessage()]);
         }
 
         $this->console->writeLn('install bash completion script successfully');

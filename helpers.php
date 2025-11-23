@@ -166,11 +166,17 @@ if (!function_exists('base_url')) {
 }
 
 if (!function_exists('console_log')) {
-    function console_log(string $level, mixed $message): void
+    function console_log(string $level, mixed $message, array $context = []): void
     {
         if (defined('STDERR')) {
             if (is_array($message)) {
                 $message = sprintf(...$message);
+            } elseif (is_string($message) && $context !== [] && str_contains($message, '{')) {
+                $replaces = [];
+                foreach ($context as $key => $value) {
+                    $replaces["{{$key}}"] = is_string($value) ? $value : json_stringify($value);
+                }
+                $message = strtr($message, $replaces);
             }
             fprintf(STDERR, '[%s][%s]: %s', date('c'), $level, $message);
             fprintf(STDERR, PHP_EOL);
