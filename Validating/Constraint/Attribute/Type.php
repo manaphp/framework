@@ -18,7 +18,6 @@ use function is_iterable;
 use function is_object;
 use function is_string;
 use function method_exists;
-use function sprintf;
 use function ucfirst;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
@@ -40,7 +39,7 @@ class Type extends AbstractConstraint
         if (method_exists($this, $method)) {
             return $this->$method($validation);
         } else {
-            throw new MisuseException(sprintf('%s type is not supported', $this->type));
+            throw new MisuseException('The validation type "{type}" is not supported.', ['type' => $this->type]);
         }
     }
 

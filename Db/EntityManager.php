@@ -149,11 +149,11 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);
 
         if (!isset($entity->$primaryKey)) {
-            throw new MisuseException('missing primary key value');
+            throw new MisuseException('The primary key value is missing.', ['entity_class' => $entityClass, 'primary_key' => $primaryKey]);
         }
 
         if ($entity->$primaryKey !== $original->$primaryKey) {
-            throw new MisuseException('updating entity primary key value is not support');
+            throw new MisuseException('Updating the entity primary key value is not supported.', ['entity_class' => $entityClass, 'primary_key' => $primaryKey, 'old_value' => $original->$primaryKey, 'new_value' => $entity->$primaryKey]);
         }
 
         $fields = $this->entityMetadata->getFields($entityClass);
@@ -215,7 +215,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);
 
         if (!isset($entity->$primaryKey)) {
-            throw new MisuseException('missing primary key value');
+            throw new MisuseException('The primary key value is missing.', ['entity_class' => $entityClass, 'primary_key' => $primaryKey]);
         }
 
         list($connection, $table) = $this->sharding->getUniqueShard($entityClass, $entity);

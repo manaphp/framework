@@ -82,7 +82,7 @@ class Controllers implements ControllersInterface
                 return "/$controller/$action";
             }
         } else {
-            throw new MisuseException(['invalid controller `{controller}`', 'controller' => $controllerPath]);
+            throw new MisuseException('Invalid controller: "{controllerPath}".', ['controllerPath' => $controllerPath]);
         }
     }
 }

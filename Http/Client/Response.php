@@ -68,13 +68,13 @@ class Response implements JsonSerializable, Stringable
 
             if ($content_encoding === 'gzip') {
                 if (($decoded = @gzdecode($body)) === false) {
-                    throw new BadResponseException(['`{url}`: ungzip failed`', 'url' => $request->url]);
+                    throw new BadResponseException('Failed to unzip response from "{url}".', ['url' => $request->url]);
                 } else {
                     $body = (string)$decoded;
                 }
             } elseif ($content_encoding === 'deflate') {
                 if (($decoded = @gzinflate($body)) === false) {
-                    throw new BadResponseException(['`{url}`: deflate failed', 'url' => $request->url]);
+                    throw new BadResponseException('Failed to deflate response from "{url}".', ['url' => $request->url]);
                 } else {
                     $body = (string)$decoded;
                 }
@@ -148,7 +148,7 @@ class Response implements JsonSerializable, Stringable
         $data = json_parse($this->body);
         if (!is_array($data)) {
             $cut_body = substr($this->body, 0, 128);
-            throw new InvalidJsonException(['response of `{1}` is not a valid json: `{2}`', $this->url, $cut_body]);
+            throw new InvalidJsonException('Response from "{url}" is not valid JSON: {cut_body}.', ['url' => $this->url, 'cut_body' => $cut_body]);
         }
 
         return $data;

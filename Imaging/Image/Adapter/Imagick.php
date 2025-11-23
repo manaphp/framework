@@ -38,21 +38,21 @@ class Imagick extends AbstractImage
     public function __construct(string $file)
     {
         if (!extension_loaded('imagick')) {
-            throw new ExtensionNotInstalledException('Imagick');
+            throw new ExtensionNotInstalledException('Imagick extension is not installed.');
         }
 
         $this->file = realpath($this->alias->resolve($file));
         if (!$this->file) {
-            throw new InvalidValueException(['`{file}` file is not exists', 'file' => $file]);
+            throw new InvalidValueException('The image file "{file}" does not exist.', ['file' => $file]);
         }
 
         $this->image = new PhpImagick();
         if (!$this->image->readImage($this->file)) {
-            throw new InvalidFormatException(['Imagick::readImage `{file}` failed', 'file' => $file]);
+            throw new InvalidFormatException('Could not read image file "{file}" using Imagick::readImage.', ['file' => $file]);
         }
 
         if ($this->image->getNumberImages() !== 1) {
-            throw new PreconditionException(['not support multiple iterations: `{file}`', 'file' => $file]);
+            throw new PreconditionException('The file "{file}" contains multiple image iterations. Only single-image files are supported.', ['file' => $file]);
         }
 
         if (!$this->image->getImageAlphaChannel()) {
@@ -149,11 +149,20 @@ class Imagick extends AbstractImage
         }
 
         if ($watermark->getNumberImages() !== 1) {
-            throw new PreconditionException(['not support multiple iterations: `{file}`', 'file' => $file]);
+            throw new PreconditionException('The file "{file}" contains multiple image iterations. Only single-image files are supported.', ['file' => $file]);
         }
 
         if (!$this->image->compositeImage($watermark, PhpImagick::COMPOSITE_OVER, $offsetX, $offsetY)) {
-            throw new RuntimeException('Imagick::compositeImage Failed');
+            throw new RuntimeException('Imagick::compositeImage() failed. Please check image formats and dimensions.', [
+                'main_image' => $this->file,
+                'watermark_file' => $file,
+                'main_image_format' => $this->image->getImageFormat(),
+                'watermark_format' => $watermark->getImageFormat(),
+                'main_image_size' => $this->image->getImageWidth() . 'x' . $this->image->getImageHeight(),
+                'watermark_size' => $watermark->getImageWidth() . 'x' . $watermark->getImageHeight(),
+                'offset_x' => $offsetX,
+                'offset_y' => $offsetY
+            ]);
         }
 
         $watermark->clear();
@@ -182,7 +191,7 @@ class Imagick extends AbstractImage
         }
 
         if (!$this->image->writeImage($file)) {
-            throw new RuntimeException(['save `{file}` image file failed', 'file' => $file]);
+            throw new RuntimeException('Could not save image file to "{file}".', ['file' => $file]);
         }
     }
 

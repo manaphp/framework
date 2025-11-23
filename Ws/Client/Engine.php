@@ -80,7 +80,7 @@ class Engine implements EngineInterface
 
             $proxy_scheme = $parts['scheme'];
             if ($proxy_scheme !== 'http' && $proxy_scheme !== 'https') {
-                throw new NotSupportedException('only support http and https proxy');
+                throw new NotSupportedException('Only HTTP and HTTPS proxy schemes are supported, but "{proxy_scheme}" is used.', ['proxy_scheme' => $proxy_scheme]);
             }
             $server_host = ($proxy_scheme === 'http' ? 'tcp' : 'ssl') . '://' . $parts['host'];
             $server_port = $parts['port'];
@@ -90,7 +90,7 @@ class Engine implements EngineInterface
         }
 
         if (!$socket = @fsockopen($server_host, $server_port, $errno, $errmsg, $this->timeout)) {
-            throw new ConnectionException($errmsg . ': ' . $this->endpoint, $errno);
+            throw new ConnectionException('Failed to establish WebSocket connection to "{endpoint}": {errmsg} (Error code: {errno}).', ['endpoint' => $this->endpoint, 'errmsg' => $errmsg, 'errno' => $errno], $errno);
         }
 
         stream_set_timeout($socket, (int)$this->timeout, ($this->timeout - (int)$this->timeout) * 1000);
@@ -112,19 +112,19 @@ class Engine implements EngineInterface
         $this->sendInternal($socket, $headers);
 
         if (($first = fgets($socket)) !== "HTTP/1.1 101 Switching Protocols\r\n") {
-            throw new SwitchingProtocolsException($first);
+            throw new SwitchingProtocolsException('Expected "HTTP/1.1 101 Switching Protocols" but received "{first}".', ['first' => trim($first)]);
         }
 
         if (($headers = stream_get_line($socket, 4096, "\r\n\r\n")) === false) {
-            throw new HandshakeException('receive headers failed');
+            throw new HandshakeException('Failed to receive WebSocket handshake headers from server.', ['endpoint' => $this->endpoint, 'timeout' => $this->timeout]);
         }
 
         $sec_key = base64_encode(sha1($key . '258EAFA5-E914-47DA-95CA-C5AB0DC85B11', true));
         if (!str_contains($headers, $sec_key)) {
             if ($this->proxy) {
-                throw new ConnectionException('Connection by proxy timed out:  ' . $this->endpoint, 10060);
+                throw new ConnectionException('WebSocket connection through proxy timed out: "{endpoint}" (Error code: 10060).', ['endpoint' => $this->endpoint], 10060);
             } else {
-                throw new HandshakeException('handshake fail');
+                throw new HandshakeException('Invalid Sec-WebSocket-Accept header received from server.', ['endpoint' => $this->endpoint, 'expected_key' => substr($sec_key, 0, 20), 'headers_preview' => substr($headers, 0, 200)]);
             }
         }
 
@@ -152,7 +152,7 @@ class Engine implements EngineInterface
             $write = [$socket];
             if (stream_select($read, $write, $except, 0, 10000) <= 0) {
                 if (microtime(true) > $end_time) {
-                    throw new TimeoutException('send timeout');
+                    throw new TimeoutException('WebSocket send timeout: Unable to send data within {timeout} seconds.', ['timeout' => $this->timeout]);
                 } else {
                     continue;
                 }
@@ -164,7 +164,7 @@ class Engine implements EngineInterface
                     continue;
                 }
 
-                throw new DataTransferException('send failed');
+                throw new DataTransferException('Unable to send WebSocket frame to server.', ['endpoint' => $this->endpoint, 'data_length' => $data_length, 'sent_length' => $send_length, 'socket_errno' => $errno, 'socket_error' => socket_strerror($errno)]);
             }
 
             $send_length += $n;
@@ -214,14 +214,14 @@ class Engine implements EngineInterface
             $except = null;
             if (stream_select($read, $write, $except, 0, 10000) <= 0) {
                 if (microtime(true) > $end_time) {
-                    throw new TimeoutException('receive timeout');
+                    throw new TimeoutException('WebSocket receive timeout: Unable to receive data within {timeout} seconds.', ['timeout' => $this->timeout]);
                 } else {
                     continue;
                 }
             }
 
             if (($r = fread($socket, $left)) === false) {
-                throw new DataTransferException('receive failed');
+                throw new DataTransferException('Unable to read WebSocket frame from server.', ['endpoint' => $this->endpoint, 'bytes_to_read' => $left, 'timeout' => $this->timeout]);
             }
 
             if ($r === '') {
@@ -234,7 +234,7 @@ class Engine implements EngineInterface
         $byte1 = ord($buf[1]);
 
         if ($byte1 & 0x80) {
-            throw new ProtocolException('Mask not support');
+            throw new ProtocolException('Masked frames received from server are not supported for client connections.', ['endpoint' => $this->endpoint, 'frame_byte1' => $byte1, 'frame_mask' => ($byte1 & 0x80) !== 0]);
         }
 
         $len = $byte1 & 0x7F;
@@ -254,14 +254,14 @@ class Engine implements EngineInterface
             $except = null;
             if (stream_select($read, $write, $except, 0, 10000) <= 0) {
                 if (microtime(true) > $end_time) {
-                    throw new TimeoutException('receive timeout');
+                    throw new TimeoutException('WebSocket receive timeout: Unable to receive data within {timeout} seconds.', ['timeout' => $this->timeout]);
                 } else {
                     continue;
                 }
             }
 
             if (($r = fread($socket, $left)) === false) {
-                throw new DataTransferException('receive failed');
+                throw new DataTransferException('Unable to read WebSocket frame from server.', ['endpoint' => $this->endpoint, 'bytes_to_read' => $left, 'timeout' => $this->timeout]);
             }
 
             if ($r === '') {
@@ -285,14 +285,14 @@ class Engine implements EngineInterface
             $read = [$socket];
             if (stream_select($read, $write, $except, 0, 10000) <= 0) {
                 if (microtime(true) > $end_time) {
-                    throw new TimeoutException('receive timeout');
+                    throw new TimeoutException('WebSocket receive timeout: Unable to receive data within {timeout} seconds.', ['timeout' => $this->timeout]);
                 } else {
                     continue;
                 }
             }
 
             if (($r = fread($socket, $left)) === false) {
-                throw new DataTransferException('receive failed');
+                throw new DataTransferException('Unable to read WebSocket frame from server.', ['endpoint' => $this->endpoint, 'bytes_to_read' => $left, 'timeout' => $this->timeout]);
             }
 
             if ($r === '') {

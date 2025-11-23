@@ -144,13 +144,13 @@ class Authorization implements AuthorizationInterface, ContextAware
 
         if ($this->identity->isGuest()) {
             if ($this->request->isAjax()) {
-                throw new NoCredentialException('No Credential or Invalid Credential');
+                throw new NoCredentialException('No Credential or Invalid Credential.', ['request_method' => $this->request->method(), 'request_url' => $this->request->url()]);
             } else {
                 $redirect = $this->request->input('redirect', $this->request->url());
                 $this->response->redirect(["/login?redirect=$redirect"]);
             }
         } else {
-            throw new ForbiddenException('Access denied to resource');
+            throw new ForbiddenException('Access denied to resource.', ['request_method' => $this->request->method(), 'request_url' => $this->request->url()]);
         }
     }
 }

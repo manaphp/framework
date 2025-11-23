@@ -123,13 +123,13 @@ class Handler implements HandlerInterface
         $cmd = lcfirst($command) . ':' . $action;
 
         if (($class = $this->getCommandClassName($command)) === null) {
-            return $this->console->error("`$cmd` command is not exists");
+            return $this->console->error("'$cmd' command is not exists");
         }
 
         $instance = $this->commandFactory->get($class);
 
         if (($method = $this->getMethod($class, $action)) === null) {
-            return $this->console->error("`$cmd` action is not exists");
+            return $this->console->error("'$cmd' action is not exists");
         }
 
         $this->eventDispatcher->dispatch(new CliInvoking($this, $instance, $method, $action));

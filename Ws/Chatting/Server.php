@@ -219,7 +219,7 @@ class Server implements ServerInterface, BootstrapperInterface
         } elseif ($type === 'kickout.name') {
             $this->kickoutName($room, $receivers, $message);
         } else {
-            $this->logger->warning(Message::of('chatServer.bad_type', 'unknown `{0}` type message: {1}'), [$type, $message]);
+            $this->logger->warning(Message::of('chatServer.bad_type', 'unknown "{0}" type message: {1}'), [$type, $message]);
         }
     }
 

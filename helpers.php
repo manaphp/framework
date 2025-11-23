@@ -19,7 +19,7 @@ if (!function_exists('json_parse')) {
     {
         /** @noinspection NotOptimalIfConditionsInspection */
         if (($json = json_decode($str, true, 16, JSON_THROW_ON_ERROR)) === null && $str !== 'null') {
-            throw new JsonException('json_parse failed: ' . $str);
+            throw new JsonException('Failed to parse JSON string: {str}.', ['str' => substr($str, 0, 100)]);
         }
 
         return $json;
@@ -33,7 +33,7 @@ if (!function_exists('json_stringify')) {
 
         /** @noinspection JsonEncodingApiUsageInspection */
         if (($str = json_encode($json, $options, 16)) === false) {
-            throw new JsonException('json_stringify failed: ' . json_last_error_msg());
+            throw new JsonException('json_stringify failed: {error}.', ['error' => json_last_error_msg()]);
         }
 
         return $str;
@@ -139,7 +139,7 @@ if (!function_exists('seconds')) {
         } elseif (($r = strtotime($str, 0)) !== false) {
             return $r;
         } else {
-            throw new InvalidValueException(['`{str}` string is not a valid seconds expression', 'str' => $str]);
+            throw new InvalidValueException('String "{str}" is not a valid seconds expression.', ['str' => $str]);
         }
     }
 }

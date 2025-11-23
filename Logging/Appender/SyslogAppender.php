@@ -50,7 +50,7 @@ class SyslogAppender implements AppenderInterface
         $this->port = $parts['port'] ? (int)$parts['port'] : 514;
 
         if ($this->scheme !== 'udp') {
-            throw new NotSupportedException('only support udp protocol');
+            throw new NotSupportedException('Only UDP protocol is supported for remote logging, but "{scheme}" was specified.', ['scheme' => $this->scheme]);
         }
 
         $this->socket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);

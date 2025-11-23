@@ -9,11 +9,9 @@ use ManaPHP\Exception;
 
 class TooManyRequestsException extends Exception
 {
-    public function __construct($message = 'You have exceeded the allowed number of requests. Please try again later.',
-                                $code = 0, $previous = null
-    )
+    public function __construct(string $message = 'Too many requests. Please try again later.')
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message);
     }
 
     public function getStatusCode(): int
@@ -27,6 +25,6 @@ class TooManyRequestsException extends Exception
     #[ArrayShape(['code' => 'int', 'msg' => 'string'])]
     public function getJson(): array
     {
-        return ['code' => 429, 'msg' => 'Too Many Request'];
+        return ['code' => 429, 'msg' => 'Too Many Requests'];
     }
 }

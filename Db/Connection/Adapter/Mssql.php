@@ -26,7 +26,7 @@ class Mssql extends AbstractConnection
 
         if ($parts['scheme'] !== 'mssql') {
             throw new DsnFormatException(
-                ['`{1}` is invalid, `{2}` scheme is not recognized', $this->uri, $parts['scheme']]
+                '"{uri}" is invalid, "{scheme}" scheme is not recognized', ['uri' => $this->uri, 'scheme' => $parts['scheme']]
             );
         }
 
@@ -144,7 +144,7 @@ class Mssql extends AbstractConnection
             $sql .= $params['fields'];
             if (isset($params['limit'], $params['offset'])) {
                 if (!isset($params['order'])) {
-                    throw new PreconditionException('if use offset CLAUSE, must provide order CLAUSE.');
+                    throw new PreconditionException('OFFSET clause requires ORDER BY clause.');
                 }
 
                 $sql .= ', ROW_NUMBER() OVER (ORDER BY ' . $params['order'] . ') AS _row_number_';

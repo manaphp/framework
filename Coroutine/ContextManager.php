@@ -24,7 +24,7 @@ class ContextManager implements ContextManagerInterface
             if ($returnType !== null && !$returnType->isBuiltin()) {
                 $context = $this->classes[$class] = $returnType->getName();
             } else {
-                throw new ContextException(['The context class of `{1}` can not be inferred', $class]);
+                throw new ContextException('The context class cannot be inferred for "{class}".', ['class' => $class]);
             }
         }
 

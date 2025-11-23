@@ -33,7 +33,7 @@ class Client implements ClientInterface
         }
 
         if (($endpoint = $endpoint ?? $this->endpoint) === null) {
-            throw new MissingFieldException($endpoint);
+            throw new MissingFieldException('WebSocket endpoint URL is required but not provided.', ['endpoint' => $endpoint ?? $this->endpoint]);
         }
 
         $this->eventDispatcher->dispatch(new PushClientPush($this, $type, $receivers, $message, $endpoint));

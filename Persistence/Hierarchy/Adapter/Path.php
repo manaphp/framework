@@ -149,7 +149,7 @@ trait Path
     {
         $length = static::getHierarchyChildLength($code);
         if ($length < -1) {
-            throw new HierarchyException('xxxx');
+            throw new HierarchyException('Invalid hierarchy child length.', ['code' => $code, 'length' => $length, 'min_length' => -1]);
         }
 
         $hierarchyField = static::getHierarchyField();

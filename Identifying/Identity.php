@@ -45,7 +45,7 @@ class Identity implements IdentityInterface, ContextAware
         $claims = $context->claims;
 
         if (!$claims) {
-            throw new UnauthorizedException('Not Authenticated');
+            throw new UnauthorizedException('Not Authenticated.');
         }
 
         if (($key = $this->keys['id'] ?? null) !== null) {
@@ -64,7 +64,7 @@ class Identity implements IdentityInterface, ContextAware
             }
         }
 
-        throw new MisuseException('missing id in claims');
+        throw new MisuseException('Missing "id" field in claims.', ['available_keys' => array_keys($claims)]);
     }
 
     public function getName(): string
@@ -74,7 +74,7 @@ class Identity implements IdentityInterface, ContextAware
         $claims = $context->claims;
 
         if (!$claims) {
-            throw new UnauthorizedException('Not Authenticated');
+            throw new UnauthorizedException('Not Authenticated.');
         }
 
         if (($key = $this->keys['name'] ?? null) !== null) {
@@ -93,7 +93,7 @@ class Identity implements IdentityInterface, ContextAware
             }
         }
 
-        throw new MisuseException('missing name in claims');
+        throw new MisuseException('Missing "name" field in claims.', ['available_keys' => array_keys($claims)]);
     }
 
     public function getRole(string $default = 'guest'): string
@@ -116,7 +116,7 @@ class Identity implements IdentityInterface, ContextAware
             return $claims['admin_id'] === 1 ? Authorize::ADMIN : Authorize::USER;
         }
 
-        throw new MisuseException('missing role in claims');
+        throw new MisuseException('Missing "role" field in claims.', ['available_keys' => array_keys($claims)]);
     }
 
     public function getRoles(): array

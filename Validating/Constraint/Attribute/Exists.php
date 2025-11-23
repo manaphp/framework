@@ -16,7 +16,6 @@ use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
 use function class_exists;
 use function get_class;
-use function sprintf;
 use function strrpos;
 use function substr;
 
@@ -28,7 +27,7 @@ class Exists extends AbstractConstraint
     public function validate(Validation $validation): bool
     {
         if (!$validation->source instanceof Entity) {
-            throw new MisuseException(sprintf('%s is not a entity', get_class($validation->source)));
+            throw new MisuseException('The given class "{class}" is not an entity.', ['class' => get_class($validation->source)]);
         }
 
         $value = $validation->value;
@@ -44,11 +43,11 @@ class Exists extends AbstractConstraint
                 $className = 'App\\Entities\\' . Str::pascalize($match[1]);
             }
         } else {
-            throw new InvalidValueException(['validate `{1}` failed: related entity class is not provided', $field]);
+            throw new InvalidValueException('The field "{field}" name must end with "_id" to infer the entity class.', ['field' => $field]);
         }
 
         if (!class_exists($className)) {
-            throw new InvalidValueException(['validate `{1}` failed: `{2}` class is not exists.', $field, $className]);
+            throw new InvalidValueException('The entity class "{className}" for field "{field}" does not exist.', ['field' => $field, 'className' => $className]);
         }
 
         try {

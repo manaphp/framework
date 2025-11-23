@@ -19,6 +19,7 @@ use PDOException;
 use PDOStatement;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use function array_shift;
+use function compact;
 use function count;
 use function explode;
 use function gettype;
@@ -93,7 +94,7 @@ abstract class AbstractConnection implements ConnectionInterface
                 $this->eventDispatcher->dispatch(new DbConnected($this, $dsn, $uri));
 
                 $code = $e->getCode();
-                throw new ConnectionException(['connect `{1}` failed: {2}', $dsn, $e->getMessage()], $code, $e);
+                throw new ConnectionException('Could not connect to database "{dsn}": {error}.', ['dsn' => $dsn, 'error' => $e->getMessage()], $code, $e);
             }
 
             $this->eventDispatcher->dispatch(new DbConnected($this, $dsn, $uri, $pdo));
@@ -144,7 +145,7 @@ abstract class AbstractConnection implements ConnectionInterface
             } else {
                 $type = gettype($value);
                 throw new NotSupportedException(
-                    ['The `{1}` type of `{2}` parameter is not support', $parameter, $type]
+                    'Parameter "{parameter}" type "{type}" is not supported.', ['type' => $type, 'parameter' => $parameter]
                 );
             }
 
@@ -166,7 +167,7 @@ abstract class AbstractConnection implements ConnectionInterface
     public function execute(string $sql, array $bind = [], bool $has_insert_id = false): int
     {
         if ($this->readonly) {
-            throw new ReadonlyException(['`{uri}` is readonly: => {sql}', 'uri' => $this->uri, 'sql' => $sql]);
+            throw new ReadonlyException('Cannot execute SQL on readonly database connection "{uri}": {sql}.', ['uri' => $this->uri, 'sql' => $sql]);
         }
 
         $sql = $this->replaceQuoteCharacters($sql);
@@ -195,8 +196,7 @@ abstract class AbstractConnection implements ConnectionInterface
             }
         }
 
-        $bind_str = json_stringify($bind, JSON_PRETTY_PRINT);
-        throw new DbException(["{1} =>\r\n SQL: {2}\r\n BIND: {3}", $exception->getMessage(), $sql, $bind_str]);
+        throw new DbException($exception, compact('sql', 'bind'));
     }
 
     /** @noinspection PhpUnusedLocalVariableInspection */
@@ -228,8 +228,7 @@ abstract class AbstractConnection implements ConnectionInterface
             }
         }
 
-        $bind_str = json_stringify($bind, JSON_PRETTY_PRINT);
-        throw new DbException(["{1} =>\r\n SQL: {2}\r\n BIND: {3}", $exception->getMessage(), $sql, $bind_str]);
+        throw new DbException($exception, compact('sql', 'bind'));
     }
 
     public function close(): void
@@ -260,7 +259,7 @@ abstract class AbstractConnection implements ConnectionInterface
     public function begin(): void
     {
         if ($this->readonly) {
-            throw new ReadonlyException(['`{uri}` is readonly, transaction begin failed', 'uri' => $this->uri]);
+            throw new ReadonlyException('Cannot begin transaction on readonly database connection "{uri}".', ['uri' => $this->uri]);
         }
 
         try {

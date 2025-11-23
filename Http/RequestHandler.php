@@ -43,7 +43,6 @@ use function explode;
 use function is_array;
 use function is_int;
 use function is_string;
-use function json_stringify;
 use function method_exists;
 
 class RequestHandler implements RequestHandlerInterface
@@ -101,8 +100,7 @@ class RequestHandler implements RequestHandlerInterface
             $this->eventDispatcher->dispatch(new RequestRouting($this->router));
             if (($matcher = $this->router->match()) === null) {
                 throw new NotFoundRouteException(
-                    ['router does not have matched route for `{1} {2}`', $this->request->method(),
-                        $this->router->getRewriteUri()]
+                    'No matched route found for "{method} {uri}".', ['method' => $this->request->method(), 'uri' => $this->router->getRewriteUri()]
                 );
             }
             $this->eventDispatcher->dispatch(new RequestRouted($this->router, $matcher));
@@ -113,11 +111,11 @@ class RequestHandler implements RequestHandlerInterface
             list($controller, $action) = explode('::', $matcher->getHandler());
 
             if (!class_exists($controller)) {
-                throw new NotFoundControllerException(['`{1}` class cannot be loaded', $controller]);
+                throw new NotFoundControllerException('Class "{controller}" could not be loaded.', ['controller' => $controller]);
             }
 
             if (!method_exists($controller, $action)) {
-                throw new NotFoundActionException(['`{1}::{2}` method does not exist', $controller, $action]);
+                throw new NotFoundActionException('Method "{controller}::{action}" does not exist.', ['controller' => $controller, 'action' => $action]);
             }
 
             $method = new ReflectionMethod($controller, $action);

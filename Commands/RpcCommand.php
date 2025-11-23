@@ -44,7 +44,7 @@ class RpcCommand extends Command
                 LocalFS::filePut($file, $content);
 
                 $serviceName = basename($className, 'Controller') . 'Service';
-                $this->console->writeLn("`$serviceName` saved to `$file`");
+                $this->console->writeLn("'$serviceName' saved to '$file'");
             }
         }
     }

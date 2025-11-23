@@ -11,7 +11,7 @@ class MethodNotAllowedHttpException extends Exception
 {
     public function __construct(array $verbs)
     {
-        parent::__construct('This URL can only handle the following request methods: ' . implode(', ', $verbs));
+        parent::__construct('This URL can only handle the following request methods: {methods}.', ['methods' => implode(', ', $verbs)]);
     }
 
     public function getStatusCode(): int

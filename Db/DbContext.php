@@ -15,11 +15,11 @@ class DbContext implements ContextInseparable
     public function __destruct()
     {
         if ($this->transaction_level !== 0) {
-            throw new MisuseException('transaction is not close correctly');
+            throw new MisuseException('Transaction is not closed correctly.', ['transaction_level' => $this->transaction_level, 'connection' => $this->connection?->getUri()]);
         }
 
         if ($this->connection !== null) {
-            throw new MisuseException('connection is not released to pool');
+            throw new MisuseException('Connection is not released to pool.', ['connection' => $this->connection->getUri(), 'transaction_level' => $this->transaction_level]);
         }
     }
 }

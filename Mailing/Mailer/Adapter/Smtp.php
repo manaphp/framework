@@ -128,14 +128,15 @@ class Smtp extends AbstractMailer implements ContextAware
         $uri = ($this->scheme === 'smtp' ? '' : "$this->scheme://") . $this->host;
         if (!$socket = fsockopen($uri, $this->port, $errno, $errstr, $this->timeout)) {
             throw new ConnectionException(
-                ['connect to `{1}:{2}` mailer server failed: {3}', $uri, $this->port, $errstr]
+                'Failed to connect to mail server "{uri}:{port}": {errstr}',
+                ['uri' => $uri, 'port' => $this->port, 'errstr' => $errstr]
             );
         }
 
         $response = fgets($socket);
         list($code,) = explode(' ', $response, 2);
         if ($code !== '220') {
-            throw new ConnectionException(['connection protocol is not be recognized: {1}', $response]);
+            throw new ConnectionException('SMTP server response "{response}" does not indicate ready state (expected 220).', ['response' => trim($response)]);
         }
 
         $context->file = $this->alias->resolve('@runtime/mail/{ymd}/{ymd_His_}{16}.log');
@@ -165,7 +166,7 @@ class Smtp extends AbstractMailer implements ContextAware
 
         $code = (int)$code;
         if ($expected && !in_array($code, $expected, true)) {
-            throw new BadResponseException(['response is not expected: {response}', 'response' => $response]);
+            throw new BadResponseException('Unexpected SMTP response code {code}, expected one of [{expected}].', ['code' => $code, 'expected' => implode(', ', $expected)]);
         }
 
         return [$code, $message];
@@ -177,7 +178,7 @@ class Smtp extends AbstractMailer implements ContextAware
 
         if ($data !== null) {
             if (fwrite($context->socket, $data) === false) {
-                throw new TransmitException(['send data failed: {uri}', 'uri' => $this->uri]);
+                throw new TransmitException('Failed to send data to mail server "{uri}".', ['uri' => $this->uri]);
             }
             file_put_contents($context->file, $data, FILE_APPEND);
         }
@@ -185,7 +186,7 @@ class Smtp extends AbstractMailer implements ContextAware
         file_put_contents($context->file, PHP_EOL, FILE_APPEND);
 
         if (fwrite($context->socket, "\r\n") === false) {
-            throw new TransmitException(['send data failed: {uri}', 'uri' => $this->uri]);
+            throw new TransmitException('Failed to send line break to mail server "{uri}".', ['uri' => $this->uri]);
         }
 
         return $this;
@@ -196,7 +197,7 @@ class Smtp extends AbstractMailer implements ContextAware
         $context = $this->getContext();
 
         if (($str = fgets($context->socket)) === false) {
-            throw new TransmitException(['receive data failed: {uri}', 'uri' => $this->uri]);
+            throw new TransmitException('Failed to receive response from mail server "{uri}".', ['uri' => $this->uri]);
         }
 
         file_put_contents($context->file, str_replace("\r\n", PHP_EOL, $str), FILE_APPEND);
@@ -240,7 +241,7 @@ class Smtp extends AbstractMailer implements ContextAware
         foreach ($attachments as $attachment) {
             $file = $this->alias->resolve($attachment['file']);
             if (!is_file($file)) {
-                throw new InvalidValueException(['`{file}` attachment file is not exists', 'file' => $file]);
+                throw new InvalidValueException('Email attachment file "{file}" does not exist or is not accessible.', ['file' => $file]);
             }
 
             $this->writeLine()
@@ -260,7 +261,7 @@ class Smtp extends AbstractMailer implements ContextAware
     {
         foreach ($embeddedFiles as $embeddedFile) {
             if (!is_file($file = $this->alias->resolve($embeddedFile['file']))) {
-                throw new InvalidValueException(['`{file}` inline file is not exists', 'file' => $file]);
+                throw new InvalidValueException('Email inline attachment file "{file}" does not exist or is not accessible.', ['file' => $file]);
             }
             $this->writeLine()
                 ->writeLine("--$boundary")
@@ -309,11 +310,11 @@ class Smtp extends AbstractMailer implements ContextAware
 
             list($code, $msg) = $this->transmit(base64_encode($this->username));
             if ($code !== 334) {
-                throw new AuthenticationException(['authenticate with `{1}` failed: {2} {3}', $this->uri, $code, $msg]);
+                throw new AuthenticationException('SMTP password rejected for server "{uri}": {code} {msg}.', ['uri' => $this->uri, 'code' => $code, 'msg' => $msg]);
             }
             list($code, $msg) = $this->transmit(base64_encode($this->password));
             if ($code !== 235) {
-                throw new AuthenticationException(['authenticate with `{1}` failed: {2} {3}', $this->uri, $code, $msg]);
+                throw new AuthenticationException('SMTP password rejected for server "{uri}": {code} {msg}.', ['uri' => $this->uri, 'code' => $code, 'msg' => $msg]);
             }
         }
 
@@ -359,7 +360,7 @@ class Smtp extends AbstractMailer implements ContextAware
             if ($textBody = $message->getTextBody()) {
                 $this->sendTextBody($textBody);
             } else {
-                throw new InvalidValueException('mail is invalid: neither html body nor text body is exist.');
+                throw new InvalidValueException('Email message must contain either HTML body or text body, but both are missing.');
             }
         } elseif ($attachments = $message->getAttachments()) {
             $this->writeLine('Content-Type: multipart/mixed;');

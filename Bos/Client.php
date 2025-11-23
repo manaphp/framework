@@ -84,7 +84,7 @@ class Client implements ClientInterface
     public function getPutObjectUrl(string $bucket, string $key, array $policy = [], int $ttl = 3600): string
     {
         if ($key[0] === '/') {
-            throw new MisuseException('key can NOT start with /');
+            throw new MisuseException('BOS object key cannot start with "/" character.', ['bucket' => $bucket, 'key' => $key]);
         }
 
         $policy['bucket'] = $bucket;
@@ -109,7 +109,7 @@ class Client implements ClientInterface
         }
 
         if (!isset($body['data']['token'])) {
-            throw new MissingFieldException('token');
+            throw new MissingFieldException('BOS upload response is missing required "token" field.', ['bucket' => $bucket, 'key' => $key]);
         }
 
         return $this->parsePutObjectResponse($body['data']['token']);

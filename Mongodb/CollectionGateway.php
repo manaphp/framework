@@ -42,7 +42,7 @@ class CollectionGateway implements CollectionGatewayInterface
         $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);
         foreach ($documents as $i => $document) {
             if (!isset($document[$primaryKey])) {
-                throw new MisuseException(['bulkUpdate `{1}` entity must set primary value', static::class]);
+                throw new MisuseException('bulkUpdate entity must set primary value: ' . static::class);
             }
             $documents[$i] = $this->entityManager->normalizeDocument($entityClass, $document);
         }

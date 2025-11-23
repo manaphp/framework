@@ -14,7 +14,7 @@ class EntityNotFoundException extends Exception
 
     public function __construct(string $entityClass, mixed $filters)
     {
-        parent::__construct(['No record for `{1}` entity of `{2}`', $entityClass, json_stringify($filters)]);
+        parent::__construct('No record for "{entityClass}" entity of "{filters}"', ['entityClass' => $entityClass, 'filters' => json_stringify($filters)]);
 
         $this->entityClass = $entityClass;
         $this->filters = $filters;
@@ -28,6 +28,6 @@ class EntityNotFoundException extends Exception
     #[ArrayShape(['code' => 'int', 'msg' => 'string'])]
     public function getJson(): array
     {
-        return ['code' => 404, 'msg' => "Record of `$this->entityClass` Model is not exists"];
+        return ['code' => 404, 'msg' => "Record of '$this->entityClass' Model is not exists"];
     }
 }

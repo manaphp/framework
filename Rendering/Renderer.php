@@ -69,7 +69,7 @@ class Renderer implements RendererInterface, ContextAware
         $context = $this->getContext();
 
         if (!$this->getMutex()->isLocked()) {
-            throw new MisuseException('renderer is not locked');
+            throw new MisuseException('Renderer must be locked before performing rendering operations.', ['template' => $template]);
         }
 
         if (DIRECTORY_SEPARATOR === '\\' && str_contains($template, '\\')) {
@@ -103,7 +103,7 @@ class Renderer implements RendererInterface, ContextAware
 
             if (!$file) {
                 $extensions = implode(', or ', array_keys($this->engines));
-                throw new FileNotFoundException(['`{1}` with `{2}` extension was not found', $template, $extensions]);
+                throw new FileNotFoundException('Template "{template}" with "{extensions}" extension was not found.', ['template' => $template, 'extensions' => $extensions]);
             }
 
             $this->files[$template] = [$file, $extension];
@@ -112,7 +112,7 @@ class Renderer implements RendererInterface, ContextAware
         $engine = $this->engineFactory->get($this->engines[$extension]);
 
         if (isset($vars['renderer'])) {
-            throw new MisuseException('variable `renderer` is reserved for renderer');
+            throw new MisuseException('Variable "renderer" is reserved for renderer.', ['template' => $template, 'available_vars' => array_keys($vars)]);
         }
 
         $context->templates[] = $template;
@@ -223,7 +223,7 @@ class Renderer implements RendererInterface, ContextAware
         $context = $this->getContext();
 
         if (!$context->stack) {
-            throw new PreconditionException('cannot stop a section without first starting session');
+            throw new PreconditionException('Cannot stop a section without first starting one.', ['current_sections' => array_keys($context->sections ?? [])]);
         }
 
         $last = array_pop($context->stack);
@@ -239,7 +239,7 @@ class Renderer implements RendererInterface, ContextAware
         $context = $this->getContext();
 
         if (!$context->stack) {
-            throw new PreconditionException('Cannot append a section without first starting one:');
+            throw new PreconditionException('Cannot append a section without first starting one.', ['current_sections' => array_keys($context->sections ?? [])]);
         }
 
         $last = array_pop($context->stack);

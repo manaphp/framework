@@ -66,7 +66,7 @@ class Paginator implements PaginatorInterface, JsonSerializable
     {
         if ($urlTemplate === null) {
             if (!$urlTemplate = $this->request->path()) {
-                throw new PreconditionException('REQUEST_URI is not exist');
+                throw new PreconditionException('Unable to determine request URI for generating pagination links.', ['request_method' => $this->request->method(), 'request_url' => $this->request->url()]);
             }
 
             if (!str_contains($urlTemplate, '?page=') && !str_contains($urlTemplate, '&page=')) {
@@ -77,7 +77,7 @@ class Paginator implements PaginatorInterface, JsonSerializable
         }
 
         if (!str_contains($urlTemplate, '{page}')) {
-            throw new InvalidValueException(['`{template}` url must contain {page}', 'template' => $urlTemplate]);
+            throw new InvalidValueException('The URL template "{urlTemplate}" must contain "{page}" placeholder.', ['urlTemplate' => $urlTemplate]);
         }
 
         $str = PHP_EOL . '<ul class="pagination">' . PHP_EOL;

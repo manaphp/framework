@@ -93,13 +93,7 @@ class Query extends AbstractQuery
         $r = $mongodb->command($cmd, $db)[0];
         if (!$r['ok']) {
             throw new InvalidFormatException(
-                [
-                    '`:distinct` distinct for `:collection` collection failed `:code`: `:msg`',
-                    'distinct'   => $field,
-                    'code'       => $r['code'],
-                    'msg'        => $r['errmsg'],
-                    'collection' => $source
-                ]
+                'Distinct operation for field "{field}" in collection "{source}" failed: {code} - {errmsg}.', ['field' => $field, 'source' => $source, 'code' => $r['code'], 'errmsg' => $r['errmsg']]
             );
         }
 
@@ -188,7 +182,7 @@ class Query extends AbstractQuery
             }
 
             if (preg_match('#^(\w+)\((.*)\)$#', $v, $match) !== 1) {
-                throw new MisuseException(['`{aggregate}` aggregate is invalid.', 'aggregate' => $v]);
+                throw new MisuseException('The aggregate expression "{aggregate}" is invalid. Expected format: "function(operand)".', ['aggregate' => $v]);
             }
 
             $accumulator = strtolower($match[1]);
@@ -212,21 +206,19 @@ class Query extends AbstractQuery
                 if ($cond = $this->compileCondExpression($operand)) {
                     $this->aggregate[$k] = ['$sum' => $cond];
                 } else {
-                    throw new MisuseException(
-                        ['unknown COUNT_IF expression: `{expression}`', 'expression' => $operand]
-                    );
+                    throw new MisuseException('The COUNT_IF expression "{operand}" could not be compiled to a valid condition.', ['operand' => $operand]);
                 }
             } elseif ($accumulator === 'sum_if') {
                 if ($cond = $this->compileCondExpression($operand)) {
                     $this->aggregate[$k] = ['$sum' => $cond];
                 } else {
-                    throw new MisuseException(['unknown SUM_IF expression: `{expression}`', 'expression' => $operand]);
+                    throw new MisuseException('The SUM_IF expression "{operand}" could not be compiled to a valid condition.', ['operand' => $operand]);
                 }
             } elseif ($accumulator === 'avg_if') {
                 if ($cond = $this->compileCondExpression($operand)) {
                     $this->aggregate[$k] = ['$avg' => $cond];
                 } else {
-                    throw new MisuseException(['unknown AVG_IF expression: `{expression}`', 'expression' => $operand]);
+                    throw new MisuseException('The AVG_IF expression "{operand}" could not be compiled to a valid condition.', ['operand' => $operand]);
                 }
             } elseif (in_array(
                 $accumulator,
@@ -251,10 +243,10 @@ class Query extends AbstractQuery
                 } elseif ($cond = $this->compileCondExpression($operand)) {
                     $this->aggregate[$k] = ['$' . $accumulator => $cond];
                 } else {
-                    throw new MisuseException(['unknown `{1}` operand of `{2}` aggregate', $operand, $v]);
+                    throw new MisuseException('Unknown "{operand}" operand of "{aggregate}" aggregate.', ['operand' => $operand, 'aggregate' => $v]);
                 }
             } else {
-                throw new MisuseException(['unknown `{1}` accumulator of `{2}` aggregate', $accumulator, $v]);
+                throw new MisuseException('Unknown "{accumulator}" accumulator of "{aggregate}" aggregate.', ['accumulator' => $accumulator, 'aggregate' => $v]);
             }
         }
 
@@ -268,7 +260,7 @@ class Query extends AbstractQuery
         }
 
         if (!isset($this->types[$field])) {
-            throw new MisuseException(['`{field}` field type is not defined', 'field' => $field]);
+            throw new MisuseException('The field type for "{field}" is not defined.', ['field' => $field]);
         }
 
         $type = $this->types[$field];
@@ -286,7 +278,7 @@ class Query extends AbstractQuery
         } elseif ($type === 'array') {
             return (array)$value;
         } else {
-            throw new InvalidValueException(['normalize `{type}` type value is not supported', 'type' => $type]);
+            throw new InvalidValueException('The type "{type}" value normalization is not supported.', ['type' => $type]);
         }
     }
 
@@ -333,7 +325,7 @@ class Query extends AbstractQuery
                 $entityClass = $this->entityClass;
                 $collection = $entityClass ? $this->entityMetadata->getTable($entityClass) : $this->table;
                 throw new InvalidArgumentException(
-                    ['`{1}` field is not exist in `{2}` collection', $field, $collection]
+                    'Field "{field}" does not exist in collection "{collection}".', ['field' => $field, 'collection' => $collection]
                 );
             }
 
@@ -346,12 +338,12 @@ class Query extends AbstractQuery
                     $this->filters[] = [$field => ['$in' => [(string)$value, (int)$value, (float)$value]]];
                 }
             } else {
-                throw new InvalidValueException(['`{1}` operator is not valid: value must be scalar value', $operator]);
+                throw new InvalidValueException('The operator "{operator}" is not valid because the value must be scalar.', ['operator' => $operator]);
             }
         } else {
             $operator_map = ['>' => '$gt', '>=' => '$gte', '<' => '$lt', '<=' => '$lte', '!=' => '$ne', '<>' => '$ne'];
             if (!isset($operator_map[$operator])) {
-                throw new InvalidValueException(['unknown `{operator}` operator', 'operator' => $operator]);
+                throw new InvalidValueException('The operator "{operator}" is not supported. Valid operators are: >, >=, <, <=, !=, <>.', ['operator' => $operator]);
             }
             $this->filters[] = [$field => [$operator_map[$operator] => $this->normalizeValue($field, $value)]];
         }
@@ -605,12 +597,12 @@ class Query extends AbstractQuery
                         $parts = explode(',', $match[2]);
 
                         if ($parts[1] === '0') {
-                            throw new MisuseException(['`{group}` substr index is 1-based', 'group' => $groupBy]);
+                            throw new MisuseException('The substr groupBy expression "{groupBy}" is invalid. The substr index must be 1-based (cannot be 0).', ['groupBy' => $groupBy]);
                         }
                         $this->group[$parts[0]] = ['$substr' => ['$' . $parts[0], $parts[1] - 1, (int)$parts[2]]];
                     }
                 } else {
-                    throw new MisuseException(['`{group}` group is not supported. ', 'group' => $groupBy]);
+                    throw new MisuseException('The groupBy expression "{groupBy}" is not supported because it has an invalid format.', ['groupBy' => $groupBy]);
                 }
             } else {
                 foreach (explode(',', str_replace(' ', '', $groupBy)) as $field) {

@@ -73,7 +73,7 @@ class DateCommand extends Command
     {
         $timestamp = $this->getRemoteTimestamp($url);
         if ($timestamp === null) {
-            return $this->console->error('fetch remote timestamp failed: `{url}`', ['url' => $url]);
+            return $this->console->error('fetch remote timestamp failed: "{url}"', ['url' => $url]);
         } else {
             $this->updateDate($timestamp);
             $this->console->writeLn(date('Y-m-d H:i:s'));
@@ -92,7 +92,7 @@ class DateCommand extends Command
     {
         $timestamp = $this->getRemoteTimestamp($url);
         if ($timestamp === null) {
-            return $this->console->error(sprintf('fetch remote timestamp failed: `%s`', $url));
+            return $this->console->error(sprintf('fetch remote timestamp failed: "%s"', $url));
         } else {
             $this->console->writeLn(date('Y-m-d H:i:s', $timestamp));
             return 0;
@@ -111,7 +111,7 @@ class DateCommand extends Command
         $remote_ts = $this->getRemoteTimestamp($url);
         $local_ts = time();
         if ($remote_ts === null) {
-            return $this->console->error(sprintf('fetch remote timestamp failed: `%s`', $url));
+            return $this->console->error(sprintf('fetch remote timestamp failed: "%s"', $url));
         } else {
             $this->console->writeLn(' local: ' . date('Y-m-d H:i:s', $local_ts));
             $this->console->writeLn('remote: ' . date('Y-m-d H:i:s', $remote_ts));
@@ -193,7 +193,7 @@ class DateCommand extends Command
         $str = $date . ' ' . $time;
         $timestamp = strtotime($str);
         if ($timestamp === false || preg_match('#^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$#', $str) !== 1) {
-            return $this->console->error(sprintf('`%s` time format is invalid', $str));
+            return $this->console->error(sprintf('"%s" time format is invalid', $str));
         } else {
             $this->updateDate($timestamp);
             $this->console->writeLn(date('Y-m-d H:i:s'));

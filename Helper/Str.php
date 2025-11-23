@@ -61,7 +61,7 @@ class Str
     public static function random(int $length, int $base = 62): string
     {
         if ($length < 0) {
-            throw new MisuseException('length(%d) is negative number');
+            throw new MisuseException('Length parameter cannot be negative, but {length} was provided.', ['length' => $length]);
         } elseif ($length === 0) {
             return '';
         } elseif ($base === 32) {
@@ -91,7 +91,7 @@ class Str
             }
             return $str;
         } else {
-            throw new NotSupportedException(['base({1}) is not supported', $base]);
+            throw new NotSupportedException('Base {base} conversion is not supported. Supported bases are: 2, 8, 10, 16, 36.', ['base' => $base]);
         }
     }
 

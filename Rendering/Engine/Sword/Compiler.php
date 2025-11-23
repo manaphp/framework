@@ -16,7 +16,6 @@ use function count;
 use function dirname;
 use function in_array;
 use function is_array;
-use function sprintf;
 use function strlen;
 
 class Compiler
@@ -153,14 +152,14 @@ class Compiler
 
         if (($str = @file_get_contents($source)) === false) {
             $error = error_get_last()['message'] ?? '';
-            throw new InvalidArgumentException(['read `{1}` sword source file failed: {2}', $source, $error]);
+            throw new InvalidArgumentException('Failed to read Sword source file "{source}": {error}.', ['source' => $source, 'error' => $error]);
         }
 
         $result = $this->compileString($str);
 
         if (file_put_contents($compiled, $result, LOCK_EX) === false) {
             $error = error_get_last()['message'] ?? '';
-            throw new RuntimeException(['write `{1}` compiled file file failed: {2}', $compiled, $error]);
+            throw new RuntimeException('Failed to write compiled file "{compiled}": {error}.', ['compiled' => $compiled, 'error' => $error]);
         }
 
         return $this;

@@ -47,7 +47,7 @@ class Swift extends AbstractMailer
         } elseif ($scheme === 'ssl') {
             $encryption = 'ssl';
         } else {
-            throw new NotSupportedException(['`{scheme}` scheme is not known', 'scheme' => $scheme]);
+            throw new NotSupportedException('Unknown encryption scheme "{scheme}". Supported schemes are: ssl, tls.', ['scheme' => $scheme]);
         }
         $this->encryption = $encryption;
 

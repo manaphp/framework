@@ -26,7 +26,7 @@ class SwordCommand extends Command
     public function compileAction(bool $replace = false): void
     {
         LocalFS::dirDelete('@runtime/sword');
-        $this->console->writeLn('delete `@runtime/sword` directory success');
+        $this->console->writeLn('delete "@runtime/sword" directory success');
 
         $ext = 'sword';
 

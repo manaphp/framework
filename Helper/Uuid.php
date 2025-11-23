@@ -86,7 +86,7 @@ class Uuid
     {
         $xd = '[\da-fA-F]';
         if (!preg_match("#($xd{4})($xd{4})-($xd{4})-($xd{4})-($xd{4})-($xd{12})#", $uuid, $match)) {
-            throw new InvalidValueException('uuid is not correct format');
+            throw new InvalidValueException('"{uuid}" is not a valid UUID format. Expected format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx.', ['uuid' => $uuid]);
         }
 
         $xd1 = hexdec($match[1]);

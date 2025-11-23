@@ -51,11 +51,11 @@ class Stream implements EngineInterface
         if (($proxy = $request->options['proxy']) !== null) {
             $parts = parse_url($proxy);
             if ($parts['scheme'] !== 'http') {
-                throw new NotSupportedException('only support http proxy');
+                throw new NotSupportedException('Only HTTP proxy is supported.', ['proxy' => $proxy, 'scheme' => $parts['scheme']]);
             }
 
             if (isset($parts['user']) || isset($parts['pass'])) {
-                throw new NotSupportedException('not support Proxy-Authorization');
+                throw new NotSupportedException('Proxy-Authorization is not supported.', ['proxy' => $proxy, 'has_user' => isset($parts['user']), 'has_pass' => isset($parts['pass'])]);
             }
 
             $address = "tcp://$parts[host]:" . ($parts['port'] ?? 80);

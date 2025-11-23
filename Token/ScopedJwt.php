@@ -27,7 +27,7 @@ class ScopedJwt implements ScopedJwtInterface
     public function encode(array $claims, int $ttl, string $scope): string
     {
         if (isset($claims['scope'])) {
-            throw new MisuseException('scope field is exists');
+            throw new MisuseException('Scope field already exists in JWT claims.', ['existing_scope' => $claims['scope'], 'new_scope' => $scope]);
         }
 
         $claims['scope'] = $scope;
@@ -40,11 +40,11 @@ class ScopedJwt implements ScopedJwtInterface
         $claims = $this->jwt->decode($token, false);
 
         if (!isset($claims['scope'])) {
-            throw new ScopeException('scope is not exists');
+            throw new ScopeException('Scope field does not exist in JWT claims.', ['token_preview' => substr($token, 0, 50), 'expected_scope' => $scope]);
         }
 
         if ($claims['scope'] !== $scope) {
-            throw new ScopeException(['`{1}` is not equal `{2}`', $claims['scope'], $scope]);
+            throw new ScopeException('The scope "{scope1}" does not match the expected scope "{scope2}".', ['scope1' => $claims['scope'], 'scope2' => $scope]);
         }
 
         if ($verify) {

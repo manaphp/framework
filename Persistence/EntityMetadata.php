@@ -23,7 +23,6 @@ use ReflectionClass;
 use ReflectionProperty;
 use function preg_match;
 use function property_exists;
-use function sprintf;
 use function strpos;
 use function substr;
 
@@ -139,7 +138,7 @@ class EntityMetadata implements EntityMetadataInterface
                 return $this->primaryKey[$entityClass] = 'id';
             }
 
-            throw new MisuseException('Primary key not found for entity: ' . $entityClass);
+            throw new MisuseException('Primary key not found for entity "{entityClass}".', ['entityClass' => $entityClass]);
         } else {
             return $primaryKey;
         }
@@ -292,7 +291,7 @@ class EntityMetadata implements EntityMetadataInterface
             } elseif (preg_match('#^(.*)\\\\Entity\\\\(\\w+)$#', $entityClass, $match) === 1) {
                 $repository = $match[1] . '\\Repository\\' . $match[2] . 'Repository';
             } else {
-                throw new MisuseException(sprintf('repository of `%s` not found', $entityClass));
+                throw new MisuseException('Repository for entity "{entityClass}" not found.', ['entityClass' => $entityClass]);
             }
             $this->repository[$entityClass] = $repository;
         }

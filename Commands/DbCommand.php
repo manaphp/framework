@@ -327,7 +327,7 @@ class DbCommand extends Command
         foreach ($connections ?: $this->dbFactory->getNames() as $connection) {
             $db = $this->dbFactory->get($connection);
 
-            $this->console->writeLn("connection: `$connection`");
+            $this->console->writeLn("connection: $connection");
             foreach ($this->getTables($connection, $table_pattern) as $row => $table) {
                 $columns = (array)$db->getMetadata($table)[Db::METADATA_ATTRIBUTES];
                 $primaryKey = $db->getMetadata($table)[Db::METADATA_PRIMARY_KEY];
@@ -373,7 +373,7 @@ class DbCommand extends Command
         if ($connection) {
             $db = $this->dbFactory->get($connection);
             if (!in_array($table, $db->getTables(), true)) {
-                throw new Exception(['`{table}` is not exists', 'table' => $table]);
+                throw new Exception('Table "{table}" does not exist in the database.', ['table' => $table]);
             }
         } else {
             foreach ($this->dbFactory->getNames() as $s) {
@@ -384,7 +384,7 @@ class DbCommand extends Command
                 }
             }
             if (!$connection) {
-                throw new Exception(['`{table}` is not found in connections`', 'table' => $table]);
+                throw new Exception('Table "{table}" is not found in connections.', ['table' => $table]);
             }
         }
 
@@ -394,7 +394,7 @@ class DbCommand extends Command
         $entity_str = $this->renderEntity($connection, $class, $table, $camelized);
         LocalFS::filePut($fileName, $entity_str);
 
-        $this->console->writeLn("`$table` table saved to `$fileName`");
+        $this->console->writeLn("'$table' table saved to '$fileName'");
     }
 
     /**
@@ -433,7 +433,7 @@ class DbCommand extends Command
                 $repositoryFile = '@runtime/db_entities/' . str_replace('\\', '/', $repository) . '.php';
                 $repositoryContent = $this->renderRepository($entity, $repository);
                 LocalFS::filePut($repositoryFile, $repositoryContent);
-                $this->console->writeLn(" `$table` table saved to `$entityFile`");
+                $this->console->writeLn(" '$table' table saved to '$entityFile'");
             }
         }
     }
@@ -465,7 +465,7 @@ class DbCommand extends Command
                 $entity_str = $this->renderTable($connection, $table, $namespace);
                 LocalFS::filePut($fileName, $entity_str);
 
-                $this->console->writeLn(" `$table` table saved to `$fileName`");
+                $this->console->writeLn(" '$table' table saved to '$fileName'");
             }
         }
     }
@@ -498,7 +498,7 @@ class DbCommand extends Command
 
                 $elapsed = microtime(true) - $startTime;
                 $this->console->writeLn(
-                    sprintf('write to `%s` success: `%d` `[%.3f]`', $fileName, count($rows), $elapsed)
+                    sprintf('write to "%s" success: "%d" "[%.3f]"', $fileName, count($rows), $elapsed)
                 );
             }
         }
@@ -543,7 +543,7 @@ class DbCommand extends Command
                 $count = count($rows);
                 $elapsed = microtime(true) - $startTime;
                 $this->console->writeLn(
-                    sprintf(' `%s` imported to `%s`:%d [%.3f]', $table, $fileName, $count, $elapsed)
+                    sprintf(' "%s" imported to "%s":%d [%.3f]', $table, $fileName, $count, $elapsed)
                 );
             }
         }

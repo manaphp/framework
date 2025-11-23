@@ -146,7 +146,7 @@ class Query extends AbstractQuery
             $this->conditions[] = $normalizedField . $operator . ':' . $bind_key;
             $this->bind[$bind_key] = $value;
         } else {
-            throw new MisuseException(['unknown `{operator}` operator', 'operator' => $operator]);
+            throw new MisuseException('Unknown operator "{operator}" is not supported.', ['operator' => $operator]);
         }
 
         return $this;
@@ -675,12 +675,12 @@ class Query extends AbstractQuery
                 }
 
                 if (!isset($join_shards[$connection])) {
-                    throw new NotSupportedException('');
+                    throw new NotSupportedException('Sharding does not support join operation across multiple connections.', ['connection' => $connection, 'join_shards' => array_keys($join_shards)]);
                 }
 
                 $join_tables = $join_shards[$connection];
                 if (count($join_tables) > 1) {
-                    throw new NotSupportedException('');
+                    throw new NotSupportedException('Sharding does not support join operation across multiple tables.', ['connection' => $connection, 'join_tables' => $join_tables, 'table_count' => count($join_tables)]);
                 }
 
                 $join[0] = $join_tables[0];
@@ -817,7 +817,7 @@ class Query extends AbstractQuery
             $result = $this->query(key($shards), current($shards)[0]);
         } else {
             if ($this->having) {
-                throw new NotSupportedException('sharding not support having');
+                throw new NotSupportedException('Sharding does not support HAVING clause.', ['having' => $this->having, 'shards' => array_keys($shards)]);
             }
 
             $aggs = [];

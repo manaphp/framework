@@ -31,7 +31,7 @@ class Sender implements SenderInterface
     public function sendHeaders(): void
     {
         if (headers_sent($file, $line)) {
-            throw new MisuseException("Headers has been sent in $file:$line");
+            throw new MisuseException('Headers have already been sent in "{file}" at line {line}.', ['file' => $file, 'line' => $line]);
         }
 
         header('HTTP/1.1 ' . $this->response->getStatus());

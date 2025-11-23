@@ -227,14 +227,14 @@ class Arr
                 } elseif ($agg === 'AVG') {
                     $sum_field = $field . '_sum';
                     if (!isset($v[0][$sum_field])) {
-                        throw new MisuseException(['`{1}` not in `{2}`', $sum_field, implode(',', array_keys($v[0]))]);
+                        throw new MisuseException('Field "{sum_field}" does not exist in the data structure. Available fields are: {fields}.', ['sum_field' => $sum_field, 'fields' => implode(', ', array_keys($v[0]))]);
                     }
                     $sum = array_sum(array_column($v, $sum_field));
 
                     $count_field = $field . '_count';
                     if (!isset($v[0][$count_field])) {
                         throw new MisuseException(
-                            ['`{1}` not in `{2}`', $count_field, implode(',', array_keys($v[0]))]
+                            '"{count_field}" not in "{fields}"', ['count_field' => $count_field, 'fields' => implode(',', array_keys($v[0]))]
                         );
                     }
                     $count = array_sum(array_column($v, $count_field));

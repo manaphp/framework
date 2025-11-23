@@ -28,12 +28,12 @@ class Gd extends AbstractImage
     public function __construct(string $file)
     {
         if (!extension_loaded('gd')) {
-            throw new ExtensionNotInstalledException('gd');
+            throw new ExtensionNotInstalledException('GD extension is not installed.');
         }
 
         $this->file = realpath($this->alias->resolve($file));
         if (!$this->file) {
-            throw new FileNotFoundException(['`{file}` file is not exists', 'file' => $file]);
+            throw new FileNotFoundException('File "{file}" does not exist.', ['file' => $file]);
         }
 
         list($this->width, $this->height, $type) = getimagesize($this->file);
@@ -45,7 +45,7 @@ class Gd extends AbstractImage
         } elseif ($type === IMAGETYPE_PNG) {
             $this->image = imagecreatefrompng($this->file);
         } else {
-            throw new PreconditionException('Installed GD does not support such images');
+            throw new PreconditionException('Installed GD does not support such images.', ['file' => $this->file, 'image_type' => $type, 'supported_types' => [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG]]);
         }
         imagesavealpha($this->image, true);
     }
@@ -160,7 +160,7 @@ class Gd extends AbstractImage
         } elseif ($maskType === IMAGETYPE_PNG) {
             $maskImage = imagecreatefrompng($file);
         } else {
-            throw new PreconditionException('Installed GD does not support such images');
+            throw new PreconditionException('Installed GD does not support such images.', ['file' => $this->file]);
         }
 
         imagesavealpha($maskImage, true);
@@ -202,7 +202,7 @@ class Gd extends AbstractImage
         } elseif ($ext === 'png') {
             imagepng($this->image, $file);
         } else {
-            throw new PreconditionException(['`{extension}` is not supported by Installed GD', 'extension' => $ext]);
+            throw new PreconditionException('Extension "{ext}" is not supported by installed GD.', ['ext' => $ext]);
         }
     }
 

@@ -14,7 +14,6 @@ use function is_callable;
 use function is_string;
 use function method_exists;
 use function preg_split;
-use function sprintf;
 use function strpos;
 use function substr;
 use function ucfirst;
@@ -41,7 +40,7 @@ class Relations implements RelationsInterface
     {
         $relation = $this->get($entityClass, $name);
         if ($relation === null) {
-            throw new RelationNotFoundException(sprintf('`%s` relation not found', $name));
+            throw new RelationNotFoundException('Relation "{name}" not found.', ['name' => $name]);
         }
 
         $query = $relation->getThatQuery();
@@ -63,7 +62,7 @@ class Relations implements RelationsInterface
             $query->select($data->getFields());
             $query->orderBy($data->getOrders());
         } else {
-            throw new InvalidValueException(['`{with}` with is invalid', 'with' => $name]);
+            throw new InvalidValueException('The "with" parameter "{name}" is invalid.', ['name' => $name]);
         }
 
         return $query;
@@ -81,7 +80,7 @@ class Relations implements RelationsInterface
             }
 
             if (($relation = $this->get($entityClass, $name)) === null) {
-                throw new InvalidValueException(['unknown `{relation}` relation', 'relation' => $name]);
+                throw new InvalidValueException('Unknown relation "{name}".', ['name' => $name]);
             }
 
             $thatQuery = $v instanceof QueryInterface

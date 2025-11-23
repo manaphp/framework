@@ -116,12 +116,12 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
         $shards = $this->getShards();
 
         if (count($shards) !== 1) {
-            throw new ShardingTooManyException(['too many dbs: `{dbs}`', 'dbs' => array_keys($shards)]);
+            throw new ShardingTooManyException('Query spans multiple databases {databases}, only single-database operations supported.', ['databases' => array_keys($shards)]);
         }
 
         $tables = current($shards);
         if (count($tables) !== 1) {
-            throw new ShardingTooManyException(['too many tables: `{tables}`', 'tables' => $tables]);
+            throw new ShardingTooManyException('Query spans multiple tables {tables}, only single-table operations supported.', ['tables' => $tables]);
         }
 
         return [key($shards), $tables[0]];
@@ -166,7 +166,7 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
                     $field = substr($filter, 0, -strlen($operator));
                     if ($operator === '~=') {
                         if (count($value) !== 2) {
-                            throw new MisuseException(['value of `{filter}` filter is invalid', 'filter' => $filter]);
+                            throw new MisuseException('The value of filter "{filter}" is invalid.', ['filter' => $filter]);
                         }
                         $this->whereBetween($field, $value[0], $value[1]);
                     } elseif ($operator === '@=') {
@@ -180,12 +180,12 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
                     } elseif ($operator === '%=') {
                         $this->whereMod($field, $value[0], $value[1]);
                     } else {
-                        throw new MisuseException(['unknown `{operator}` operator', 'operator' => $operator]);
+                        throw new MisuseException('Unknown filter operator "{operator}" is not supported.', ['operator' => $operator]);
                     }
                 } elseif (!$value || isset($value[0])) {
                     $this->whereIn($filter, $value);
                 } else {
-                    throw new MisuseException(['unknown `{filter}` filter', 'operator' => $filter]);
+                    throw new MisuseException('Unknown filter type "{filter}" is not supported.', ['filter' => $filter]);
                 }
             } elseif (preg_match('#^([\w.]+)([<>=!^$*~,@dm?]*)$#', $filter, $matches) === 1) {
                 list(, $field, $operator) = $matches;
@@ -219,12 +219,12 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
                 } elseif ($operator === '@y=') {
                     $this->whereYear($field, $value);
                 } else {
-                    throw new MisuseException(['unknown `{operator}` operator', 'operator' => $operator]);
+                    throw new MisuseException('Unknown filter operator "{operator}" is not supported.', ['operator' => $operator]);
                 }
             } elseif (str_contains($filter, ',') && preg_match('#^[\w,.]+$#', $filter)) {
                 $this->where1v1($filter, $value);
             } else {
-                throw new MisuseException(['unknown `{filter}` filter', 'filter' => $filter]);
+                throw new MisuseException('Unknown filter type "{filter}" is not supported.', ['filter' => $filter]);
             }
         }
 
@@ -234,7 +234,7 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
     public function whereDateBetween(string $field, mixed $min, mixed $max): static
     {
         if (!$this->entityClass) {
-            throw new MisuseException('use whereDateBetween must provide entity');
+            throw new MisuseException('Use whereDateBetween must provide entity.', ['method' => __METHOD__]);
         }
 
         if ($min && !str_contains($min, ':')) {
@@ -287,7 +287,7 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
             } elseif ($v === 'DESC' || $v === 'desc') {
                 $this->order[$k] = SORT_DESC;
             } else {
-                throw new MisuseException(['unknown sort order: `{order}`', 'order' => $v]);
+                throw new MisuseException('Unknown sort direction "{direction}". Valid values are: ASC, DESC.', ['direction' => $v]);
             }
         }
 
@@ -424,7 +424,7 @@ abstract class AbstractQuery implements QueryInterface, IteratorAggregate, JsonS
     public function get(): array
     {
         if (!$r = $this->first()) {
-            throw new NotFoundException('record is not exists');
+            throw new NotFoundException('No record found matching the specified criteria.', ['entity_class' => $this->entityClass, 'conditions' => $this->conditions ?? []]);
         }
 
         return $r;

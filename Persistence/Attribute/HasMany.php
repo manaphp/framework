@@ -42,7 +42,7 @@ class HasMany extends AbstractRelation
         $data = $thatQuery->whereIn($thatField, $ids)->fetch();
 
         if (isset($data[0]) && !isset($data[0][$thatField])) {
-            throw new MisuseException(['missing `{1}` field in `{2}` with', $thatField, $name]);
+            throw new MisuseException('The field "{thatField}" is missing in "{name}" entity.', ['thatField' => $thatField, 'name' => $name]);
         }
 
         $rd = [];

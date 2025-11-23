@@ -177,7 +177,7 @@ class Server implements ServerInterface, BootstrapperInterface
         } elseif ($type === 'room') {
             $this->pushToRoom($receivers, $message);
         } else {
-            $this->logger->warning(Message::of('wspServer.bad_type', 'unknown `{0}` type message: {1}'), [$type, $message]);
+            $this->logger->warning(Message::of('wspServer.bad_type', 'unknown "{0}" type message: {1}'), [$type, $message]);
         }
     }
 

@@ -21,27 +21,27 @@ class EntityManager extends AbstractEntityManager
 
     public function create(Entity $entity): Entity
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in entity merger context.', ['method' => __METHOD__]);
     }
 
     public function restore(Entity $entity): Entity
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in entity merger context.', ['method' => __METHOD__]);
     }
 
     /** @noinspection PhpUnusedParameterInspection */
     public static function insert(array $record): int
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in entity merger context.', ['method' => __METHOD__]);
     }
 
     public function update(Entity $entity, Entity $original): Entity
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in entity merger context.', ['method' => __METHOD__]);
     }
 
     public function delete(Entity $entity): Entity
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in entity merger context.', ['method' => __METHOD__]);
     }
 }

@@ -166,7 +166,7 @@ class Client implements ClientInterface
     public function startConsume(int $prefetch_size = 0, int $prefetch_count = 0): void
     {
         if ($this->engine === null) {
-            throw new MisuseException('none consume');
+            throw new MisuseException('No consumer engine is configured.');
         }
 
         $this->engine->wait($prefetch_size, $prefetch_count);

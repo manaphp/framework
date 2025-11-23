@@ -28,7 +28,9 @@ class ErrorHandler implements ErrorHandlerInterface
     {
         $code = $throwable instanceof Exception ? $throwable->getStatusCode() : 500;
         if ($code >= 500 && $code <= 599) {
-            $this->logger->error('', ['exception' => $throwable]);
+            $context = $throwable instanceof Exception ? $throwable->getContext() : [];
+            $context['exception'] = $throwable;
+            $this->logger->error($throwable::class, $context);
         }
 
         if ($this->format === 'json'

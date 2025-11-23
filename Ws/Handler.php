@@ -86,7 +86,7 @@ class Handler implements HandlerInterface
             $this->eventDispatcher->dispatch(new RequestAuthenticated());
 
             if (($matcher = $this->router->match()) === null) {
-                throw new NotFoundRouteException(['router does not have matched route']);
+                throw new NotFoundRouteException('No handler found for the incoming WebSocket request.', ['request_path' => $this->request->path(), 'request_method' => $this->request->method()]);
             }
 
             $handler = $matcher->getHandler();

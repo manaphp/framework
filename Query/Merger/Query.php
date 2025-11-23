@@ -58,7 +58,7 @@ class Query extends AbstractQuery
             } elseif ($query instanceof EntityManagerInterface) {
                 $this->queries[$id] = $query->query($queries[0]->getEntityClass());
             } else {
-                throw new MisuseException('');
+                throw new MisuseException('Query merger only supports QueryInterface or EntityManagerInterface.', ['query_type' => get_class($query), 'query_id' => $id, 'supported_types' => ['QueryInterface', 'EntityManagerInterface']]);
             }
         }
 
@@ -75,22 +75,22 @@ class Query extends AbstractQuery
 
     public function shard(?callable $strategy = null): static
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in query merger context.', ['method' => __METHOD__]);
     }
 
     public function from(string $table, ?string $alias = null): static
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in query merger context.', ['method' => __METHOD__]);
     }
 
     public function getShards(): array
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in query merger context.', ['method' => __METHOD__]);
     }
 
     public function getUniqueShard(): array
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in query merger context.', ['method' => __METHOD__]);
     }
 
     public function setEntityClass(string $entityClass): static
@@ -416,7 +416,7 @@ class Query extends AbstractQuery
 
     public function aggregate(array $expr): array
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in query merger context.', ['method' => __METHOD__]);
     }
 
     public function values(string $field): array
@@ -502,6 +502,6 @@ class Query extends AbstractQuery
 
     public function getSql(): string
     {
-        throw new NotSupportedException(__METHOD__);
+        throw new NotSupportedException('Method "{method}" is not supported in query merger context.', ['method' => __METHOD__]);
     }
 }

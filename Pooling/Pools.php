@@ -41,7 +41,7 @@ class Pools implements PoolsInterface
     public function create(object $owner, int $capacity, string $type = 'default'): void
     {
         if (isset($this->pools[$owner][$type])) {
-            throw new MisuseException(['`{1}` pool of `{2}` is exists', $type, $owner::class]);
+            throw new MisuseException('Pool "{type}" of "{owner}" already exists.', ['type' => $type, 'owner' => $owner::class]);
         }
 
         $this->pools[$owner] ??= [];
@@ -55,7 +55,7 @@ class Pools implements PoolsInterface
             $this->pools[$owner][$type] = $queue = new Channel($size);
         } elseif ($queue->length() + $size > $queue->capacity()) {
             throw new FullException(
-                ['`{1}` pool of `{2}` capacity({3}) is not big enough', $type, $owner::class, $queue->capacity()]
+                'Pool "{type}" of "{owner}" capacity ({capacity}) is not big enough.', ['type' => $type, 'owner' => $owner::class, 'capacity' => $queue->capacity()]
             );
         }
 
@@ -73,7 +73,7 @@ class Pools implements PoolsInterface
     public function push(object $owner, object $instance, string $type = 'default'): void
     {
         if (!$queue = $this->pools[$owner][$type] ?? null) {
-            throw new MisuseException(['`{1}` pool of `{2}` is not exists', $type, $owner::class]);
+            throw new MisuseException('Pool "{type}" of "{owner}" does not exist.', ['type' => $type, 'owner' => $owner::class]);
         }
 
         $queue->push($instance);
@@ -84,7 +84,7 @@ class Pools implements PoolsInterface
     public function pop(object $owner, ?float $timeout = null, string $type = 'default'): object
     {
         if (!$queue = $this->pools[$owner][$type] ?? null) {
-            throw new MisuseException(['`{1}` pool of `{2}` is not exists', $type, $owner::class]);
+            throw new MisuseException('Pool "{type}" of "{owner}" does not exist.', ['type' => $type, 'owner' => $owner::class]);
         }
 
         $this->eventDispatcher->dispatch(new PoolPopping($this, $owner, $type));
@@ -95,7 +95,7 @@ class Pools implements PoolsInterface
             );
             $capacity = $queue->capacity();
             $this->eventDispatcher->dispatch(new PoolBusy($this, $owner, $type, $capacity, $timeout));
-            throw new BusyException(['`{1}` pool of `{2}` is busy: capacity[{3}]', $type, $owner::class, $capacity]);
+            throw new BusyException('Pool "{type}" of "{owner}" is busy: capacity [{capacity}].', ['type' => $type, 'owner' => $owner::class, 'capacity' => $capacity]);
         }
 
         $this->eventDispatcher->dispatch(
@@ -115,7 +115,7 @@ class Pools implements PoolsInterface
     public function isEmpty(object $owner, string $type = 'default'): bool
     {
         if (!$queue = $this->pools[$owner][$type] ?? null) {
-            throw new MisuseException(['`{1}` pool of `{2}` is not exists', $type, $owner::class]);
+            throw new MisuseException('Pool "{type}" of "{owner}" does not exist.', ['type' => $type, 'owner' => $owner::class]);
         }
 
         return $queue->isEmpty();
@@ -129,7 +129,7 @@ class Pools implements PoolsInterface
     public function size(object $owner, string $type = 'default'): int
     {
         if (!$queue = $this->pools[$owner][$type] ?? null) {
-            throw new MisuseException(['`{1} pool of `{2}` is not exists', $type, $owner::class]);
+            throw new MisuseException('Pool "{type}" of "{owner}" does not exist.', ['type' => $type, 'owner' => $owner::class]);
         }
 
         return $queue->capacity();

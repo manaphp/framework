@@ -42,7 +42,7 @@ class Php implements EngineInterface
             $parts = parse_url($this->uri);
             $scheme = $parts['scheme'];
             if ($scheme !== 'amqp') {
-                throw new MisuseException('only support ampq scheme');
+                throw new MisuseException('Only "amqp" scheme is supported.', ['uri' => $this->uri, 'scheme' => $scheme]);
             }
             $host = $parts['host'];
             $port = isset($parts['port']) ? (int)$parts['port'] : 5672;

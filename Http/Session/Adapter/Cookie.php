@@ -10,6 +10,7 @@ use ManaPHP\Http\Session\Adapter\Cookie\Exception as CookieException;
 use ManaPHP\Security\CryptInterface;
 use function count;
 use function explode;
+use function gettype;
 use function is_array;
 use function json_parse;
 use function json_stringify;
@@ -34,18 +35,18 @@ class Cookie extends AbstractSession
         $parts = explode('.', $data, 2);
 
         if (count($parts) !== 2) {
-            throw new CookieException(['format invalid: `{cookie}`', 'cookie' => $data]);
+            throw new CookieException('Cookie format invalid: {data}.', ['data' => $data]);
         }
 
         $key = $this->key ?? $this->crypt->getDerivedKey($this->salt);
 
         if (md5($parts[0] . $key) !== $parts[1]) {
-            throw new CookieException(['hash invalid: `{cookie}`', 'cookie' => $data]);
+            throw new CookieException('Cookie hash invalid: {data}.', ['data' => $data]);
         }
 
         $payload = json_parse($parts[0]);
         if (!is_array($payload)) {
-            throw new CookieException(['payload invalid: `{cookie}`', 'cookie' => $data]);
+            throw new CookieException('Cookie payload is not an array, got "{type}".', ['type' => gettype($payload)]);
         }
 
         if (time() > $payload['exp']) {

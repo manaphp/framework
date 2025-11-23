@@ -19,7 +19,6 @@ use function dirname;
 use function explode;
 use function is_string;
 use function preg_replace_callback;
-use function sprintf;
 use function str_contains;
 use function ucfirst;
 
@@ -165,7 +164,7 @@ class View implements ViewInterface, ContextAware
         }
 
         if (!class_exists($widget)) {
-            throw new InvalidValueException(sprintf('`%s` widget class is not exists', $widget));
+            throw new InvalidValueException('The widget class "{widget}" does not exist.', ['widget' => $widget]);
         }
 
         $rClass = new ReflectionClass($widget);

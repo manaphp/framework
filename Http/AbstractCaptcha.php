@@ -63,7 +63,7 @@ abstract class AbstractCaptcha implements CaptchaInterface
     public function verify(string $code, bool $isTry = false): void
     {
         if (!$this->session->has($this->sessionVar)) {
-            throw new InvalidCaptchaException('captcha is not exist in server');
+            throw new InvalidCaptchaException('Captcha does not exist in server session.', ['session_var' => $this->sessionVar]);
         }
 
         $sessionVar = $this->session->get($this->sessionVar);
@@ -71,7 +71,7 @@ abstract class AbstractCaptcha implements CaptchaInterface
         if ($isTry) {
             if (isset($sessionVar['try_verified_time'])) {
                 $this->session->remove($this->sessionVar);
-                throw new InvalidCaptchaException('captcha has been tried');
+                throw new InvalidCaptchaException('Captcha has already been tried once.');
             } else {
                 $sessionVar['try_verified_time'] = time();
                 $this->session->set($this->sessionVar, $sessionVar);
@@ -80,16 +80,17 @@ abstract class AbstractCaptcha implements CaptchaInterface
             $this->session->remove($this->sessionVar);
         }
 
-        if (time() - $sessionVar['created_time'] < $this->min_interval) {
-            throw new InvalidCaptchaException('captcha verification is too frequency');
+        $timeSinceCreation = time() - $sessionVar['created_time'];
+        if ($timeSinceCreation < $this->min_interval) {
+            throw new InvalidCaptchaException('Captcha verification attempts are too frequent.', ['time_since_creation' => $timeSinceCreation, 'min_interval' => $this->min_interval, 'created_time' => date('Y-m-d H:i:s', $sessionVar['created_time'])]);
         }
 
-        if (time() - $sessionVar['created_time'] > $sessionVar['ttl']) {
-            throw new InvalidCaptchaException('captcha is expired');
+        if ($timeSinceCreation > $sessionVar['ttl']) {
+            throw new InvalidCaptchaException('Captcha has expired.', ['expired_at' => date('Y-m-d H:i:s', $sessionVar['created_time'] + $sessionVar['ttl']), 'current_time' => date('Y-m-d H:i:s'), 'ttl' => $sessionVar['ttl']]);
         }
 
         if (strtolower($sessionVar['code']) !== strtolower($code)) {
-            throw new InvalidCaptchaException('captcha is not match');
+            throw new InvalidCaptchaException('Captcha code does not match.', ['code' => $code]);
         }
     }
 }

@@ -27,7 +27,7 @@ class Env implements EnvInterface, JsonSerializable
         $file = $this->alias->resolve($this->file);
 
         if (!str_contains($this->file, '://') && !is_file($file)) {
-            throw new FileNotFoundException(['.env file is not found: {file}', 'file' => $file]);
+            throw new FileNotFoundException('The .env file could not be found at "{file}".', ['file' => $file]);
         }
 
         $lines = file($file, FILE_IGNORE_NEW_LINES);
@@ -44,7 +44,7 @@ class Env implements EnvInterface, JsonSerializable
             $parts = explode('=', $line, 2);
 
             if (count($parts) !== 2) {
-                throw new InvalidValueException(['has no = character, invalid line: `{line}`', 'line' => $line]);
+                throw new InvalidValueException('The .env file line "{line}" is invalid. Expected format: "KEY=VALUE".', ['line' => $line]);
             }
             list($name, $value) = $parts;
 
@@ -71,7 +71,7 @@ class Env implements EnvInterface, JsonSerializable
                         $ref_name = trim($matches[1], '{}');
                         if (($ref_value = getenv($ref_name)) === false) {
                             throw new InvalidValueException(
-                                ['`{1}` ref variable is not exists: {2}', $ref_name, $value]
+                                'reference variable "{ref_name}" does not exist: {value}', ['ref_name' => $ref_name, 'value' => $value]
                             );
                         }
                         return $ref_value;
@@ -96,7 +96,7 @@ class Env implements EnvInterface, JsonSerializable
     {
         if (($value = getenv($key)) === false) {
             if ($default === null) {
-                throw new InvalidArgumentException(['`{key}` key value is not exists in .env file', 'key' => $key]);
+                throw new InvalidArgumentException('The key "{key}" does not exist in the .env file.', ['key' => $key]);
             }
             return $default;
         }
@@ -108,7 +108,7 @@ class Env implements EnvInterface, JsonSerializable
                 if (is_array($r = json_parse($value))) {
                     return $r;
                 } else {
-                    throw new InvalidValueException(['the value of `{1}` key is not valid json format array', $key]);
+                    throw new InvalidValueException('The value for key "{key}" is not a valid JSON array format.', ['key' => $key]);
                 }
             } else {
                 return preg_split('#[\s,]+#', $value, -1, PREG_SPLIT_NO_EMPTY);
@@ -125,7 +125,7 @@ class Env implements EnvInterface, JsonSerializable
             } elseif (in_array(strtolower($value), ['0', 'off', 'false'], true)) {
                 return false;
             } else {
-                throw new InvalidArgumentException(['`{1}` key value is not a valid bool value: {2}', $key, $value]);
+                throw new InvalidArgumentException('The value "{value}" for key "{key}" is not a valid boolean value.', ['key' => $key, 'value' => $value]);
             }
         } else {
             return $value;

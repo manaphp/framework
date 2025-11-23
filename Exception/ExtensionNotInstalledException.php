@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace ManaPHP\Exception;
 
-use Exception;
-
 class ExtensionNotInstalledException extends RuntimeException
 {
-    public function __construct(string $extension = '', int $code = 0, ?Exception $previous = null)
+    public function __construct(string $extension)
     {
-        parent::__construct("`$extension` is not installed, or the extension is not loaded", $code, $previous);
+        parent::__construct("'$extension' is not installed, or the extension is not loaded");
     }
 }

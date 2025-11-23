@@ -12,7 +12,6 @@ use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
 use function is_int;
-use function sprintf;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Unique extends AbstractConstraint
@@ -30,7 +29,7 @@ class Unique extends AbstractConstraint
         $source = $validation->source;
 
         if (!$source instanceof Entity) {
-            throw new MisuseException(sprintf('%s is not a entity', $source::class));
+            throw new MisuseException('The given class "{class}" is not an entity.', ['class' => $source::class]);
         }
 
         $filters = [$validation->field => $validation->value];

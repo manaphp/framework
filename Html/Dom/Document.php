@@ -88,7 +88,8 @@ class Document
         libxml_use_internal_errors($old_use_internal_errors);
 
         if (!$r) {
-            throw new DocumentException('xx');
+            $errors = libxml_get_errors();
+            throw new DocumentException('Failed to load HTML document.', ['xml_errors' => $errors, 'error_count' => count($errors)]);
         }
 
         $this->query = $this->maker->make(Query::class, [$this->dom]);

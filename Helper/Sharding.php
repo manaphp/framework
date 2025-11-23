@@ -50,7 +50,7 @@ class Sharding
                 }
                 return $r;
             } else {
-                throw new MisuseException($str);
+                throw new MisuseException('Invalid sharding strategy format "{str}". Expected format: "table:field%mod".', ['str' => $str]);
             }
         } else {
             return [$str];
@@ -60,7 +60,7 @@ class Sharding
     public static function modulo(string $strategy, array $context): array
     {
         if (preg_match('#^([\w.]+):(\w+)%(\d+)$#', $strategy, $match) !== 1) {
-            throw new MisuseException($strategy);
+            throw new MisuseException('Invalid sharding strategy format "{strategy}". Expected format: "table:field%mod".', ['strategy' => $strategy]);
         }
 
         list(, $base, $key, $divisor) = $match;
@@ -107,12 +107,12 @@ class Sharding
             $tables = preg_split('#[\s,]+#', $table, -1, PREG_SPLIT_NO_EMPTY);
         } else {
             if (preg_match('#^([\w.]+):(\w+)%(\d+)$#', $db, $match) !== 1) {
-                throw new MisuseException($db);
+                throw new MisuseException('Invalid database sharding format "{db}". Expected format: "table:field%mod".', ['db' => $db]);
             }
             list(, $db_base, $db_key, $db_divisor) = $match;
             list($db_format, $db_divisor) = self::divisorToFD($db_divisor);
             if (preg_match('#^([\w.]+):(\w+)%(\d+)$#', $table, $match) !== 1) {
-                throw new MisuseException($table);
+                throw new MisuseException('Invalid table sharding format "{table}". Expected format: "table:field%mod".', ['table' => $table]);
             }
             list(, $table_base, $table_key, $table_divisor) = $match;
             list($table_format, $table_divisor) = self::divisorToFD($table_divisor);
@@ -166,12 +166,12 @@ class Sharding
     {
         $shards = self::multiple($db, $source, $context);
         if (count($shards) !== 1) {
-            throw new ShardingTooManyException(['too many dbs: `{dbs}`', 'dbs' => array_keys($shards)]);
+            throw new ShardingTooManyException('Query spans multiple databases {databases}, only single-database operations supported.', ['databases' => array_keys($shards)]);
         }
 
         $tables = current($shards);
         if (count($tables) !== 1) {
-            throw new ShardingTooManyException(['too many tables: `{tables}`', 'tables' => $tables]);
+            throw new ShardingTooManyException('Query spans multiple tables {tables}, only single-table operations supported.', ['tables' => $tables]);
         }
 
         return [key($shards), $tables[0]];

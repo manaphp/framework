@@ -9,6 +9,7 @@ use ManaPHP\Helper\Sharding\ShardingTooManyException;
 use function array_keys;
 use function count;
 use function current;
+use function implode;
 use function key;
 use function strcspn;
 use function strlen;
@@ -28,12 +29,12 @@ class Sharding implements ShardingInterface
     {
         $shards = $this->getMultipleShards($entityClass, $context);
         if (count($shards) !== 1) {
-            throw new ShardingTooManyException(['too many dbs: `{dbs}`', 'dbs' => array_keys($shards)]);
+            throw new ShardingTooManyException('Entity operation spans multiple databases {databases}, only single-database operations supported.', ['databases' => array_keys($shards)]);
         }
 
         $tables = current($shards);
         if (count($tables) !== 1) {
-            throw new ShardingTooManyException(['too many tables: `{tables}`', 'tables' => $tables]);
+            throw new ShardingTooManyException('Too many tables: {tables}.', ['tables' => implode(', ', $tables)]);
         }
 
         return [key($shards), $tables[0]];

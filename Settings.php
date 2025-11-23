@@ -19,7 +19,7 @@ class Settings implements SettingsInterface
     {
         if (($value = $this->redisDb->hGet($this->key, $key)) === false) {
             if ($default === null) {
-                throw new InvalidArgumentException(['`{1}` key is not exists', $key]);
+                throw new InvalidArgumentException('Key "{key}" does not exist.', ['key' => $key]);
             } else {
                 $value = $default;
             }

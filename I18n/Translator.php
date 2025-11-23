@@ -36,7 +36,7 @@ class Translator implements TranslatorInterface
 
         if (!isset($this->templates[$locale])) {
             if (($file = $this->files[$locale] ?? null) === null) {
-                throw new RuntimeException(['`{1}` locale file is not exists', $locale]);
+                throw new RuntimeException('Locale file "{locale}" does not exist or is not loaded.', ['locale' => $locale]);
             }
 
             $templates = require $file;

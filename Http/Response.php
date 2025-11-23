@@ -354,7 +354,7 @@ class Response implements ResponseInterface, ContextAware
         $context = $this->getContext();
 
         if (!LocalFS::fileExists($file)) {
-            throw new FileNotFoundException(['Sent file is not exists: `{file}`', 'file' => $file]);
+            throw new FileNotFoundException('The sent file "{file}" does not exist.', ['file' => $file]);
         }
         $this->setHeader('Content-Length', (string)LocalFS::fileSize($file));
 

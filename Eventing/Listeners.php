@@ -12,7 +12,6 @@ use function count;
 use function explode;
 use function is_int;
 use function preg_match;
-use function sprintf;
 use function str_ends_with;
 use function str_replace;
 use function str_starts_with;
@@ -56,7 +55,7 @@ class Listeners implements ListenersInterface
                         array_shift($matches);
 
                         if (count($matches) !== substr_count($listener, '*')) {
-                            throw new InvalidValueException(sprintf('%s glob with %s class', $glob, $class));
+                            throw new InvalidValueException('The glob pattern "{glob}" does not match class "{class}" because the wildcard count does not match.', ['glob' => $glob, 'class' => $class]);
                         }
 
                         while (($pos = strpos($listener, '*')) !== false) {

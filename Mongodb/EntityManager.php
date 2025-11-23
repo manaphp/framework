@@ -63,7 +63,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
 
             $mongodb = $this->mongodbFactory->get($connection);
             if (!$docs = $mongodb->fetchAll($collection, [], ['limit' => 1])) {
-                throw new RuntimeException(['`{collection}` collection has none record', 'collection' => $collection]);
+                throw new RuntimeException('Cannot infer field types because collection "{collection}" has no records.', ['collection' => $collection]);
             }
 
             $types = [];
@@ -85,7 +85,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
                     }
                     $types[$field] = 'objectid';
                 } else {
-                    throw new RuntimeException(['`{field}` field value type can not be infer.', 'field' => $field]);
+                    throw new RuntimeException('The field value type for "{field}" could not be inferred.', ['field' => $field]);
                 }
             }
 
@@ -119,7 +119,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         } elseif ($type === 'array') {
             return (array)$value;
         } else {
-            throw new MisuseException(['`{1}` type is not supported', $type]);
+            throw new MisuseException('The type "{type}" is not supported.', ['type' => $type]);
         }
     }
 
@@ -245,11 +245,11 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);
 
         if (!isset($entity->$primaryKey)) {
-            throw new MisuseException('missing primary key value');
+            throw new MisuseException('The primary key value is missing.', ['entity_class' => $entityClass, 'primary_key' => $primaryKey]);
         }
 
         if ($entity->$primaryKey !== $original->$primaryKey) {
-            throw new MisuseException('updating entity primary key value is not support');
+            throw new MisuseException('Updating the entity primary key value is not supported.', ['entity_class' => $entityClass, 'primary_key' => $primaryKey, 'old_value' => $original->$primaryKey, 'new_value' => $entity->$primaryKey]);
         }
 
         $fields = $this->entityMetadata->getFields($entityClass);
@@ -301,7 +301,7 @@ class EntityManager extends AbstractEntityManager implements EntityManagerInterf
         $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);
 
         if (!isset($entity->$primaryKey)) {
-            throw new MisuseException('missing primary key value');
+            throw new MisuseException('The primary key value is missing.', ['entity_class' => $entityClass, 'primary_key' => $primaryKey]);
         }
 
         list($connection, $table) = $this->sharding->getUniqueShard($entityClass, $entity);

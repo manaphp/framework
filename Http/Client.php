@@ -174,32 +174,32 @@ class Client implements ClientInterface
         if ($http_code_class === 200) {
             SuppressWarnings::noop();
         } elseif ($http_code_class === 300) {
-            throw new RedirectionException($response->url, $response);
+            throw new RedirectionException($response->url, [], $response);
         } elseif ($http_code_class === 400) {
             if ($http_code === 400) {
-                throw new BadRequestException(['{1} => `{2}`', $response->url, $response_text], $response);
+                throw new BadRequestException('HTTP request to "{url}" returned 400 Bad Request: "{response_text}".', ['url' => $response->url, 'response_text' => $response_text], $response);
             } elseif ($http_code === 401) {
-                throw new UnauthorizedException($response->url, $response);
+                throw new UnauthorizedException($response->url, [], $response);
             } elseif ($http_code === 403) {
-                throw new ForbiddenException($response->url, $response);
+                throw new ForbiddenException($response->url, [], $response);
             } elseif ($http_code === 404) {
-                throw new NotFoundException($response->url, $response);
+                throw new NotFoundException($response->url, [], $response);
             } elseif ($http_code === 429) {
-                throw new TooManyRequestsException($response->url, $response);
+                throw new TooManyRequestsException($response->url, [], $response);
             } else {
-                throw new ClientErrorException($response->url, $response);
+                throw new ClientErrorException($response->url, [], $response);
             }
         } elseif ($http_code_class === 500) {
             if ($http_code === 500) {
-                throw new InternalServerErrorException($response->url, $response);
+                throw new InternalServerErrorException($response->url, [], $response);
             } elseif ($http_code === 502) {
-                throw new BadGatewayException($response->url, $response);
+                throw new BadGatewayException($response->url, [], $response);
             } elseif ($http_code === 503) {
-                throw new ServiceUnavailableException($response->url, $response);
+                throw new ServiceUnavailableException($response->url, [], $response);
             } elseif ($http_code === 504) {
-                throw new GatewayTimeoutException($response->url, $response);
+                throw new GatewayTimeoutException($response->url, [], $response);
             } else {
-                throw new ServerErrorException($response->url, $response);
+                throw new ServerErrorException($response->url, [], $response);
             }
         }
 
@@ -249,7 +249,7 @@ class Client implements ClientInterface
 
         if (is_string($response->body)) {
             $content_type = $response->content_type;
-            throw new ContentTypeException(['content-type is not application/json: {1}', $content_type], $response);
+            throw new ContentTypeException('The response content-type "{content_type}" is not application/json.', ['content_type' => $content_type], $response);
         }
 
         return $response;

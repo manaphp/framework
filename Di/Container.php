@@ -28,7 +28,6 @@ use function is_object;
 use function is_string;
 use function method_exists;
 use function preg_match;
-use function sprintf;
 use function str_contains;
 use function str_ends_with;
 use function strpos;
@@ -61,7 +60,7 @@ class Container implements ContainerInterface
     public function set(string $id, mixed $definition): static
     {
         if (isset($this->instances[$id])) {
-            throw new MisuseException(['it\'s too late to set(): `{1}` instance has been created', $id]);
+            throw new MisuseException('Cannot set definition for "{id}" because the instance has already been created.', ['id' => $id]);
         }
 
         if ($definition instanceof FactoryInterface) {
@@ -122,7 +121,7 @@ class Container implements ContainerInterface
 
         if (($value = $parameters[$name] ?? null) === null || is_string($value)) {
             if (($rType = $property->getType()) === null) {
-                throw new Exception(sprintf('The type of `%s::%s` is missing.', $object::class, $name));
+                throw new Exception('Property "{class}::{name}" has no type declaration.', ['class' => $object::class, 'name' => $name]);
             }
 
             if ($rType instanceof ReflectionUnionType) {
@@ -152,7 +151,7 @@ class Container implements ContainerInterface
             $property->setValue($object, null);
         } else {
             throw new Exception(
-                sprintf('The property value of `%s::$%s` is not provided.', $property->class, $property->getName())
+                'The property value of "{class}::${name}" is not provided.', ['class' => $property->class, 'name' => $property->getName()]
             );
         }
     }
@@ -217,7 +216,7 @@ class Container implements ContainerInterface
                     }
                 } else {
                     throw new Exception(
-                        sprintf('The type of `%s::%s` is missing.', $object::class, $property->getName())
+                        'The type of "{class}::{name}" is missing.', ['class' => $object::class, 'name' => $property->getName()]
                     );
                 }
             } elseif (isset($attributes[ConfigAttribute::class])) {
@@ -260,7 +259,7 @@ class Container implements ContainerInterface
         }
 
         if (preg_match('#^[\w\\\\]+$#', $name) !== 1) {
-            throw new NotFoundException(['{1} not found', $name]);
+            throw new NotFoundException('The class or interface "{name}" could not be found.', ['name' => $name]);
         }
 
         $exists = false;
@@ -276,7 +275,7 @@ class Container implements ContainerInterface
         }
 
         if (!$exists) {
-            throw new NotFoundException(['`{1}` is not exists', $name]);
+            throw new NotFoundException('The class or interface "{name}" does not exist.', ['name' => $name]);
         }
 
         if (method_exists($name, '__invoke')) {
@@ -301,13 +300,13 @@ class Container implements ContainerInterface
             return $instance;
         } elseif (($definition = $this->definitions[$id] ?? null) === null) {
             if (str_contains($id, '#')) {
-                throw new Exception(sprintf('The definition of `%s` is not found.', $id));
+                throw new Exception('The definition for "{id}" could not be found.', ['id' => $id]);
             }
 
             $instance = $this->make($id, [], $id);
             if (class_exists($id, false) && interface_exists($id . 'Interface', false)) {
                 unset($this->instances[$id]);
-                throw new MisuseException(sprintf('please autowire using %sInterface to replace %s.', $id, $id));
+                throw new MisuseException('Please use "{id}Interface" instead of "{id}" for autowiring.', ['id' => $id]);
             }
 
             return $this->instances[$id] = $instance;
@@ -322,7 +321,7 @@ class Container implements ContainerInterface
 
             return $this->instances[$id] = $this->make($class, $definition, $id);
         } elseif (!is_string($definition)) {
-            throw new Exception(sprintf('The definition of `%s` is not supported.', $id));
+            throw new Exception('The definition for "{id}" is not supported.', ['id' => $id]);
         } elseif (str_contains($definition, '#')) {
             if (str_contains($id, '#')) {
                 list($type,) = explode('#', $id);
@@ -395,7 +394,7 @@ class Container implements ContainerInterface
                 $signature = is_array($callable)
                     ? $callable[0]::class . '::' . $callable[1]
                     : $rFunction->getName();
-                throw new Exception(sprintf('Cannot autowire argument `$%s` of method %s().', $name, $signature));
+                throw new Exception('Cannot autowire argument "{name}" of method {signature}() because it has no type hint or default value.', ['name' => $name, 'signature' => $signature]);
             }
 
             if ($type !== null && !is_object($value)) {

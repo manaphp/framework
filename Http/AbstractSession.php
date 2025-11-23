@@ -218,7 +218,7 @@ abstract class AbstractSession implements SessionInterface, ContextAware, ArrayA
         } /** @noinspection SpellCheckingInspection */ elseif ($serializer === 'igbinary') {
             return igbinary_serialize($data);
         } else {
-            throw new NotSupportedException(['`{serializer}` serializer is not support', 'serializer' => $serializer]);
+            throw new NotSupportedException('Serializer "{serializer}" is not supported.', ['serializer' => $serializer]);
         }
     }
 
@@ -262,7 +262,7 @@ abstract class AbstractSession implements SessionInterface, ContextAware, ArrayA
         } /** @noinspection SpellCheckingInspection */ elseif ($serializer === 'igbinary') {
             return igbinary_unserialize($data);
         } else {
-            throw new NotSupportedException(['`{serializer}` serializer is not support', 'serializer' => $serializer]);
+            throw new NotSupportedException('Serializer "{serializer}" is not supported.', ['serializer' => $serializer]);
         }
     }
 

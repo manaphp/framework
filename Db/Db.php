@@ -282,7 +282,7 @@ class Db implements DbInterface, ContextAware
         $table = $this->completeTable($table);
 
         if (!$record) {
-            throw new InvalidArgumentException(['Unable to insert into {table} table without data', 'table' => $table]);
+            throw new InvalidArgumentException('Unable to insert into table "{table}" without data.', ['table' => $table]);
         }
         $fields = array_keys($record);
         $insertedValues = ':' . implode(',:', $fields);
@@ -334,11 +334,11 @@ class Db implements DbInterface, ContextAware
         $table = $this->completeTable($table);
 
         if (!$fieldValues) {
-            throw new InvalidArgumentException(['Unable to update {table} table without data', 'table' => $table]);
+            throw new InvalidArgumentException('Unable to update table "{table}" without data.', ['table' => $table]);
         }
 
         if (!$conditions) {
-            throw new NotSupportedException(['update must with a condition!']);
+            throw new NotSupportedException('Update operation must include a condition.', ['table' => $table]);
         }
 
         $wheres = [];
@@ -346,7 +346,7 @@ class Db implements DbInterface, ContextAware
         foreach ((array)$conditions as $k => $v) {
             if (is_int($k)) {
                 if (!is_string($v) || $v === '' || preg_match('#^\w+$#', $v) === 1) {
-                    throw new NotSupportedException(['update with `{1}` condition is danger!', json_stringify($v)]);
+                    throw new NotSupportedException('Update with condition "{condition}" is dangerous.', ['condition' => json_stringify($v)]);
                 }
                 $wheres[] = stripos($v, ' or ') ? "($v)" : $v;
             } else {
@@ -427,14 +427,14 @@ class Db implements DbInterface, ContextAware
         $table = $this->completeTable($table);
 
         if (!$conditions) {
-            throw new NotSupportedException(['delete must with a condition!']);
+            throw new NotSupportedException('Delete operation must include a condition.', ['table' => $table]);
         }
 
         $wheres = [];
         foreach ((array)$conditions as $k => $v) {
             if (is_int($k)) {
                 if (!is_string($v) || $v === '' || ($v !== 'FALSE' && preg_match('#^\w+$#', $v) === 1)) {
-                    throw new NotSupportedException(['delete with `{1}` condition is danger!', json_stringify($v)]);
+                    throw new NotSupportedException('Delete with condition "{condition}" is dangerous.', ['condition' => json_stringify($v)]);
                 }
                 $wheres[] = stripos($v, ' or ') ? "($v)" : $v;
             } else {
@@ -474,7 +474,7 @@ class Db implements DbInterface, ContextAware
                 $this->pools->push($this, $connection);
 
                 $message = 'beginTransaction failed: ' . $exception->getMessage();
-                throw new DbException($message, $exception->getCode(), $exception);
+                throw new DbException($message, [], $exception->getCode(), $exception);
             }
         } else {
             $context->transaction_level++;
@@ -500,7 +500,7 @@ class Db implements DbInterface, ContextAware
                     $context->connection->rollback();
                 } catch (PDOException $exception) {
                     $message = 'rollBack failed: ' . $exception->getMessage();
-                    throw new DbException($message, $exception->getCode(), $exception);
+                    throw new DbException($message, [], $exception->getCode(), $exception);
                 } finally {
                     $this->pools->push($this, $context->connection);
                     $context->connection = null;
@@ -515,7 +515,7 @@ class Db implements DbInterface, ContextAware
         $context = $this->getContext();
 
         if ($context->transaction_level === 0) {
-            throw new MisuseException('There is no active transaction');
+            throw new MisuseException('There is no active transaction.');
         }
 
         $context->transaction_level--;
@@ -524,7 +524,7 @@ class Db implements DbInterface, ContextAware
             try {
                 $context->connection->commit();
             } catch (PDOException $exception) {
-                throw new DbException('commit failed: ' . $exception->getMessage(), $exception->getCode(), $exception);
+                throw new DbException('Database commit failed: {message}.', ['message' => $exception->getMessage()], $exception->getCode(), $exception);
             } finally {
                 $this->pools->push($this, $context->connection);
                 $context->connection = null;

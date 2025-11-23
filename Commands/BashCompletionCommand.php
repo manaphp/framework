@@ -272,7 +272,7 @@ EOT;
         }
 
         $this->console->writeLn('install bash completion script successfully');
-        $this->console->writeLn("please execute `source $file` command to become effective");
+        $this->console->writeLn("please execute 'source $file' command to become effective");
         return 0;
     }
 }

@@ -11,7 +11,6 @@ use ManaPHP\Persistence\Entity;
 use ManaPHP\Persistence\EntityMetadataInterface;
 use ManaPHP\Validating\AbstractConstraint;
 use ManaPHP\Validating\Validation;
-use function sprintf;
 
 #[Attribute(Attribute::TARGET_PROPERTY)]
 class Immutable extends AbstractConstraint
@@ -28,7 +27,7 @@ class Immutable extends AbstractConstraint
         $entity = $validation->source;
         $entityClass = $entity::class;
         if (!$entity instanceof Entity) {
-            throw new MisuseException(sprintf('%s is not a entity', $entityClass));
+            throw new MisuseException('The given class "{entityClass}" is not an entity.', ['entityClass' => $entityClass]);
         }
 
         $primaryKey = $this->entityMetadata->getPrimaryKey($entityClass);

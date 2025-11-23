@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace ManaPHP\Exception;
 
-use Exception;
 use function str_contains;
 
 class MissingFieldException extends RuntimeException
 {
-    public function __construct(string $message = '', int $code = 0, ?Exception $previous = null)
+    public function __construct(string $message = '', array $context = [])
     {
         if (!str_contains($message, ' ')) {
-            $message = "missing $message field";
+            $field = $message ?: ($context['field'] ?? '');
+            $message = 'Missing "{field}" field.';
+            $context['field'] = $field;
         }
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $context);
     }
 }

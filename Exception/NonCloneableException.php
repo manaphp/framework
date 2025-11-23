@@ -10,6 +10,6 @@ class NonCloneableException extends Exception
 {
     public function __construct(object $object)
     {
-        parent::__construct(['`:class` is not cloneable', 'class' => $object::class]);
+        parent::__construct('Class "{class}" is not cloneable.', ['class' => $object::class]);
     }
 }

@@ -24,7 +24,6 @@ use function microtime;
 use function parse_str;
 use function parse_url;
 use function preg_match;
-use function sprintf;
 use function str_contains;
 
 class Connection
@@ -83,14 +82,14 @@ class Connection
         $persistent_id = md5($uri);
         if ($persistent) {
             if (!@$redis->pconnect($host, (int)$port, $timeout, $persistent_id)) {
-                throw new ConnectionException(['connect to `{uri}` failed', 'uri' => $uri]);
+                throw new ConnectionException('Failed to connect to Redis server at "{uri}".', ['uri' => $uri]);
             }
         } elseif (!@$redis->connect($host, (int)$port, $timeout)) {
-            throw new ConnectionException(['connect to `{uri}` failed', 'uri' => $uri]);
+            throw new ConnectionException('Failed to connect to Redis server at "{uri}".', ['uri' => $uri]);
         }
 
         if (($auth = $query['auth'] ?? '') !== '' && !$redis->auth($auth)) {
-            throw new AuthException(['`{auth}` auth is wrong.', 'auth' => $auth]);
+            throw new AuthException('Redis authentication failed: invalid credentials.', ['auth' => $auth]);
         }
 
         return $redis;
@@ -117,7 +116,7 @@ class Connection
             } elseif ($scheme === 'redis') {
                 $redis = $this->getRedis($uri);
             } else {
-                throw new NotSupportedException(sprintf('%s is not recognized', $uri));
+                throw new NotSupportedException('URI format "{uri}" is not recognized.', ['uri' => $uri]);
             }
 
             parse_str(parse_url($uri, PHP_URL_QUERY) ?? '', $query);
@@ -131,7 +130,7 @@ class Connection
             }
 
             if ($db !== 0 && !$redis->select($db)) {
-                throw new RuntimeException(['select `{db}` db failed', 'db' => $db]);
+                throw new RuntimeException('Failed to select Redis database "{db}".', ['db' => $db]);
             }
 
             if (($read_timeout = $query['read_timeout'] ?? null) !== null) {

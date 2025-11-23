@@ -26,7 +26,7 @@ class Crypt implements CryptInterface
         $iv_length = openssl_cipher_iv_length($this->method);
         /** @noinspection CryptographicallySecureRandomnessInspection */
         if (!$iv = openssl_random_pseudo_bytes($iv_length)) {
-            throw new CryptException('generate iv failed');
+            throw new CryptException('Failed to generate IV.', ['method' => $this->method, 'iv_length' => $iv_length, 'openssl_error' => openssl_error_string()]);
         }
 
         $data = pack('N', strlen($text)) . $text . md5($text, true);
@@ -38,7 +38,7 @@ class Crypt implements CryptInterface
         $iv_length = openssl_cipher_iv_length($this->method);
 
         if (strlen($text) < $iv_length * 2) {
-            throw new CryptException('encrypted data is too short.');
+            throw new CryptException('Encrypted data is too short.', ['data_length' => strlen($text), 'required_length' => $iv_length * 2, 'method' => $this->method]);
         }
 
         $data = substr($text, $iv_length);
@@ -48,13 +48,13 @@ class Crypt implements CryptInterface
         $length = unpack('N', $decrypted)[1];
 
         if (4 + $length + 16 !== strlen($decrypted)) {
-            throw new CryptException('decrypted data length is wrong.');
+            throw new CryptException('Decrypted data length is wrong.', ['expected_length' => 4 + $length + 16, 'actual_length' => strlen($decrypted), 'unpacked_length' => $length]);
         }
 
         $plainText = substr($decrypted, 4, -16);
 
         if (md5($plainText, true) !== substr($decrypted, -16)) {
-            throw new CryptException('decrypted md5 is not valid.');
+            throw new CryptException('Decrypted MD5 checksum is not valid.', ['data_length' => strlen($plainText), 'expected_md5' => bin2hex(substr($decrypted, -16)), 'calculated_md5' => bin2hex(md5($plainText, true))]);
         }
 
         return $plainText;

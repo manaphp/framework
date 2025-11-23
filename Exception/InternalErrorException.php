@@ -8,7 +8,7 @@ use ManaPHP\Exception;
 
 class InternalErrorException extends Exception
 {
-    public function __construct(string $message = '内部错误，请稍后重试')
+    public function __construct(string $message = 'Internal server error. Please try again later.')
     {
         parent::__construct($message);
 

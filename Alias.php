@@ -33,7 +33,7 @@ class Alias implements AliasInterface, JsonSerializable
     public function set(string $name, string $path): string
     {
         if ($name[0] !== '@') {
-            throw new MisuseException(['`{name}` must start with `@`', 'name' => $name]);
+            throw new MisuseException('The alias name "{name}" must start with "@" character.', ['name' => $name]);
         }
 
         if ($path === '') {
@@ -54,7 +54,7 @@ class Alias implements AliasInterface, JsonSerializable
     public function get(string $name): ?string
     {
         if ($name[0] !== '@') {
-            throw new MisuseException(['`{name}` must start with `@`', 'name' => $name]);
+            throw new MisuseException('The alias name "{name}" must start with "@" character.', ['name' => $name]);
         }
 
         return $this->aliases[$name] ?? null;
@@ -63,7 +63,7 @@ class Alias implements AliasInterface, JsonSerializable
     public function has(string $name): bool
     {
         if ($name[0] !== '@') {
-            throw new MisuseException(['`{name}` must start with `@`', 'name' => $name]);
+            throw new MisuseException('The alias name "{name}" must start with "@" character.', ['name' => $name]);
         }
 
         return isset($this->aliases[$name]);
@@ -94,7 +94,7 @@ class Alias implements AliasInterface, JsonSerializable
 
         if (($pos = strpos($path, '/')) === false) {
             if (!isset($this->aliases[$path])) {
-                throw new InvalidArgumentException(['`{alias}` is not exists', 'alias' => $path]);
+                throw new InvalidArgumentException('The alias "{path}" is not defined.', ['path' => $path]);
             }
             return $this->aliases[$path];
         }
@@ -102,7 +102,7 @@ class Alias implements AliasInterface, JsonSerializable
         $alias = substr($path, 0, $pos);
 
         if (!isset($this->aliases[$alias])) {
-            throw new InvalidArgumentException(['`{1}` is not exists for `{2}`', $alias, $path]);
+            throw new InvalidArgumentException('The alias "{alias}" does not exist for path "{path}".', ['alias' => $alias, 'path' => $path]);
         }
 
         return $this->aliases[$alias] . substr($path, $pos);

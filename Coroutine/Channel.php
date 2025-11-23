@@ -24,7 +24,7 @@ class Channel
     public function push(mixed $data): void
     {
         if ($this->length + 1 > $this->capacity) {
-            throw new MisuseException('channel is full');
+            throw new MisuseException('Channel is full.', ['capacity' => $this->capacity]);
         }
 
         $this->length++;
@@ -50,7 +50,7 @@ class Channel
             $data = $timeout === null ? $this->queue->pop() : $this->queue->pop($timeout);
         } else {
             if ($this->length === 0) {
-                throw new MisuseException('channel is empty');
+                throw new MisuseException('Channel is empty.', ['capacity' => $this->capacity]);
             }
 
             $data = $this->queue->pop();

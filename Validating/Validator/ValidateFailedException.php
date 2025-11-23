@@ -18,7 +18,7 @@ class ValidateFailedException extends Exception
                        'msg'  => json_stringify($errors, JSON_PRETTY_PRINT),
                        'data' => ['validator.errors' => $this->errors]];
 
-        parent::__construct(json_stringify($errors), $code, $previous);
+        parent::__construct(json_stringify($errors), [], $code, $previous);
     }
 
     public function getErrors(): array

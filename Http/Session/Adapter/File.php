@@ -66,7 +66,7 @@ class File extends AbstractSession
 
         if (file_put_contents($file, $data, LOCK_EX) === false) {
             $error = error_get_last()['message'] ?? '';
-            trigger_error(sprintf('write `%s` session file failed: %s', $file, $error));
+            trigger_error(sprintf('write "%s" session file failed: %s', $file, $error));
         }
 
         @touch($file, time() + $ttl);

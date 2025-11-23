@@ -8,8 +8,8 @@ use ManaPHP\Exception;
 
 class AbortException extends Exception
 {
-    public function __construct($message = 'The process was terminated prematurely.', $code = 0, $previous = null)
+    public function __construct(string $message = 'The process was terminated prematurely.', array $context = [])
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $context);
     }
 }

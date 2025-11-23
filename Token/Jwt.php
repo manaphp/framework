@@ -56,12 +56,12 @@ class Jwt implements JwtInterface
     public function decode(string $token, bool $verify = true, ?string $key = null): array
     {
         if ($token === '') {
-            throw new NoCredentialException('No Credentials');
+            throw new NoCredentialException('No credentials provided.');
         }
 
         $parts = explode('.', $token, 5);
         if (count($parts) !== 3) {
-            throw new MalformedException('The JWT must have three dots');
+            throw new MalformedException('JWT token must have three parts separated by dots.', ['parts_count' => count($parts)]);
         }
 
         list($header, $payload) = $parts;
@@ -69,39 +69,41 @@ class Jwt implements JwtInterface
         //DO NOT use json_parse, it maybe generates a lot of Exceptions
         /** @noinspection JsonEncodingApiUsageInspection */
         if (!is_array($claims = json_decode($this->base64UrlDecode($payload), true))) {
-            throw new MalformedException('payload is not array.');
+            $decodedPayload = $this->base64UrlDecode($payload);
+            throw new MalformedException('JWT payload is not an array.', ['payload_type' => gettype($claims), 'payload_preview' => is_string($decodedPayload) ? substr($decodedPayload, 0, 100) : null]);
         }
 
         //DO NOT use json_parse, it maybe generates a lot of Exceptions
         /** @noinspection JsonEncodingApiUsageInspection */
         $decoded_header = json_decode($this->base64UrlDecode($header), true);
         if (!$decoded_header) {
-            throw new MalformedException('The JWT header is not distinguished');
+            $decodedHeader = $this->base64UrlDecode($header);
+            throw new MalformedException('JWT header cannot be decoded or is invalid.', ['header_preview' => is_string($decodedHeader) ? substr($decodedHeader, 0, 100) : null, 'json_error' => json_last_error_msg()]);
         }
 
         if (!isset($decoded_header['alg'])) {
-            throw new MalformedException('The JWT alg field is missing');
+            throw new MalformedException('The JWT "alg" field is missing in the header.', ['header_keys' => array_keys($decoded_header), 'token_preview' => substr($token, 0, 50)]);
         }
 
         if ($decoded_header['alg'] !== $this->alg) {
             $decoded_alg = $decoded_header['alg'];
-            throw new MalformedException(['The JWT alg `{1}` is not same as {2}', $decoded_alg, $this->alg]);
+            throw new MalformedException('JWT algorithm "{decoded_alg}" does not match the expected algorithm "{alg}".', ['decoded_alg' => $decoded_alg, 'alg' => $this->alg]);
         }
 
         if (!$decoded_header['typ']) {
-            throw new MalformedException(['The JWT typ field is missing: `{token}`', 'token' => $token]);
+            throw new MalformedException('The JWT "typ" field is missing in the header for token "{token}".', ['token' => $token]);
         }
 
         if ($decoded_header['typ'] !== 'JWT') {
-            throw new MalformedException(['The JWT typ `{typ}` is not JWT', 'typ' => $decoded_header['typ']]);
+            throw new MalformedException('JWT typ "{typ}" is not "JWT".', ['typ' => $decoded_header['typ']]);
         }
 
         if (isset($claims['exp']) && time() > $claims['exp']) {
-            throw new ExpiredException('token is expired.');
+            throw new ExpiredException('JWT token has expired.', ['expired_at' => date('Y-m-d H:i:s', $claims['exp']), 'current_time' => date('Y-m-d H:i:s')]);
         }
 
         if (isset($claims['nbf']) && time() < $claims['nbf']) {
-            throw new NotBeforeException('token is not active.');
+            throw new NotBeforeException('JWT token is not yet active.', ['active_at' => date('Y-m-d H:i:s', $claims['nbf']), 'current_time' => date('Y-m-d H:i:s')]);
         }
 
         if ($verify) {
@@ -114,7 +116,7 @@ class Jwt implements JwtInterface
     public function verify(string $token, ?string $key = null): void
     {
         if (($pos = strrpos($token, '.')) === false) {
-            throw new MalformedException('The JWT must have three dots');
+            throw new MalformedException('JWT token must have three parts separated by dots.', ['token_length' => strlen($token)]);
         }
 
         $key = $key ?? $this->key ?? $this->crypt->getDerivedKey('jwt');
@@ -124,7 +126,7 @@ class Jwt implements JwtInterface
         $hmac = hash_hmac(strtr($this->alg, ['HS' => 'sha']), $data, $key, true);
 
         if ($this->base64UrlEncode($hmac) !== $signature) {
-            throw new SignatureException('signature is not corrected');
+            throw new SignatureException('JWT signature verification failed.', ['algorithm' => $this->alg, 'token_preview' => substr($token, 0, 50), 'expected_signature' => substr($this->base64UrlEncode($hmac), 0, 20), 'received_signature' => substr($signature, 0, 20)]);
         }
     }
 }

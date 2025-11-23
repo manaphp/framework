@@ -4,44 +4,39 @@ declare(strict_types=1);
 
 namespace ManaPHP;
 
-use ManaPHP\Helper\SuppressWarnings;
-use Stringable;
-use function is_array;
+use Throwable;
 use function is_string;
 use function json_stringify;
-use function preg_match_all;
+use function str_contains;
 use function strtr;
 
 class Exception extends \Exception
 {
+    protected array $context = [];
     protected array $json = [];
 
-    public function __construct(string|Stringable|array $message = '', int $code = 0, ?\Exception $previous = null)
+    public function __construct(string|Throwable $message = '', array $context = [], int $code = 0, ?\Exception $previous = null)
     {
-        if (is_array($message)) {
-            $replaces = [];
-
-            preg_match_all('#{(\w+)}#', $message[0], $matches);
-            foreach ($matches[1] as $key) {
-                if (($val = $message[$key] ?? null) !== null) {
-                    if (is_string($val)) {
-                        SuppressWarnings::noop();
-                    } elseif ($val instanceof Stringable) {
-                        $val = (string)$val;
+        if ($message instanceof Throwable) {
+            $this->context = $context;
+            parent::__construct($message->getMessage(), $code, $message);
+        } else {
+            if ($context !== []) {
+                $tr = [];
+                $extra = [];
+                foreach ($context as $k => $v) {
+                    if (str_contains($message, "{{$k}}")) {
+                        $tr["{{$k}}"] = is_string($v) ? $v : json_stringify($v);
                     } else {
-                        $val = json_stringify($val);
+                        $extra[$k] = $v;
                     }
-
-                    $replaces['{' . $key . '}'] = $val;
                 }
+                $message = strtr($message, $tr);
+                $this->context = $extra;
             }
 
-            $message = strtr($message[0], $replaces);
-        } elseif ($message instanceof Stringable) {
-            $message = (string)$message;
+            parent::__construct($message, $code, $previous);
         }
-
-        parent::__construct($message, $code, $previous);
     }
 
     public function getStatusCode(): int
@@ -58,5 +53,10 @@ class Exception extends \Exception
             $message = $code === 500 ? 'Server Internal Error' : $this->getMessage();
             return ['code' => $code === 200 ? -1 : $code, 'msg' => $message];
         }
+    }
+
+    public function getContext(): array
+    {
+        return $this->context;
     }
 }

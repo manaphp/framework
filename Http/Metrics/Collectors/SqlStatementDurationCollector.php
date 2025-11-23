@@ -50,7 +50,7 @@ class SqlStatementDurationCollector implements WorkerCollectorInterface, Context
     {
         $context = $this->getContext();
 
-        $context->statements[] = [$event instanceof DbExecuted ? $event->type : 'select', $event->elapsed];
+        $context->statements[] = [$event instanceof DbExecuted ? $event->event : 'select', $event->elapsed];
     }
 
     public function querying(): array

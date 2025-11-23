@@ -104,7 +104,7 @@ class Swoole implements ServerInterface
 
         if (isset($this->settings['dispatch_mode'])) {
             if (!in_array((int)$this->settings['dispatch_mode'], [2, 4, 5], true)) {
-                throw new NotSupportedException('only support dispatch_mode=2,4,5');
+                throw new NotSupportedException('Only dispatch_mode values 2, 4, or 5 are supported for proper request handling.', ['dispatch_mode' => $this->settings['dispatch_mode']]);
             }
         } else {
             $this->settings['dispatch_mode'] = 2;

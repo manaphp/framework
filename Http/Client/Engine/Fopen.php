@@ -39,7 +39,7 @@ class Fopen implements EngineInterface
 
             $parts = parse_url($proxy);
             if ($parts['scheme'] !== 'http') {
-                throw new NotSupportedException(['only support http type proxy: `{proxy}`', 'proxy' => $proxy]);
+                throw new NotSupportedException('Only HTTP type proxy is supported, but "{proxy}" uses a different scheme.', ['proxy' => $proxy]);
             }
 
             if (isset($parts['pass'])) {
@@ -75,7 +75,7 @@ class Fopen implements EngineInterface
 
         if (!$stream = @fopen($request->url, 'rb', false, stream_context_create(['http' => $http, 'ssl' => $ssl]))) {
             $error = error_get_last()['message'] ?? '';
-            throw new ConnectionException(['connect to `{1}` failed: {2}', $request->url, $error]);
+            throw new ConnectionException('Could not connect to URL "{url}": {error}.', ['url' => $request->url, 'error' => $error]);
         }
 
         $headers = stream_get_meta_data($stream)['wrapper_data'];

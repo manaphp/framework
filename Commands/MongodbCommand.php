@@ -80,7 +80,7 @@ class MongodbCommand extends Command
         $file = '@runtime/mongodb_entities/' . substr($entityClass, strrpos($entityClass, '\\') + 1) . '.php';
         LocalFS::filePut($file, $entity);
 
-        $this->console->writeLn("write entity to `:$file`");
+        $this->console->writeLn("write entity to :$file");
     }
 
     /**
@@ -123,7 +123,7 @@ class MongodbCommand extends Command
                     $entity = $this->renderEntity($fieldTypes, $entityClass);
                     LocalFS::filePut($fileName, $entity);
 
-                    $this->console->writeLn(sprintf(' `%s` collection saved to `%s`', "$cdb.$collection", $fileName));
+                    $this->console->writeLn(sprintf(' "%s" collection saved to "%s"', "$cdb.$collection", $fileName));
 
                     $pending_fields = [];
                     foreach ($fieldTypes as $field => $type) {
@@ -134,7 +134,7 @@ class MongodbCommand extends Command
 
                     if ($pending_fields) {
                         $this->console->warning(
-                            sprintf('`%s` has pending fields: `%s`', $collection, implode(', ', $pending_fields))
+                            sprintf('"%s" has pending fields: "%s"', $collection, implode(', ', $pending_fields))
                         );
                     }
                 }
@@ -317,7 +317,7 @@ class MongodbCommand extends Command
 
                     $this->console->writeLn(
                         sprintf(
-                            'write to `%s` success: %d [%f]',
+                            'write to "%s" success: %d [%f]',
                             $fileName,
                             $linesCount,
                             round(microtime(true) - $startTime, 4)
@@ -352,7 +352,7 @@ class MongodbCommand extends Command
                     continue;
                 }
 
-                $this->console->writeLn("---`$cdb` db of `$connection` connection---", [], Console::BC_CYAN);
+                $this->console->writeLn("---'$cdb' db of '$connection' connection---", [], Console::BC_CYAN);
                 foreach ($mongodb->listCollections($cdb) as $row => $collection) {
                     if ($collection_pattern && !fnmatch($collection_pattern, $collection)) {
                         continue;
