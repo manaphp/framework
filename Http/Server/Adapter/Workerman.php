@@ -82,7 +82,7 @@ class Workerman extends AbstractServer implements ContextAware
         $this->worker = $worker = new Worker("http://$this->host:$this->port");
 
         $settings = json_stringify($this->settings);
-        console_log('info', ['listen on: %s:%d with setting: %s', $this->host, $this->port, $settings]);
+        console_log('info', 'listen on: {host}:{port} with setting: {settings}', ['host' => $this->host, 'port' => $this->port, 'settings' => $settings]);
         echo 'ab';
         $worker->onMessage = [$this, 'onRequest'];
 

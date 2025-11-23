@@ -166,12 +166,10 @@ if (!function_exists('base_url')) {
 }
 
 if (!function_exists('console_log')) {
-    function console_log(string $level, mixed $message, array $context = []): void
+    function console_log(string $level, string|Stringable $message, array $context = []): void
     {
         if (defined('STDERR')) {
-            if (is_array($message)) {
-                $message = sprintf(...$message);
-            } elseif (is_string($message) && $context !== [] && str_contains($message, '{')) {
+            if (is_string($message) && $context !== [] && str_contains($message, '{')) {
                 $replaces = [];
                 foreach ($context as $key => $value) {
                     $replaces["{{$key}}"] = is_string($value) ? $value : json_stringify($value);

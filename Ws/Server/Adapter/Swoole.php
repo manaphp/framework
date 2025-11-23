@@ -289,7 +289,7 @@ class Swoole implements ServerInterface
         echo PHP_EOL, str_repeat('+', 80), PHP_EOL;
 
         $settings = json_stringify($this->settings);
-        console_log('info', ['listen on: %s:%d with setting: %s', $this->host, $this->port, $settings]);
+        console_log('info', 'listen on: {host}:{port} with setting: {setting}', ['host' => $this->host, 'port' => $this->port, 'settings' => $settings]);
         $this->swoole->start();
         console_log('info', 'shutdown');
     }
